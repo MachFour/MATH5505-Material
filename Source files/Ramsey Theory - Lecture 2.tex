@@ -1,0 +1,550 @@
+%%  MATH5505 Ramsey Theory Lecture 2: Ramsey's Theorem
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+
+% OK Pigeonhole refresh
+% OK K6 example
+% OK Ramsey's Theorem (simple)
+% OK Example (K6)
+% OK Exercise: K5 (does it also have a mono-chromatic triangle?)
+% OK Proof I (pretty picture)
+% OK Ramsey's Theorem (reduced)
+% OK Example
+% OK Lemma 1
+% OK Lemma 2
+% OK Proof II (follows directly from the lemma)
+% OK Ramsey's Theorem (extended)
+% OK Proof
+%%    Ramsey's Theorem variants, extensions
+
+
+\include{mydefinitionsramsey}
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 2: Ramsey's Theorem\end{center}}
+
+\newcommand{\aaia}{\vphantom{ }\vspace{15mm}\begin{center}
+  \begin{pspicture}(0,2.5)(10,2.5)
+    \rput( 0,2.5){\man}
+    \rput( 5,2.5){\woman}
+    \rput(10,2.5){\woman}
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\pigeonthma}{{\dg The Pigeonhole Principle}
+  \\[1mm]If $\bl k+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least two pigeons.}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\pigeonthmstrong}{{\dg The Pigeonhole Principle} {\gray (strong)}
+  \\[1mm]If $\bl (n_1-1) +\cdots+(n_k-1) + 1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some $\bl i$th pigeonhole contains at least $\bl n_i$ pigeons.}
+
+\newcommand{\pigeonthmexaa}{\\[8mm]\example}
+\newcommand{\pigeonthmexab}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}\psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+\newcommand{\pigeonthmexaba}{\rput(0  ,0){\pigeon}}
+\newcommand{\pigeonthmexabb}{\rput(3.5,0){\pigeon}}
+\newcommand{\pigeonthmexabc}{\rput(7  ,0){\pigeon}}
+\newcommand{\pigeonthmexabd}{\rput(3.4,-4){$\begin{array}{rcl}\bl k &\meq&\bl 3\\\bl m &\meq&\bl 2\end{array}$}}
+\newcommand{\pigeonthmexabaii}{\rput(-0.25,0){\pigeon}\rput( .25,0){\pigeon}}
+\newcommand{\pigeonthmexabbii}{\rput( 3.25,0){\pigeon}\rput(3.75,0){\pigeon}}
+\newcommand{\pigeonthmexabcii}{\rput( 6.75,0){\pigeon}\rput(7.25,0){\pigeon}}
+\newcommand{\pigeonthmexabciii}{\rput(6.7 ,0){\pigeon}\rput(7   ,0){\pigeon}\rput(7.3,0){\pigeon}}
+
+\newcommand{\pigeonthmexga}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexgb}{\\[1mm]$\bl n+1$ distinct numbers are chosen from the numbers $\bl 1,\ldots,2n$.
+  \\Show that at least two of the chosen numbers are coprime.}
+
+\newcommand{\pigeonthmexma}{\\[8mm]\example}
+\newcommand{\pigeonthmexmb}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}
+    \rput[t](0  ,-2.5){$\bl n_1\meq 1$}
+    \rput[t](3.5,-2.5){$\bl n_2\meq 3$}
+    \rput[t](7  ,-2.5){$\bl n_3\meq 2$}
+    \psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\ramseyaa}{{\dg Ramsey Theory} makes repeated use of the {\dg Pigeonhole Principle}
+to show that order exists whenever (certain) random and seemingly unordered structures are sufficiently large.}
+
+\newcommand{\ramseyaaexaa}{\\[8mm]\exercise}
+\newcommand{\ramseyaaexab}{\\Colour each edge of the complete graph $\bl K_6$ either {\red red} or {\bl blue}.
+                           \\Show that there must be a red triangle $\red\triangle$ or a blue triangle $\bl\triangle$.}
+
+\newcommand{\ramseyaaexac}[1]{\vspace*{10mm}\begin{center}\myksix{#1}{}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseyaaexacalt}[2]{\vspace*{10mm}\begin{center}\myksix{#1}{#2}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseyaaexaca}{{\psset{linecolor=red}
+  \psline(a)(c)\psline(e)(f)\psline(a)(e)\psline(c)(f)
+  \psline(a)(d)\psline(b)(e)\psline(b)(d)}{\psset{linecolor=blue}
+  \psline(a)(b)\psline(b)(f)\psline(c)(e)\psline(d)(f)
+  \psline(d)(e)\psline(a)(f)\psline(b)(c)\psline(c)(d)}}
+\newcommand{\ramseyaaexacb}{{\psset{linecolor=blue,fillcolor=lightblue,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(a)(b)(f)}}
+\newcommand{\ramseyaaexacc}{{\psset{linecolor=blue,fillcolor=lightblue,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(c)(d)(e)}}
+\newcommand{\ramseyaaexacalta}{{\pscircle[linecolor=darkgreen,fillcolor=green](a){.2}}}
+\newcommand{\ramseyaaexacd}{
+  {\psset{linecolor=lightgray}\psline(b)(c)\psline(b)(d)\psline(b)(e)\psline(b)(f)
+                              \psline(c)(d)\psline(c)(e)\psline(c)(f)
+                              \psline(d)(e)\psline(d)(f)\psline(e)(f)}
+  {\psset{linecolor=red }\psline(a)(c)\psline(a)(e)\psline(a)(d)}
+  {\psset{linecolor=blue}\psline(a)(b)\psline(a)(f)}}
+\newcommand{\ramseyaaexace}{{\psset{linecolor=blue}\psline(c)(d)(e)(c)}}
+\newcommand{\ramseyaaexacf}{\ramseyaaexacc}
+\newcommand{\ramseyaaexacg}{{\psset{linecolor=blue}\psline(c)(e)(d)}{\psset{linecolor=red}\psline(a)(c)(d)}}
+\newcommand{\ramseyaaexach}{{\psset{linecolor=blue}\psline(c)(e)(d)}{\psset{linecolor=red,fillcolor=red,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(a)(c)(d)}}
+
+\newcommand{\ramseyb}{{\dg Ramsey's Theorem} {\gray (1930)} {\halfgray (simple)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_n$ gives a complete subgraph $\bl K_m$
+   with monochromatic edges.}
+\newcommand{\ramseyba}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R(m;k)$.}}
+
+\newcommand{\ramseybexaa}{\\[6mm]\example}
+\newcommand{\ramseybexab}[1]{\\Colour each edge of $\bl K_n\meq K_6$ either {\red red} or {\bl blue} ($\bl k\meq 2$).
+                          \\There must be a red triangle $\red K_3 \black = \red \triangle$ or a blue triangle $\bl K_3\meq \triangle$.
+                          \vspace*{4mm}\begin{center}\myksix{\ramseyaaexaca#1}{}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseybexaba}{\rput[l](4,-1.4){\begin{tabular}{l}\exercise\\Show that $\bl R(3;2) \meq 6$.\end{tabular}}}
+
+\newcommand{\ramseybpfia}{\\[6mm]{\dg Proof 1 }}
+\newcommand{\ramseybpfib}[1]{\\[.5mm]Choose a vertex $\bl v_0$ in $\bl V_0\black := \bl V(K_n)$.%
+  \rput(8.25,-4){\begin{pspicture}(-2.5,-2.5)(2,7.5)
+    \psset{fillcolor=halfgray,linecolor=gray,shadow=false,linewidth=.06,fillstyle=solid}
+    \psframe[linecolor=darkgreen,fillstyle=none](-2.5,-1)(2.5,8)\rput[tl](2.5,-1){$\bl V_0$}#1\end{pspicture}}}
+\newcommand{\ramseybpfibv}[1]{\\[.5mm]Choose a vertex $\bl v_0$ in $\bl V_0\black := \bl V(K_n)$.%
+  \rput(8.25,-4){\begin{pspicture}(-2.5,-2.5)(2,7.5)
+    \psset{fillcolor=halfgray,linecolor=gray,shadow=false,linewidth=.06,fillstyle=solid}#1\end{pspicture}}}
+\newcommand{\ramseybpfic}{\\Let $\bl c_1$ be a most-occurring edge colour from $\bl v_0$}
+\newcommand{\ramseybpficv}{\\Let $\red c_1$ be a most-occurring edge colour from $\bl v_0$}
+\newcommand{\ramseybpfid}{ and\\let $\bl V_1$ be the vertices with $\red c_1$-coloured edges to $\bl v_0$.}
+\newcommand{\ramseybpfie}{\\Choose $\bl v_1\myin V_1$
+and let $\bl c_2$ be a most-occurring\\edge colour from $\bl v_1$ to vertices in $\bl V_1$.}
+\newcommand{\ramseybpfif}{\\Let $\bl V_2$ be the $\bl V_1$ vertices with $\bl c_2$-coloured edges to $\bl v_1$.}
+\newcommand{\ramseybpfig}{\\For big enough $\bl n$,
+  we can choose $\bl N\black := \bl k(m-2)+1$\\
+  colours  $\bl c_1,c_2,\ldots,c_N$ and
+  vertices $\bl v_0,v_1,\ldots,v_N$.}
+\newcommand{\ramseybpfih}{\\By the {\dg Pigeonhole Principle}, some $\bl m-1$ colours $\bl c_i$
+  \\are identical, say colour $\bl c$,}
+\newcommand{\ramseybpfij}{ and the $\bl m$ corresponding
+  \\vertices $\bl v_i$ induce a $\bl K_m$ subgraph with $\bl c$-coloured edges.\qed\hspace*{-2.7mm}}
+\newcommand{\ramseybpfihjv}{\\By the {\dg Pigeonhole Principle}, some $\bl m-1$ colours $\red c_i$
+  \\are identical, say colour $\red c$, and the $\bl m$ corresponding
+  \\vertices $\bl v_i$ induce a $\bl K_m$ subgraph with $\red c$-coloured edges.\qed\hspace*{-2.7mm}}
+
+\newcommand{\ramseybpfiba}{\rput[tl](.2,-.2){$\bl v_0$}\pscircle(0,0){.2}}
+\newcommand{\ramseybpfibc}{%
+    \psline[linecolor=blue](0,0)(-2,1)
+    \psline[linecolor=red ](0,0)(-1,1)
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psline[linecolor=red ](0,0)( 1,1)
+    \psline[linecolor=blue](0,0)( 2,1)
+  \multips(-2,1)(1,0){5}{\pscircle(0,0){.2}}\pscircle(0,0){.2}}
+\newcommand{\ramseybpfibd}{%
+    \psline[linecolor=offwhite](0,0)(-2,1)
+    \psline[linecolor=red     ](0,0)(-1,1)
+    \psline[linecolor=red     ](0,0)( 0,1)
+    \psline[linecolor=red     ](0,0)( 1,1)
+    \psline[linecolor=offwhite](0,0)( 2,1)
+  \multips(-2,1)(4,0){2}{\pscircle[linecolor=lightgray,fillcolor=offwhite](0,0){.2}}
+  \multips(-1,1)(1,0){3}{\pscircle(0,0){.2}}\rput[r](-.9,.25){$\red c_1$}\pscircle(0,0){.2}}
+\newcommand{\ramseybpfibe}{\psframe[linecolor=darkgreen,fillstyle=none](-1.5,.5)(1.5,6.5)\rput[tl](1.5,.5){$\bl V_1$}}
+\newcommand{\ramseybpfibf}{\rput[tl](.2,-.2){$\bl v_0$}\pscircle(0,0){.2}
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psframe[linecolor=darkgreen,fillstyle=none](-1.5,.5)(1.5,6.5)
+    \rput[tl](1.5 , .5){$\bl V_1$}
+    \rput[tl]( .25,1  ){$\bl v_1$}
+    \psline[linecolor=red  ](0,1)(-1.2,2)
+    \psline[linecolor=blue ](0,1)(- .4,2)
+    \psline[linecolor=blue ](0,1)(  .4,2)
+    \psline[linecolor=green](0,1)( 1.2,2)
+    \pscircle(0,0){.2}
+    \pscircle(0,1){.2}
+    \multips(-1.2,2)(.8,0){4}{\pscircle(0,0){.2}}
+    \rput[r](-.9,.25){$\red c_1$}}
+\newcommand{\ramseybpfibfv}{\rput[tl](.2,-.2){$\bl v_0$}\pscircle(0,0){.2}
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psframe[linecolor=darkgreen,fillstyle=none](-1.5,.5)(1.5,6.5)
+    \rput[tl](1.5 , .5){$\bl V_1$}
+    \rput[tl]( .25,1  ){$\bl v_1$}
+    \psline[linecolor=offwhite](0,1)(-1.2,2)
+    \psline[linecolor=blue    ](0,1)( -.4,2)
+    \psline[linecolor=blue    ](0,1)(  .4,2)
+    \psline[linecolor=offwhite](0,1)( 1.2,2)
+    \pscircle(0,0){.2}
+    \pscircle(0,1){.2}
+    \multips(- .4,2)( .8,0){2}{\pscircle(0,0){.2}}
+    \multips(-1.2,2)(2.4,0){2}{\pscircle[linecolor=lightgray,fillcolor=offwhite](0,0){.2}}
+    \rput[r](-.9,.25){$\red c_1$}
+    \rput[r](-.6,1.3){$\bl  c_2$}}
+\newcommand{\ramseybpfibg}{\rput[tl](.2,-.2){$\bl v_0$}\pscircle(0,0){.2}
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psframe[linecolor=darkgreen,fillstyle=none](-1.5,.5)(1.5,6.5)
+    \rput[tl]( .75,1.5){$\bl V_2$}
+    \rput[tl](1.5 , .5){$\bl V_1$}
+    \rput[tl]( .25,1  ){$\bl v_1$}
+    \psline[linecolor=blue    ](0,1)( -.4,2)
+    \psline[linecolor=blue    ](0,1)(  .4,2)
+    \psframe[linecolor=darkgreen,fillstyle=none](-.8,1.5)(.8,5.5)
+    \pscircle(0,0){.2}
+    \pscircle(0,1){.2}
+    \multips(- .4,2)( .8,0){2}{\pscircle(0,0){.2}}
+    \rput[r](-.9,.25){$\red c_1$}
+    \rput[r](-.6,1.3){$\bl  c_2$}}
+\newcommand{\ramseybpfibh}{
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psline[linecolor=blue](0,1)(0,2)
+    \psline[linecolor=red ](0,3)(0,4)
+    \psframe[linecolor=darkgreen,fillstyle=none](-1.5, .5)(1.5,6.5)
+    \psframe[linecolor=darkgreen,fillstyle=none](- .8,1.5)( .8,5.5)
+    \psframe[linecolor=darkgreen,fillstyle=none](- .5,3.5)( .5,5.2)
+    \pscircle(0,0){.2}
+    \pscircle(0,1){.2}
+    \pscircle(0,2){.2}
+    \pscircle(0,3){.2}
+    \pscircle(0,4){.2}
+    \multips(0,2.3)(0,.2){3}{\pscircle(0,0){.05}}
+    \rput[tl](.2 ,-.2 ){$\bl  v_0$}
+    \rput[tl](.25,1   ){$\bl  v_1$}
+    \rput[b](0   ,4.35){$\bl  v_{\!\text{\tiny$N$}}$}
+    \rput[r](-.9 , .25){$\red c_1$}
+    \rput[r](-.6 ,1.3 ){$\bl  c_2$}
+    \rput[r](-.1  ,3.3){$\red c_{\!\text{\tiny$N$}}$}
+    \rput[tl](.75,1.5 ){$\bl  V_2$}
+    \rput[tl](1.5, .5 ){$\bl  V_1$}}
+\newcommand{\ramseybpfibj}{{\psset{linecolor=red,fillstyle=none}
+    \psarc[linecolor=red](-2.598,1.5){3}{-30}{30}
+    \psarc[linecolor=red](-3.464,2  ){4}{-30}{30}
+    \psline[linecolor=red ](0,3)(0,4)}
+    \psline[linecolor=red ](0,0)( 0,1)
+    \psline[linecolor=blue](0,1)(0,2)
+    \psline[linecolor=red ](0,3)(0,4)
+    \psframe[linecolor=darkgreen,fillstyle=none](-1.5, .5)(1.5,6.5)
+    \psframe[linecolor=darkgreen,fillstyle=none](- .8,1.5)( .8,5.5)
+    \psframe[linecolor=darkgreen,fillstyle=none](- .5,3.5)( .5,5.2)
+    \pscircle(0,0){.2}
+    \pscircle(0,1){.2}
+    \pscircle(0,2){.2}
+    \pscircle(0,3){.2}
+    \pscircle(0,4){.2}
+    \multips(0,2.3)(0,.2){3}{\pscircle(0,0){.05}}
+    \rput[tl](.2 ,-.2 ){$\bl  v_0$}
+    \rput[tl](.25,1   ){$\bl  v_1$}
+    \rput[b](0   ,4.35){$\bl  v_{\!\text{\tiny$N$}}$}
+    \rput[r](-.9 , .25){$\red c_1$}
+    \rput[r](-.6 ,1.3 ){$\bl  c_2$}
+    \rput[r](-.1  ,3.3){$\red c_{\!\text{\tiny$N$}}$}
+    \rput[tl](.75,1.5 ){$\bl  V_2$}
+    \rput[tl](1.5, .5 ){$\bl  V_1$}}
+\newcommand{\ramseybpfibjv}{{\psset{linecolor=red,fillstyle=none}
+    \psarc[linecolor=red](-2.598,1.5){3}{-30}{30}
+    \psarc[linecolor=red](-3.464,2  ){4}{-30}{30}
+    \psline[linecolor=red ](0,3)(0,4)}
+    \pscircle(0,0){.2}
+    \pscircle(0,3){.2}
+    \pscircle(0,4){.2}
+    \rput[tl](.8,1){$\bl K_m$}}
+
+\newcommand{\ramseybexba}{\\[6mm]\exercise}
+\newcommand{\ramseybexbb}{\\Use the method of {\dg Proof 1} to show that $\bl R(3;2) \leq 6$.}
+
+\newcommand{\ramseyc}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of the edges of $\bl K_n$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a subgraph $\bl K_{n_i}$ with all edges coloured $\bl c_i$ for some $\bl i$.}
+\newcommand{\ramseyca}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R(n_1,\ldots,n_k)$.}}
+\newcommand{\ramseycb}{\\{\gray Note that $\lightblue R(m;k) = R(\underbrace{m,\ldots,m}_k)$.}}
+
+\newcommand{\ramseybexcaa}{\\[6mm]\example}
+\newcommand{\ramseybexcab}{\\$\bl R(3,3) \meq R(3;2) \meq 6$}
+
+\newcommand{\ramseycpfia}{\\[6mm]{\dg Proof 1 }}
+\newcommand{\ramseycpfib}{\\[.5mm]This is the same proof as before, except now use
+  the strong version of the {\dg Pigeonhole Principle}.}
+
+\newcommand{\ramseybexcba}{\\[6mm]\exercise}
+\newcommand{\ramseybexcbb}{\\Fill in the details of this proof!}
+
+\newcommand{\ramseybexda}{\\[6mm]\lemma {\gray (Erd\H{o}s \&\ Szekeres 1935)}}
+\newcommand{\ramseybexdav}{\lemma}
+\newcommand{\ramseybexdb}{\\[.5mm]$\bl R(n,\ell)\mleq R(n-1,\ell) + R(n,\ell-1)$}
+
+\newcommand{\ramseybexdaexaa}{\\[6mm]\example}
+\newcommand{\ramseybexdaexab}{\\[.5mm]For any $\bl n\geq 2$, we note that $\bl R(n,2) \meq R(2,n)\meq n$. {\gray (Why?)}}
+\newcommand{\ramseybexdaexac}{\\The above bound is therefore tight for $\bl R(3,3)$:
+   \[\bl R(3,3) \meq 6 \mleq 3 + 3 \meq R(2,3) + R(3,2)\,\black.\vspace*{-6mm}\]}
+
+\newcommand{\ramseybexdpfa}{\\[3mm]\proof}
+\newcommand{\ramseybexdpfb}{\\We use induction on $\bl n+\ell$}
+\newcommand{\ramseybexdpfc}{, noting that $\bl R(n,1) \meq R(1,n) \meq 1$ for all $\bl n$.}
+\newcommand{\ramseybexdpfd}{\\Assume that $\bl R(n-1,\ell)$ and $\bl R(n,\ell-1)$ are well-defined\hfill}
+\newcommand{\ramseybexdpfe}{\\and set $\bl N\black := \bl R(n-1,\ell) + R(n,\ell-1)$.}
+\newcommand{\ramseybexdpff}{\\Colour each edge of $\bl K_N$ either {\red red} or {\bl blue} and choose a vertex $\bl v$.}
+\newcommand{\ramseybexdpfg}{\\Let $\red R$ and $\bl B$ be the vertices with {\red red} and {\bl blue} edges to $\bl v$, respectively.}
+\newcommand{\ramseybexdpfh}[1]{\\Then\vspace*{-2mm}
+  \[\bl
+    |\red R\bl| + |B| \meq N - 1 \;{#1{\meq R(n-1,\ell) + R(n,\ell-1) - 1\,\black.}}
+  \]}
+\newcommand{\ramseybexdpfj}{Therefore, $\bl|\red R\bl|\mgeq R(n-1,\ell)$ or $\bl |B|\mgeq R(n,\ell-1)$.}
+\newcommand{\ramseybexdpfk}{\\Assume without loss of generality that $\bl|\red R\bl|\mgeq R(n-1,\ell)$.}
+\newcommand{\ramseybexdpfm}{\\If the vertices $\red R$ induce a {\bl blue}-edged $\blue K_\ell$,
+  then we are done.}
+\newcommand{\ramseybexdpfn}{\\Otherwise, by definition of $\bl R(n-1,\ell)$,
+   $\red R$ induces a {\red red}-edged $\red K_{n-1}$.}
+\newcommand{\ramseybexdpfo}{\\Adding the $\bl v$ and its {\red red} edges,
+  we have a {\red red}-edged $\red K_n$.\qed}
+
+\newcommand{\ramseybexea}{\\[6mm]\lemma}
+\newcommand{\ramseybexeav}{\lemma}
+\newcommand{\ramseybexeb}{\\$\bl R(n_1,\ldots,n_k)\mleq R\bigl(n_1,\ldots,n_{k-2},R(n_{k-1},n_k)\bigr)$}
+
+\newcommand{\ramseybexepfa}{\\[3mm]\proof}
+\newcommand{\ramseybexepfb}{\\Use induction on $\bl k\mgeq 2$,
+  noting that the first lemma shows the case $\bl k\meq 2$.}
+\newcommand{\ramseybexepfd}{\\Assume that $\bl R(m_1,\ldots,m_{k-1})$ is well-defined for all $\bl m_i$\hfill}
+\newcommand{\ramseybexepfe}{\\and set $\bl N\black := \bl R\bigl(n_1,\ldots,n_{k-2},R(n_{k-1},n_k)\bigr)$.}
+\newcommand{\ramseybexepff}{\\Colour each edge of $\bl K_N$ in colours $\bl c_1,\ldots,c_k$.}
+\newcommand{\ramseybexepfg}{\\Now re-colour each $\bl c_{k-1}$- and $\bl c_k$-coloured edges by
+ a new colour $\bl c'_{k-1}$.}
+\newcommand{\ramseybexepfh}{\\By definition,
+  $\bl K_N$ contains either a subgraph $\bl K_{n_i}$ with $\bl c_i$-coloured edges
+  for some $\bl i \mleq k-2$ or a $\bl c'_{k-1}$-coloured $\bl K_{R(n_{k-1},n_k)}$ subgraph.}
+\newcommand{\ramseybexepfj}{\\Suppose that $\bl K_N$ contains the latter subgraph.}
+\newcommand{\ramseybexepfk}{\\This subgraph originally had colours $\bl c_{k-1}, c_k$
+ so it (and thus $\bl K_N$) contained
+ either a $\bl c_{k-1}$-coloured $\bl K_{n_{k-1}}$
+ or     a $\bl c_k$-coloured $\bl K_{n_k}$.}
+\newcommand{\ramseybexepfm}{\\Hence, $\bl K_N$ had a $\bl c_i$-coloured $\bl K_{n_i}$ subgraph for some $\bl i\mleq n$.\qed}
+
+\newcommand{\ramseycpfiia}{\\[6mm]{\dg Proof 2 }}
+\newcommand{\ramseycpfiib}{\\[.5mm]The theorem follows directly from the second lemma.}
+
+\newcommand{\ramseynotaa}{\\[6mm]Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+\newcommand{\ramseynotaav}{Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+
+\newcommand{\ramseynotaaexa}{\\[6mm]\example}
+\newcommand{\ramseynotaaexb}{\vspace*{-3mm}\[\bl [3] \meq \{1,2,3\} \qquad \binom{[3]}{2} \meq \bigl\{\{1,2\},\{1,3\},\{2,3\}\bigr\}\]}
+
+\newcommand{\ramseyd}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{2}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{2}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseydv}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{\red2\bl}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{\red2\bl}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseye}{{\dg Ramsey's Theorem} {\gray (1930)}\\
+   If $\bl n_1,\ldots,n_k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{r}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{r}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseyea}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R_r(n_1,\ldots,n_k)$.}}
+
+\newcommand{\ramseyepfa}{\\[6mm]\proof}
+\newcommand{\ramseyepfav}{{\phantom{ }\vspace*{-8mm}}\proof}
+\newcommand{\ramseyepfb}{\\[.5mm]We generalise {\dg Proof 1}, using induction on $\bl r$ having proved
+  the case $\bl r\meq 2$.}
+\newcommand{\ramseyepfc}{\\Assume that the theorem is true for $\bl r-1$ and set $\red t\black :=\bl R_{r-1}(n_1,\ldots,n_k)$.}
+\newcommand{\ramseyepfd}{\\Choose $\bl r-2$ elements $\bl v_1,\ldots,v_{r-2}$ and
+  set $\bl V_{r-1}\black:=\bl [n]-\{v_1,\ldots,v_{r-2}\}$.}
+\newcommand{\ramseyepfe}{\\Continue to choose elements $\bl v_{r-1},v_r,\ldots$ and sets $\bl V_r,V_{r+1},\ldots$ as follows.}
+\newcommand{\ramseyepff}{\\Suppose that we have chosen $\bl v_1,\ldots,v_{i-1}$ and $\bl V_i$. }
+\newcommand{\ramseyepfg}{Choose $\bl v_i\myin V_i$.}
+\newcommand{\ramseyepfh}{\\Let $\bl V_{i+1}$ be a maximal subset of $\bl V_i-\{v_i\}$
+  so that $\bl T\cup\{v\}$ and $\bl T\cup\{w\}$
+  have same colour for all $\bl v,w\in V_{i+1}$
+  and $\bl (r-1)$-subsets $\bl T\subseteq\{v_1,\ldots,v_i\}$.}
+\newcommand{\ramseyepfj}{\\If $\bl n$ is sufficiently large, then it is possible to choose $\red t$
+  elements $\bl v_1,\ldots,v_{\red t}$.}
+\newcommand{\ramseyepfk}{\\Now colour each $\bl (r-1)$-subset $\bl T$ of these,
+  giving $\bl T$ the same colour as $\bl T\cup \{v_t\}$ if $\bl v_t\notin V_{\red t}$
+  and colouring it randomly otherwise.}
+\newcommand{\ramseyepfm}{\\By definition of $\red t$,
+  there is a $\bl n_i$-subset $\bl S$ of the $\bl v_i$s whose $\bl (r-1)$-subsets
+  each have colour $\bl c_i$ for some $\bl i$.}
+\newcommand{\ramseyepfn}{\\Let $\bl U\subseteq S$ be an $\bl r$-subset
+  and let $\bl v$ be the greatest element in $\bl U$.}
+\newcommand{\ramseyepfo}{\\Then $\bl T\black :=\bl U-\{v\}$ is a $\bl c_i$-coloured $\bl (r-1)$-sized subset of $\bl S$}
+\newcommand{\ramseyepfp}{\\and $\bl T \cup \{v_t\}$ must therefore be $\bl c_i$-coloured.}
+\newcommand{\ramseyepfq}{\\By construction, $\bl T \cup \{v_t\}$ and $\bl U\meq T \cup \{v\}$ have the same colour,~$\bl c_i$.}
+\newcommand{\ramseyepfr}{\\We see that each $\bl r$-subset $\bl U\subseteq S$ is $\bl c_i$-coloured. \qed\vspace*{-8mm}}
+
+
+
+\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+%\np\aaia%\np\aaib{}
+\np\pigeonthma
+\np\pigeonthma\pigeonthmexaa
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabcii}
+\np\pigeonthmplusa
+\np\pigeonthmplusa\pigeonthmexaa
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabb\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabb\pigeonthmexabcii\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabbii\pigeonthmexabcii\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabbii\pigeonthmexabciii\pigeonthmexabd}
+\np\pigeonthmstrong
+\np\pigeonthmstrong\pigeonthmexma
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabb}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabb\pigeonthmexabc}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabbii\pigeonthmexabc}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexaba\pigeonthmexabbii\pigeonthmexabc}
+\np\ramseyaa
+\np\ramseyaa\ramseyaaexaa
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexac{}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexac{\ramseyaaexaca}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexac{\ramseyaaexaca\ramseyaaexacb}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexac{\ramseyaaexaca\ramseyaaexacc}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{}{}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd\ramseyaaexace}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd\ramseyaaexacf}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd\ramseyaaexacg}{\ramseyaaexacalta}
+\np\ramseyaa\ramseyaaexaa\ramseyaaexab\ramseyaaexacalt{\ramseyaaexacd\ramseyaaexach}{\ramseyaaexacalta}
+\np\ramseyb
+\np\ramseyb\ramseyba
+\np\ramseyb\ramseyba\ramseybexaa
+\np\ramseyb\ramseyba\ramseybexaa\ramseybexab{}
+\np\ramseyb\ramseyba\ramseybexaa\ramseybexab{\ramseyaaexacb}
+\np\ramseyb\ramseyba\ramseybexaa\ramseybexab{\ramseyaaexacb\ramseybexaba}
+\np\ramseyb
+\np\ramseyb\ramseybpfia
+\np\ramseyb\ramseybpfia\ramseybpfib{}
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba}
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba}\ramseybpfic
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba\ramseybpfibc}\ramseybpfic
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba\ramseybpfibd}\ramseybpficv
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba\ramseybpfibd}\ramseybpficv\ramseybpfid
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfiba\ramseybpfibd\ramseybpfibe}\ramseybpficv\ramseybpfid
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibf}\ramseybpficv\ramseybpfid\ramseybpfie
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibfv}\ramseybpficv\ramseybpfid\ramseybpfie
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibfv}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibg}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibg}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibh}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibh}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig\ramseybpfih
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibh}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig\ramseybpfih\ramseybpfij
+\np\ramseyb\ramseybpfia\ramseybpfib{\ramseybpfibj}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig\ramseybpfihjv
+\np\ramseyb\ramseybpfia\ramseybpfibv{\ramseybpfibjv}\ramseybpficv\ramseybpfid\ramseybpfie\ramseybpfif\ramseybpfig\ramseybpfihjv
+\np\ramseyb\ramseyba
+\np\ramseyb\ramseyba\ramseybexba
+\np\ramseyb\ramseyba\ramseybexba\ramseybexbb
+\np\ramseyc
+\np\ramseyc\ramseyca
+\np\ramseyc\ramseyca\ramseycb
+\np\ramseyc\ramseyca\ramseycb\ramseybexcaa
+\np\ramseyc\ramseyca\ramseycb\ramseybexcaa\ramseybexcab
+\np\ramseyc\ramseyca\ramseycb
+\np\ramseyc\ramseyca\ramseycb\ramseycpfia
+\np\ramseyc\ramseyca\ramseycb\ramseycpfia\ramseycpfib
+\np\ramseyc\ramseyca\ramseycb\ramseycpfia\ramseycpfib\ramseybexcba
+\np\ramseyc\ramseyca\ramseycb\ramseycpfia\ramseycpfib\ramseybexcba\ramseybexcbb
+\np\ramseyc\ramseyca\ramseycb
+\np\ramseyc\ramseyca\ramseycb\ramseybexda
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdaexaa
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdaexaa\ramseybexdaexab
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdaexaa\ramseybexdaexab\ramseybexdaexac
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa\ramseybexdpfb
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe
+\np\ramseyc\ramseyca\ramseycb\ramseybexda\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{\ph}
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}\ramseybexdpfj
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}\ramseybexdpfj\ramseybexdpfk
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}\ramseybexdpfj\ramseybexdpfk\ramseybexdpfm
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}\ramseybexdpfj\ramseybexdpfk\ramseybexdpfm\ramseybexdpfn
+\np\ramseybexdav\ramseybexdb\ramseybexdpfa\ramseybexdpfb\ramseybexdpfc\ramseybexdpfd\ramseybexdpfe\ramseybexdpff\ramseybexdpfg\ramseybexdpfh{}\ramseybexdpfj\ramseybexdpfk\ramseybexdpfm\ramseybexdpfn\ramseybexdpfo
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb\ramseybexea
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb\ramseybexea\ramseybexeb
+\np\ramseybexeav\ramseybexeb
+\np\ramseybexeav\ramseybexeb\ramseybexepfa
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff\ramseybexepfg
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff\ramseybexepfg\ramseybexepfh
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff\ramseybexepfg\ramseybexepfh\ramseybexepfj
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff\ramseybexepfg\ramseybexepfh\ramseybexepfj\ramseybexepfk
+\np\ramseybexeav\ramseybexeb\ramseybexepfa\ramseybexepfb\ramseybexepfd\ramseybexepfe\ramseybexepff\ramseybexepfg\ramseybexepfh\ramseybexepfj\ramseybexepfk\ramseybexepfm
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb\ramseybexea\ramseybexeb
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb\ramseybexea\ramseybexeb\ramseycpfiia
+\np\ramseyc\ramseyca\ramseybexda\ramseybexdb\ramseybexea\ramseybexeb\ramseycpfiia\ramseycpfiib
+\np\ramseyc\ramseyca
+\np\ramseyc\ramseyca\ramseynotaa
+\np\ramseyc\ramseyca\ramseynotaa\ramseynotaaexa
+\np\ramseyc\ramseyca\ramseynotaa\ramseynotaaexa\ramseynotaaexb
+\np\ramseyc\ramseyca\ramseynotaa\ramseynotaaexa\ramseynotaaexb\ramseyd
+\np\ramseynotaav\ramseynotaaexa\ramseynotaaexb\ramseyd
+\np\ramseynotaav\ramseynotaaexa\ramseynotaaexb\ramseydv
+\np\ramseynotaav\ramseynotaaexa\ramseynotaaexb\ramseye
+\np\ramseye
+\np\ramseye\ramseyea
+\np\ramseye\ramseyea\ramseyepfa
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh
+\np\ramseye\ramseyea\ramseyepfa\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm\ramseyepfn
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm\ramseyepfn\ramseyepfo
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm\ramseyepfn\ramseyepfo\ramseyepfp
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm\ramseyepfn\ramseyepfo\ramseyepfp\ramseyepfq
+\np\ramseyepfav\ramseyepfb\ramseyepfc\ramseyepfd\ramseyepfe\ramseyepff\ramseyepfg\ramseyepfh\ramseyepfj\ramseyepfk\ramseyepfm\ramseyepfn\ramseyepfo\ramseyepfp\ramseyepfq\ramseyepfr
+
+
+\end{document}
+
+

@@ -1,0 +1,525 @@
+%  Lecture 7:  Euler circuits and integer programming
+%
+%  OK Graph defs recap
+%  OK Vertex degree
+%  OK Handshaking Lemma
+%  OK Small lemmas
+%  OK Euler Cycle
+%  OK Hamiltonian Cycle
+%  OK Euler Cycle Theorems
+%  OK Euler Algorithm
+%  OK Example
+%  OK Hamiltonian Theorems
+%%     Integer Programming basics and how they can be used to show over results...
+%%     Overview over other combinatorial optimisation results
+%
+
+\include{mydefinitionsmatchings}
+\usepackage{graphicx}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\end{center}}
+
+\newcommand{\lecturetitlevii}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\\[3mm]
+  \darkgreen Lecture 7: Traversing Circuits\end{center}}
+
+\newcommand{\hallivra}{A (simple) {\dg graph} $\bl G\meq (V,E)$ consists of {\dg vertices} $\bl V$ and {\dg edges} $\bl {\blue E}\msubseteq\binom{V}{2}$.}
+\newcommand{\hallivrb}{\\We draw $\bl G$ as dots (vertices) and lines between the dots (edges).}
+
+\newcommand{\hallivrc}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallivrcv}{{\darkgreen Example}}
+\newcommand{\hallivrd}{\\Let $\bl G$ be the graph $\bl (V,E)$ where
+  $\bl V \meq \{\textsf{1},\textsf{2},\textsf{3},\textsf{4}\}$ and
+  $\bl E \meq \binom{V}{2}$:} % \meq \bigl\{\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{3,4\},\{2,4\}\bigr\}$:}
+\newcommand{\hallivre}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-1)(5,2)#1\endpspicture}}
+\newcommand{\hallivrev}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-.75)(5,1.75)#1\endpspicture}}
+\newcommand{\hallivrea}{\rput(-.3,0){\pspicture(-1,-1)(1,1)\psline(0,0)(.866,-.5)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(.866,-.5)(0,1)(0,0)(-.866,-.5)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\small\darkgray
+  \rput[b](0,1.2){1}\rput[u](0,-.25){4}\rput[l](-1.216,-.625){2}\rput[r](1.216,-.625){3}\endpspicture}}
+\newcommand{\hallivreb}[2]{\rput(-.3,0.3){\pspicture(-1,-1)(2.5,1)#1{#2
+  \psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)}
+  \psline[fillstyle=none](0,1)(.866,-.5)(0,0)(-.866,-.5)
+  \psline[fillstyle=none](.866,1)(2.589,1)(1.732,-.5)
+  \pscircle(.866,1){.1}\pscircle(2.598,1){.1}\pscircle(1.732,-.5){.1}{#2\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}\endpspicture}}
+\newcommand{\hallivreba}{{\psset{linecolor=lightgray,fillcolor=offwhite,linearc=.2,fillstyle=solid}
+  \pspolygon(-1.22,-.7)(0,1.4)(1.22,-.7)\pspolygon(.512,1.2)(1.732,-.9)(2.952,1.2)}}
+\newcommand{\hallivrebb}{\psline[linecolor=blue](0,0)(.866,-.5)}
+\newcommand{\graviiexa}[5]{\rput(-1,.35){\pspicture(-1,-1)(1,1)
+  \psline[fillstyle=none](0,1)(0,0)(-.866,-.5)(.866,-.5)(0,0)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\small\darkgray
+  \rput[b](0,1.2){$\blue\mathsf{\mathsf{v}_1}$}\rput[u](0,-.3){$\blue\mathsf{\mathsf{v}_4}$}
+  \rput[l](-1.3,-.65){$\blue\mathsf{\mathsf{v}_2}$}\rput[r](1.35,-.65){$\blue\mathsf{\mathsf{v}_3}$}
+  \rput[l](2.1,.34){$\begin{array}{|c|c|}\hline\blue\mathsf{v}&\blue\mathsf{deg(v)}\\\hline\vspace{-1mm}
+  \blue\mathsf{v_1}&\blue\mathsf{#2{1}}\\[-.1mm]\blue\mathsf{v_2}&\blue\mathsf{#3{2}}\\[-1mm]
+  \blue\mathsf{v_3}&\blue\mathsf{#4{2}}\\[-1mm]\blue\mathsf{v_4}&\blue\mathsf{#5{3}}\\\hline\end{array}$}#1\endpspicture}}
+\newcommand{\graviiexaa}{\rput[l](4.4,.5){$\blue\mathsf{2}|E|\meq\mathsf{2\times 4 \meq 8}$}
+    \rput[l](4.4,0){$\blue\mathsf{1+2+2+3\meq8}$}}
+
+\newcommand{\hallivrq}{\\[3mm]Let $\bl G \meq (V,E)$ be a graph. }
+\newcommand{\hallivrqv}{Let $\bl G \meq (V,E)$ be a graph. }
+\newcommand{\hallivrr}{\\ A {\dg walk} in $\bl G$ is
+  a sequence of vertices $\bl v_1,v_2,\ldots,v_n$ with $\bl \{\mathsf{v}_i,\mathsf{v}_{i+1}\}\myin E$.}
+\newcommand{\hallivrs}{\\If a walk exists between each pair of vertices in $\bl G$, then $\bl G$ is {\blue connected}.}
+\newcommand{\hallivrt}{\\The {\em maximally connected subgraphs} of $\bl G$ are the {\dg components} of $\bl G$.}
+
+\newcommand{\hallivrx}{\\ A {\dg path} in $\bl G$ is a walk with no repeated vertex.}
+\newcommand{\hallivry}{\\ A {\dg closed walk} in $\bl G$ is a walk of the form $\bl v_1,v_2,\ldots,v_n,v_1$.}
+\newcommand{\hallivrz}{\\ A {\dg cycle} in $\bl G$ is a closed walk with no repeated vertex but the first and~last.}
+
+\newcommand{\hexagonpic}{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadow=false,fillstyle=solid}\pspicture(-4.5,-1)(5,2)
+  \rput(-1,.5){\pspicture(-1,-1)(1,1)
+  \pspolygon[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+  \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}\endpspicture}}
+
+\newcommand{\lectviia}{\\The {\em \blue degree} $\bl\mathsf{deg(v)}$ of a vertex $\bl\mathsf{v}$
+  is the number of edges that contain $\bl\mathsf{v}$.}
+
+\newcommand{\lectviib}{{\darkgreen Handshaking Lemma}\\[1mm]$\bl \displaystyle\blue2|E| \meq \sum_{\mathsf{v}\myin V}\textsf{deg(v)}$}
+
+\newcommand{\lectviipfia}{\proof}
+\newcommand{\lectviipfib}{\quad$\bl\displaystyle
+  2|E| \meq \sum_{e\myin E}2 \meq \sum_{e\myin E}\sum_{\mathsf{v}\myin e}1
+       \meq \sum_{\mathsf{v}\myin V}\sum_{e\myin E\,:\,\mathsf{v}\myin e}1
+       \meq \sum_{\mathsf{v}\myin V}\textsf{deg(v)}$\qed}
+
+\newcommand{\lectviic}{\\By this lemma, no graph with {\blue5} vertices can have degrees {\blue3,3,3,2,2}.}
+
+\newcommand{\lectviid}{{\darkgreen\sf Lemma}\\Each vertex degree is at most $\bl n-1$.}
+
+\newcommand{\lectviida}{\\By this lemma, no graph with {\blue5} vertices can have degrees\vspace{-.5mm}
+   \begin{center}$\blue\mathsf{5,4,3,2,1} \quad\textsf{\black or}\quad\mathsf{4,3,3,1,1}$\end{center}}
+
+\newcommand{\lectviie}{{\darkgreen\sf Lemma}\\Suppose that $\bl G$ is connected. Then
+  \\[.5mm]\mybullet $\bl G$ is a {\blue cycle} $\bl \green\Leftrightarrow$ each vertex in $\bl G$ has degree {\blue2};
+  \\\mybullet $\bl G$ is a {\blue path}\,$\green\Leftrightarrow$ each vertex in $\bl G$ has degree {\blue2},
+             except two with degree~{\blue1}.}
+
+\newcommand{\graviiexc}[2]{\rput(-2,.5){#1}\rput(1,.5){#2}}
+\newcommand{\graviiexca}{\pspicture(-1,-1)(1,1)
+    \pspolygon[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+    \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+    \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}
+\newcommand{\graviiexcb}{\pspicture(-1,-1)(1,1)
+    \psline[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+    \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+    \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}
+\newcommand{\graviiexcba}{\pspicture(-1,-1)(1,1)
+    \psline[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+    \psline[linestyle=dashed](-.5,-.866)(.5,-.866)
+    \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+    \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}
+
+\newcommand{\lectviif}{Let $\bl G$ be a connected graph. }
+\newcommand{\lectviifa}{\\An {\dg Euler trail} in $\bl G$ is a nonclosed walk
+  passing each {\dg edge} of $\bl G$ exactly~once.}
+\newcommand{\lectviifb}{\\An {\dg Euler circuit} in $\bl G$ is a closed walk
+  passing each {\dg edge} of $\bl G$ exactly once.}
+\newcommand{\lectviifc}{\\A {\dg Hamilton path} in $\bl G$ is a path
+  that passes each {\dg vertex} of $\bl G$ exactly~once.}
+\newcommand{\lectviifd}{\\A {\dg Hamilton cycle} in $\bl G$ is a cycle
+  that passes each {\dg vertex} of $\bl G$ exactly~once.}
+
+\newcommand{\edgab}{\ncline{-}{a}{b}}
+\newcommand{\edgac}{\ncline{-}{a}{c}}
+\newcommand{\edgad}{\ncline{-}{a}{d}}
+\newcommand{\edgae}{\ncline{-}{a}{e}}
+\newcommand{\edgbc}{\ncline{-}{b}{c}}
+\newcommand{\edgbd}{\ncline{-}{b}{d}}
+\newcommand{\edgbe}{\ncline{-}{b}{e}}
+\newcommand{\edgcd}{\ncline{-}{c}{d}}
+\newcommand{\edgce}{\ncline{-}{c}{e}}
+\newcommand{\edgde}{\ncline{-}{d}{e}}
+
+\newcommand{\verta}{\nput[labelsep=0]{0}{a}{\mydot}}
+\newcommand{\vertb}{\nput[labelsep=0]{0}{b}{\mydot}}
+\newcommand{\vertc}{\nput[labelsep=0]{0}{c}{\mydot}}
+\newcommand{\vertd}{\nput[labelsep=0]{0}{d}{\mydot}}
+\newcommand{\verte}{\nput[labelsep=0]{0}{e}{\mydot}}
+\newcommand{\eulervert}{\verta\vertb\vertc\vertd\verte}
+
+\newcommand{\eulerex}[2]{\\\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.25,-2)(5,1.5)
+%  \rput(-2,0.3){\pspicture(-1,0.4045)(3,1.4045)
+  \rput(-2,0.3){\pspicture(-1,-.309)(3,1.5)
+    \pnode(0,0){a}\pnode(1,0){b}\pnode(2,0){c}\pnode(.5,.866){d}\pnode(1.5,.866){e}
+    \edgad\edgae\edgbd\edgbe\edgcd\edgce\eulervert
+    #1\nput[labelsep=.2]{270}{a}{\darkgray1}
+      \nput[labelsep=.2]{270}{b}{\darkgray2}
+      \nput[labelsep=.2]{270}{c}{\darkgray3}
+      \nput[labelsep=.2]{ 90}{d}{$\darkgray\mathsf{u}$}
+      \nput[labelsep=.2]{ 90}{e}{$\darkgray\mathsf{v}$}\endpspicture}
+  \rput(3.75,0.3){\pspicture(-1,-.809)(1,1)
+    \pnode(0,1){a}\pnode(.951,.309){b}\pnode(.588,-.809){c}\pnode(-.588,-.809){d}\pnode(-.951,.309){e}
+    \edgab\edgac\edgad\edgae\edgbc\edgbd\edgbe\edgcd\edgce\edgde\eulervert#2
+    \nput[labelsep=.2]{ 90}{a}{\darkgray1}
+    \nput[labelsep=.2]{ 18}{b}{\darkgray2}
+    \nput[labelsep=.2]{306}{c}{\darkgray3}
+    \nput[labelsep=.2]{234}{d}{\darkgray4}
+    \nput[labelsep=.2]{168}{e}{\darkgray5}
+    \endpspicture}\endpspicture}
+
+% Euler trail in K_{3,2}
+% ... prettify...
+\newcommand{\eulerexaa}{{\psset{linecolor=blue}\edgad\edgae\edgce\edgcd\edgbd\edgbe\eulervert}}
+\newcommand{\eulerexaaa}{\rput(1,-1.2){$\blue\mathsf{u1v2u3v}$ is an {\dg Euler trail}}}
+% Euler circuit in K_{3,2}
+\newcommand{\eulerexaba}{\rput(1,-1.7){There is {\red no} {\dg Euler circuit}}}
+% Hamilton path in K_{3,2}
+\newcommand{\eulerexac}{{\psset{linecolor=blue}\edgad\edgbd\edgbe\edgce\eulervert}}
+\newcommand{\eulerexaca}{\rput(1,-2.2){$\blue\mathsf{1u2v3}$ is a {\dg Hamilton path}}}
+% Hamilton cycle in K_{3,2}
+\newcommand{\eulerexada}{\rput(1,-2.7){There is {\red no} {\dg Hamilton cycle}}}
+
+% Euler trail in K_5
+\newcommand{\eulerexbaa}{\rput(0,-1.7){There is {\red no} {\dg Euler trail}}}
+% Euler circuit in K_5
+% ... prettify...
+\newcommand{\eulerexbb}{{\psset{linecolor=blue}\edgab\edgbc\edgcd\edgde\edgae
+  {\psset{linecolor=green}\edgac\edgce\edgbe\edgbd\edgad}\eulervert}}
+\newcommand{\eulerexbba}{\rput(0,-2.2){$\mathsf{\blue123451\green35241}$ is an {\dg Euler circuit}}}
+% Hamilton path in K_5
+\newcommand{\eulerexbc}{{\psset{linecolor=blue}\edgab\edgbc\edgcd\edgde\eulervert}}
+\newcommand{\eulerexbca}{\rput(0,-2.7){$\blue\mathsf{12345}$ is a {\dg Hamilton path}}}
+% Hamilton cycle in K_{3,2}
+\newcommand{\eulerexbd}{{\psset{linecolor=blue}\edgab\edgbc\edgcd\edgde\edgae\eulervert}}
+\newcommand{\eulerexbda}{\rput(0,-3.2){$\blue\mathsf{123451}$ is a {\dg Hamilton cycle}}}
+
+\newcommand{\lectviiga}{{\darkgreen Theorem}\\$\blue G$ has an {\dg Euler circuit} if and only if each vertex of $\bl G$ has even degree. }
+\newcommand{\lectviigav}{{\darkgreen Theorem}
+  \\$\blue G$ has an {\dg Euler circuit} if and only if each vertex of $\bl G$ has even degree.
+  \\$\blue G$ has an {\dg Euler trail} if and only if {\blue exactly two} vertices have {\blue odd}~degree.}
+\newcommand{\lectviigavv}{{\darkgreen Theorem}
+  \\If $\bl G$ is connected, then
+  \\$\blue G$ has an {\dg Euler circuit} if and only if each vertex of $\bl G$ has even degree;
+  \\$\blue G$ has an {\dg Euler trail} if and only if {\blue exactly two} vertices have {\blue odd}~degree.}
+
+\newcommand{\lectviipfiia}{\proof}
+\newcommand{\lectviipfiib}{\quad Suppose that $\bl G$ has an Euler circuit $\bl C$. }
+\newcommand{\lectviipfiic}{\\Each time $\bl C$ passes via a vertex $\bl \mathsf{v}$, it uses {\bl2} edges, one in and one out. }
+\newcommand{\lectviipfiid}{\\Every edge is used exactly once,
+   \\so $\bl \deg(\mathsf{v})$ is twice the number of times $\bl C$ passes through $\bl \mathsf{v}$. }
+\newcommand{\lectviipfiie}{\\Therefore, $\bl \deg(\mathsf{v})$ is even. }
+\newcommand{\lectviipfiif}{\\[3mm]Conversely, suppose that each vertex in $\bl G$ has even degree. }
+\newcommand{\lectviipfiifv}{Conversely, suppose that each vertex in $\bl G$ has even degree. }
+\newcommand{\lectviipfiig}{\\If $\bl G$ has at least one edge, then some vertex has at least two edges. }
+\newcommand{\lectviipfiih}{\\Let $\bl P \meq \mathsf{v}_1,\ldots,\mathsf{v}_k$ be a maximal path in $\bl G$. }
+\newcommand{\lectviipfiij}{\\Since $\bl \deg(\mathsf{v}_k)\mgeq 2$, there is an edge $\bl \{\mathsf{v}_k,\mathsf{v}\}$ in $\bl G$ where $\bl \mathsf{v}\neq\mathsf{v}_{k-1}$. }
+\newcommand{\lectviipfiik}{\\Since $\bl P$ is maximal, $\bl \mathsf{v}$ must lie in $\bl P$; in other words, $\bl \mathsf{v}=\mathsf{v}_j$ for some $\bl j$. }
+\newcommand{\lectviipfiim}{\\Then $\bl C \meq \mathsf{v}_j,\ldots,\mathsf{v}_k,\mathsf{v}_j$ is a cycle in $\bl G$. }
+\newcommand{\lectviipfiin}{\\Let $\bl G'$ be the graph obtained from $\bl G$ by removing the edges along $\bl C$. }
+\newcommand{\lectviipfiio}{\\Then each vertex degree in $\bl G'$ is even. }
+\newcommand{\lectviipfiip}{\\As long as edges remain,
+  we can thus continue to find and remove cycles. }
+\newcommand{\lectviipfiiq}{\\Hence, $\bl G$ is a union of edge-disjoint cycles. }
+\newcommand{\lectviipfiir}{\\Since $\bl G$ is connected, no cycle is vertex-disjoint from all other cycles. }
+\newcommand{\lectviipfiis}{\\Hence, we can traverse the cycles recursively to get an Euler circuit.\qed}
+
+\newcommand{\lectviiha}{{\darkgreen Theorem}\\$\blue G$ has an {\dg Euler trail} if and only if {\blue exactly two} vertices have {\blue odd}~degree.}
+
+\newcommand{\lectviipfiiia}{\proof}
+\newcommand{\lectviipfiiib}{Suppose that $\bl G$ has an Euler trail $\bl \mathsf{v}_1,\ldots,\mathsf{v}_k$. }
+\newcommand{\lectviipfiiic}{\\Add the edge $\bl \{\mathsf{v}_k,\mathsf{v}_1\}$ to $\bl G$. }
+\newcommand{\lectviipfiiid}{\\Now $\bl G$ has an Euler circuit, so each vertex degree is even. }
+\newcommand{\lectviipfiiie}{\\Remove the edge $\bl \{\mathsf{v}_k,\mathsf{v}_1\}$ again. }
+\newcommand{\lectviipfiiif}{\\Then each vertex degree is even, except $\bl \deg(\mathsf{v}_1)$ and $\bl \deg(\mathsf{v}_k)$.}
+\newcommand{\lectviipfiiig}{\\[1mm]The converse is proved similarly.\qed}
+
+\newcommand{\eulciralg}{{\dg\sc Euler Circuit Algorithm}}
+\newcommand{\eulciralga}{\\[1mm]\mybullet Set $\bl C \meq \mathsf{v_0}$ for some vertex $\bl \mathsf{v_0}$ in $\bl G$.}
+\newcommand{\eulciralgb}{\\\mybullet Choose a cycle $\bl C'$ with at least one vertex $\bl \mathsf{v}$, but no edge, of~$\bl C$.}
+\newcommand{\eulciralgc}{\\\mybullet Replace one of the $\bl \mathsf{v}$'s in $\bl C$ by $\bl C'$.}
+\newcommand{\eulciralgd}{\\\mybullet Continue this process until $\bl C$ contains all edges in $\bl G$.}
+\newcommand{\eulciralge}{\\\mybullet Then $\bl C$ is an Euler circuit for $\bl G$.}
+\newcommand{\eulciralgav}{\\[1mm]\mystep Set $\bl C \meq \mathsf{v_0}$ for some vertex $\bl\mathsf{v_0}$ in $\bl G$.}
+\newcommand{\eulciralgbv}{\\\mystep Choose a cycle $\bl \green C'$ with at least one vertex $\bl\mathsf{v}$, but no edge, of~$\blue C$.}
+\newcommand{\eulciralgcv}{\\\mystep Replace one of the $\bl\mathsf{v}$'s in $\bl C$ by $\bl \green C'$.}
+\newcommand{\eulciralgdv}{\\\mystep Continue this process until $\bl C$ contains all edges in $\bl G$.}
+\newcommand{\eulciralgev}{\\\mystep Then $\bl C$ is an Euler circuit for $\bl G$.}
+
+\newcommand{\nodea}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{a}{\mydot}}
+\newcommand{\nodeb}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{b}{\mydot}}
+\newcommand{\nodec}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{c}{\mydot}}
+\newcommand{\noded}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{d}{\mydot}}
+\newcommand{\nodee}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{e}{\mydot}}
+\newcommand{\nodef}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{f}{\mydot}}
+\newcommand{\nodeg}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{g}{\mydot}}
+\newcommand{\nodeh}{\nput[labelsep=0,fillstyle=solid,fillcolor=halfgray]{0}{h}{\mydot}}
+
+\newcommand{\nodealabel}{\nput[labelsep=.2]{180}{a}{$\mathsf{a}$}}
+\newcommand{\nodeblabel}{\nput[labelsep=.2]{ 90}{b}{$\mathsf{b}$}}
+\newcommand{\nodeclabel}{\nput[labelsep=.2]{180}{c}{$\mathsf{c}$}}
+\newcommand{\nodedlabel}{\nput[labelsep=.2]{270}{d}{$\mathsf{d}$}}
+\newcommand{\nodeelabel}{\nput[labelsep=.2]{ 90}{e}{$\mathsf{e}$}}
+\newcommand{\nodeflabel}{\nput[labelsep=.2]{  0}{f}{$\mathsf{f}$}}
+\newcommand{\nodeglabel}{\nput[labelsep=.2]{ 30}{g}{$\mathsf{g}$}}
+\newcommand{\nodehlabel}{\nput[labelsep=.2]{330}{h}{$\mathsf{h}$}}
+
+\newcommand{\edgeab}{\ncline[nodesep=.1]{-}{a}{b}}
+\newcommand{\edgead}{\ncline[nodesep=.1]{-}{a}{d}}
+\newcommand{\edgebc}{\ncline[nodesep=.1]{-}{b}{c}}
+\newcommand{\edgebe}{\ncline[nodesep=.1]{-}{b}{e}}
+\newcommand{\edgebf}{\ncline[nodesep=.1]{-}{b}{f}}
+\newcommand{\edgecd}{\ncline[nodesep=.1]{-}{c}{d}}
+\newcommand{\edgede}{\ncline[nodesep=.1]{-}{d}{e}}
+\newcommand{\edgedf}{\ncline[nodesep=.1]{-}{d}{f}}
+\newcommand{\edgeeg}{\ncline[nodesep=.1]{-}{e}{g}}
+\newcommand{\edgegh}{\ncline[nodesep=.1]{-}{g}{h}}
+\newcommand{\edgeeh}{\ncline[nodesep=.1]{-}{e}{h}}
+
+\newcommand{\eulcirexc}[3]{\\\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-3.5,-.5)(4,3.5)
+  \rput(0,1){\pspicture(0,0)(4,2)
+    \pnode(0,1){a}\pnode(1.5,2){b}\pnode(1,1  ){c}\pnode(1.5,0 ){d}
+    \pnode(3,1){e}\pnode(2  ,1){f}\pnode(4,1.5){g}\pnode(4  ,.5){h}
+     {\darkgray\nodealabel\nodeblabel\nodeclabel\nodedlabel\nodeelabel\nodeflabel\nodeglabel\nodehlabel}
+     \edgeab\edgead\edgebc\edgebe\edgebf\edgecd\edgede\edgedf\edgeeg\edgegh\edgeeh
+     \nodea\nodeb\nodec\noded\nodee\nodef\nodeg\nodeh
+     \psset{linecolor=blue}#1\psset{linecolor=green}#2\endpspicture}#3\endpspicture}
+
+\newcommand{\eulcirexcaa}[2]{
+  \rput[l](3.8,1.35){$\green C'$}\rput[l](4.3,1.325){$=$}\rput[l](4.75,1.35){$\green\mathsf{#1}$}
+  \rput[l](3.8, .65){$\blue  C $\bl }\rput[l](4.3, .625){$=$}\rput[l](4.75, .65){$\blue \mathsf{#2}$}}
+
+\newcommand{\eulcirexcai}{\nodea\rput(-.83,.97){$\blue\mathsf{v_0}\meq$}{\blue\nodealabel}}
+\newcommand{\eulcirexcbi}{\nodea{\blue\nodealabel}}
+\newcommand{\eulcirexcci}{\nodea\rput(-.73,1){$\blue\mathsf{v}\meq$}{\blue\nodealabel}}
+\newcommand{\eulcirexcdi}{\nodea\nodeb\nodec\noded\edgeab\edgebc\edgecd\edgead{\blue\nodealabel\nodeblabel\nodeclabel\nodedlabel}}
+\newcommand{\eulcirexcei}{\nodea\nodeb\nodec\noded\edgeab\edgebc\edgecd\edgead{\blue\nodealabel\nodeclabel}\rput(1.05,-.36){$\blue\mathsf{v}\black=$}}
+\newcommand{\eulcirexcfi}{\nodea\nodeb\nodec\noded\nodee\nodef\edgedf\edgebf\edgebe\edgede\edgeab\edgebc\edgecd\edgead
+  {\blue\nodealabel\nodeclabel\nodedlabel\nodeflabel\nodeblabel\nodeelabel}}
+\newcommand{\eulcirexcgi}{\nodea\nodeb\nodec\noded\nodee\nodef\edgedf\edgebf\edgebe\edgede\edgeab\edgebc\edgecd\edgead
+  {\blue\nodealabel\nodeclabel\nodedlabel\nodeflabel\nodeblabel}\rput{-33.8}(2.66,1.5){$\blue\mathsf{v}\black=$}}
+\newcommand{\eulcirexchi}{\nodea\nodeb\nodec\noded\nodee\nodef\nodeg\nodeh\edgedf\edgebf\edgebe\edgede\edgeab\edgebc\edgecd\edgead\edgeeg\edgegh\edgeeh
+  {\blue\nodealabel\nodeclabel\nodedlabel\nodeflabel\nodeblabel\nodeelabel\nodeglabel\nodehlabel}\rput{-33.8}(2.66,1.5){$\blue\mathsf{v}\black=$}}
+\newcommand{\eulcirexcji}{\nodea\nodeb\nodec\noded\nodee\nodef\nodeg\nodeh\edgedf\edgebf\edgebe\edgede\edgeab\edgebc\edgecd\edgead\edgeeg\edgegh\edgeeh
+  {\blue\nodealabel\nodeclabel\nodedlabel\nodeflabel\nodeblabel\nodeelabel\nodeglabel\nodehlabel}}
+
+\newcommand{\eulcirexcaii}{}
+\newcommand{\eulcirexcbii}{\nodeb\nodec\noded\edgeab\edgebc\edgecd\edgead{\blue\nodealabel}}
+\newcommand{\eulcirexccii}{}
+\newcommand{\eulcirexcdii}{\nodee\nodef\edgedf\edgebf\edgebe\edgede{\green\nodedlabel\nodeflabel\nodeblabel\nodeelabel}}
+\newcommand{\eulcirexceii}{}
+\newcommand{\eulcirexcfii}{\nodeg\nodeh\edgeeg\edgegh\edgeeh{\green\nodeelabel\nodeglabel\nodehlabel}}
+\newcommand{\eulcirexcgii}{}
+
+\newcommand{\eulcirexcaiiia}{\emptyset}
+\newcommand{\eulcirexcbiiia}{abcda}
+\newcommand{\eulcirexcciiia}{\emptyset}
+\newcommand{\eulcirexcdiiia}{dfbed}
+\newcommand{\eulcirexceiiia}{\emptyset}
+\newcommand{\eulcirexcfiiia}{eghe}
+\newcommand{\eulcirexcgiiia}{\emptyset}
+
+\newcommand{\eulcirexcaiiib}{a}
+\newcommand{\eulcirexcbiiiba}{\green abcda}
+\newcommand{\eulcirexcbiiib}{abcda}
+\newcommand{\eulcirexcciiiba}{abc{\green d}a}
+\newcommand{\eulcirexcciiibaa}{abc{\green dfbed}a}
+\newcommand{\eulcirexcciiib}{abcdfbeda}
+\newcommand{\eulcirexcdiiiba}{abcdfb{\green e}da}
+\newcommand{\eulcirexcdiiibaa}{abcdfb{\green eghe}da}
+\newcommand{\eulcirexcdiiib}{abcdfbegheda}
+
+\newcommand{\diraca}{Let $\bl G\meq(V,E)$ be a simple graph with $\bl n\meq|V|\mgeq 3$.}
+
+\newcommand{\diracb}{{\darkgreen Dirac's Theorem} {\gray(1962)}
+  \\If $\bl\deg(\mathsf{v})\mgeq \frac{n}{2}$ for all $\bl \mathsf{v}\myin V$, then $\bl G$ has a {\dg Hamilton cycle}.}
+
+\newcommand{\lectviipfiva}{\\[3mm]\proof}
+\newcommand{\lectviipfivav}{\\[3mm]\proof (continued)}
+\newcommand{\lectviipfivb}{Assume that the theorem is false. }
+\newcommand{\lectviipfivc}{Since the graph $\bl K_V\meq(V,\binom{V}{2})$ has a Hamilton cycle,
+  $\bl G$ is contained in a graph $\bl G'$ on $\bl V$ that is maximal with respect to having no Hamilton cycle;
+  without loss of generality, we may assume that $\bl G\meq G'$. }
+\newcommand{\lectviipfivd}{\\Since $\bl G\mneq K_V$, there are vertices $\bl \mathsf{u},\mathsf{v}\myin V$ such that $\bl \{\mathsf{u},\mathsf{v}\}\mynotin E$. }
+\newcommand{\lectviipfive}{\\Let $\bl G^+$ be the graph obtained by adding the edge $\bl \{\mathsf{u},\mathsf{v}\}$ to $\bl G$. }
+\newcommand{\lectviipfivf}{\\By the maximality of $\bl G$, $\bl G^+$ has a Hamilton cycle,
+  \\and each Hamiltonian cycle of $\bl G^+$ must contain $\bl \{\mathsf{u},\mathsf{v}\}$. }
+\newcommand{\lectviipfivg}{\\Therefore, $\bl G$ has a Hamilton path $\bl \mathsf{v_1},\ldots,\mathsf{v_{n}}$ from $\bl \mathsf{u}\meq\mathsf{v_1}$ to $\bl \mathsf{v}\meq\mathsf{v_n}$. }
+\newcommand{\lectviipfivh}{\\Set\:\: $\bl S \meq \{\mathsf{v_i}\::\: \{\mathsf{u},\mathsf{v_{i+1}}\}\myin E\}$
+ \: and\:\: $\bl T \meq \{\mathsf{v_i}\::\: \{\mathsf{v_i},\mathsf{v}\}\myin E\}$. }
+\newcommand{\lectviipfivj}{\\Then $\bl \mathsf{v}\mnotin S\cup T$, so $\bl |S\cup T|\mlt n$. }
+\newcommand{\lectviipfivk}{Assume that $\bl \mathsf{v_i}\myin S\cap T$. }
+\newcommand{\lectviipfivm}{\\Then $\bl \mathsf{v_1},\ldots,\mathsf{v_i},\mathsf{v_n},\ldots,\mathsf{v_{i+1}},\mathsf{v_1}$
+  is a Hamilton cycle in $\bl G$, a contradiction. }
+\newcommand{\lectviipfivn}{\\Therefore, $\bl |S\cap T| \meq 0$. }
+\newcommand{\lectviipfivo}{Hence, \vspace{-1mm}\[\bl\textstyle n\meq
+  \frac{n}{2}+\frac{n}{2}\mleq \deg(\mathsf{u})+\deg(\mathsf{v})
+  \meq |S|+|T| \meq |S\cup T|+|S\cap T| \mlt  n\,,\]
+  a contradiction.\qed }
+
+\newcommand{\lectviipfivga}{\mypicture{\psset{fillstyle=none,shadow=false}
+  \rput(-10,-5){\psline(0,0)(2,0)\psline(3,0)(5,0)\psline[linestyle=dashed](2,0)(3,0)
+  {\psset{fillstyle=solid}\multips(0,0)(1,0){6}{\mydot}}
+  \rput(0.05,-.33){$\bl\mathsf{v_1}$}\rput(1.05,-.33){$\bl\mathsf{v_2}$}
+  \rput(4.05,-.33){$\bl\mathsf{v_{n-1}}$}\rput(5.05,-.33){$\bl\mathsf{v_n}$}
+  \rput(-.6,-.3){$\bl\mathsf{u}=$}\rput(5.6,-.3){$\meq\mathsf{v}$}}}}
+
+\newcommand{\lectviipfivgb}{\mypicture{\psset{fillstyle=none,shadow=false}
+  \rput(-10,-5){\psline(0,0)(1,0)\psline(4,0)(5,0)
+  {\psset{linestyle=dashed}\psline(1,0)(2,0)\psline(3,0)(4,0)}
+  \psarc(1.5,-1.5){2.12}{45}{135}\psarc(3.5,-1.5){2.12}{45}{135}
+  {\psset{fillstyle=solid}\multips(0,0)(1,0){6}{\mydot}}
+  \rput(0.05,-.33){$\bl\mathsf{v_1}$}\rput(1.05,-.33){$\bl\mathsf{v_2}$}\rput(2.05,-.33){$\bl\mathsf{v_i}$}
+  \rput(3.05,-.33){$\bl\mathsf{v_{i+1}}$}\rput(4.05,-.33){$\bl\mathsf{v_{n-1}}$}\rput(5.05,-.33){$\bl\mathsf{v_n}$}
+  \rput(-.6,-.3){$\bl\mathsf{u}\meq$}\rput(5.6,-.3){$\meq\mathsf{v}$}}}}
+
+
+\begin{document}
+\sf\coursetitle
+\newpage\lecturetitle
+\newpage\lecturetitlevii
+\newpage\hallivra\hallivrb
+%\newpage\hallivra\hallivrb\hallivrc
+%\newpage\hallivra\hallivrb\hallivrc\hallivrd
+%\newpage\hallivra\hallivrb\hallivrc\hallivrd\hallivrev{\hallivrea}
+\newpage\hallivra\hallivrb\hallivrc
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{}}
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{}}\hallivrr
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr\hallivrs
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{\ph}{\ph}{\ph}{\ph}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{\ph}{\ph}{\ph}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{}{\ph}{\ph}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{}{}{\ph}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{}{}{}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{}{}{}}\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{}{}{}{}{}}\lectviia\lb\lectviib
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib\lb\lectviipfia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib\lb\lectviipfia\lectviipfib
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib\lb\example
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviib\lb\example\lectviic
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviid
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviid\\[2.5mm]\example
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviid\\[2.5mm]\example\lectviida
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexa{\graviiexaa}{}{}{}{}}\lectviia\lb\lectviie
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexc{\graviiexca}{\graviiexcb}}\lectviia\lb\lectviie
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\graviiexc{\graviiexca}{\graviiexcba}}\lectviia\lb\lectviie
+\newpage\lectviif
+\newpage\lectviif\lectviifa
+\newpage\lectviif\lectviifa\lectviifb
+\newpage\lectviif\lectviifa\lectviifb\lectviifc
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{}{}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexaa\eulerexaaa}{}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexaa\eulerexaaa}{\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexaaa}{\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexaba\eulerexaaa}{\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexaba\eulerexaaa}{\eulerexbb\eulerexbba\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexac\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbb\eulerexbba\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexac\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbc\eulerexbca\eulerexbba\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexada\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbc\eulerexbca\eulerexbba\eulerexbaa}
+\newpage\lectviif\lectviifa\lectviifb\lectviifc\lectviifd\lb\example\eulerex{\eulerexada\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbd\eulerexbda\eulerexbca\eulerexbba\eulerexbaa}
+\newpage\lectviif\lb\example\eulerex{\eulerexada\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbd\eulerexbda\eulerexbca\eulerexbba\eulerexbaa}
+\newpage\lectviif\lb\example\eulerex{\eulerexada\eulerexaca\eulerexaba\eulerexaaa}{\eulerexbd\eulerexbda\eulerexbca\eulerexbba\eulerexbaa}\lb\lb\\[-1mm]\lectviigav
+\newpage\lectviif\lb\lectviiga
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig\lectviipfiih
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig\lectviipfiih\lectviipfiij
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiib\lectviipfiic\lectviipfiid\lectviipfiie\lectviipfiif\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin\lectviipfiio
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin\lectviipfiio\lectviipfiip
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin\lectviipfiio\lectviipfiip\lectviipfiiq
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin\lectviipfiio\lectviipfiip\lectviipfiiq\lectviipfiir
+\newpage\lectviif\lb\lectviiga\lb\lectviipfiia\lectviipfiifv\lectviipfiig\lectviipfiih\lectviipfiij\lectviipfiik\lectviipfiim\lectviipfiin\lectviipfiio\lectviipfiip\lectviipfiiq\lectviipfiir\lectviipfiis
+\newpage\lectviif\lb\lectviiga
+\newpage\lectviif\lb\lectviiga\lb\lectviiha
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib\lectviipfiiic
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib\lectviipfiiic\lectviipfiiid
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib\lectviipfiiic\lectviipfiiid\lectviipfiiie
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib\lectviipfiiic\lectviipfiiid\lectviipfiiie\lectviipfiiif
+\newpage\lectviif\lb\lectviiga\lb\lectviiha\lb\lectviipfiiia\lectviipfiiib\lectviipfiiic\lectviipfiiid\lectviipfiiie\lectviipfiiif\lectviipfiiig
+\newpage\eulciralg\eulciralgav\eulciralgbv\eulciralgcv\eulciralgdv\eulciralgev
+\newpage\eulciralg\eulciralgav\eulciralgbv\eulciralgcv\eulciralgdv\eulciralgev\eulcirexc{}{}{}
+\newpage\eulciralg\eulciralgav\eulciralgb \eulciralgc \eulciralgd \eulciralge \eulcirexc{}{}{}
+\newpage\eulciralg\eulciralgav\eulciralgb \eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcai}{\eulcirexcaii}{\eulcirexcaa{\eulcirexcaiiia}{\eulcirexcaiiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcbi}{\eulcirexcaii}{\eulcirexcaa{\eulcirexcaiiia}{\eulcirexcaiiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcci}{\eulcirexcbii}{\eulcirexcaa{\eulcirexcbiiia}{\eulcirexcaiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcci}{\eulcirexcbii}{\eulcirexcaa{\eulcirexcbiiia}{\eulcirexcaiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcci}{\eulcirexcbii}{\eulcirexcaa{\eulcirexcbiiia}{\eulcirexcbiiiba}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcdi}{\eulcirexccii}{\eulcirexcaa{\eulcirexcbiiia}{\eulcirexcbiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgc \eulciralgdv\eulciralge \eulcirexc{\eulcirexcdi}{\eulcirexccii}{\eulcirexcaa{\eulcirexcciiia}{\eulcirexcbiiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcdi}{\eulcirexccii}{\eulcirexcaa{\eulcirexcciiia}{\eulcirexcbiiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcei}{\eulcirexcdii}{\eulcirexcaa{\eulcirexcdiiia}{\eulcirexcbiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcei}{\eulcirexcdii}{\eulcirexcaa{\eulcirexcdiiia}{\eulcirexcbiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcei}{\eulcirexcdii}{\eulcirexcaa{\eulcirexcdiiia}{\eulcirexcciiiba}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcei}{\eulcirexcdii}{\eulcirexcaa{\eulcirexcdiiia}{\eulcirexcciiibaa}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcfi}{\eulcirexceii}{\eulcirexcaa{\eulcirexcdiiia}{\eulcirexcciiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgc \eulciralgdv\eulciralge \eulcirexc{\eulcirexcfi}{\eulcirexceii}{\eulcirexcaa{\eulcirexceiiia}{\eulcirexcciiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcfi}{\eulcirexceii}{\eulcirexcaa{\eulcirexceiiia}{\eulcirexcciiib}}
+\newpage\eulciralg\eulciralga \eulciralgbv\eulciralgc \eulciralgd \eulciralge \eulcirexc{\eulcirexcgi}{\eulcirexcfii}{\eulcirexcaa{\eulcirexcfiiia}{\eulcirexcciiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcgi}{\eulcirexcfii}{\eulcirexcaa{\eulcirexcfiiia}{\eulcirexcciiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcgi}{\eulcirexcfii}{\eulcirexcaa{\eulcirexcfiiia}{\eulcirexcdiiiba}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexcgi}{\eulcirexcfii}{\eulcirexcaa{\eulcirexcfiiia}{\eulcirexcdiiibaa}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgcv\eulciralgd \eulciralge \eulcirexc{\eulcirexchi}{\eulcirexcgii}{\eulcirexcaa{\eulcirexcfiiia}{\eulcirexcdiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgc \eulciralgdv\eulciralge \eulcirexc{\eulcirexcji}{\eulcirexcgii}{\eulcirexcaa{\eulcirexcgiiia}{\eulcirexcdiiib}}
+\newpage\eulciralg\eulciralga \eulciralgb \eulciralgc \eulciralgd \eulciralgev\eulcirexc{\eulcirexcji}{\eulcirexcgii}{\eulcirexcaa{\eulcirexcgiiia}{\eulcirexcdiiib}}
+\newpage\diraca
+\newpage\diraca\lb\lectviigavv
+\newpage\diraca\lb\lectviigavv\lb\diracb
+\newpage\diraca\lb\diracb\lectviipfiva
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb\lectviipfivc
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb\lectviipfivc\lectviipfivd
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb\lectviipfivc\lectviipfivd\lectviipfive
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb\lectviipfivc\lectviipfivd\lectviipfive\lectviipfivf
+\newpage\diraca\lb\diracb\lectviipfiva\lectviipfivb\lectviipfivc\lectviipfivd\lectviipfive\lectviipfivf\lectviipfivg
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivga
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivga\lectviipfivh
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivga\lectviipfivh\lectviipfivj
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivga\lectviipfivh\lectviipfivj\lectviipfivk
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivgb\lectviipfivh\lectviipfivj\lectviipfivk\lectviipfivm
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivgb\lectviipfivh\lectviipfivj\lectviipfivk\lectviipfivm\lectviipfivn
+\newpage\diraca\lb\diracb\lectviipfivav\lectviipfivg\lectviipfivgb\lectviipfivh\lectviipfivj\lectviipfivk\lectviipfivm\lectviipfivn\lectviipfivo
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

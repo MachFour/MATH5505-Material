@@ -1,0 +1,385 @@
+%   Lecture 1: Hall's Marriage Theorem
+%
+%   OK Overview
+%   OK Hall's Marriage Theorem
+%   OK Proof thereof
+%   OK Partial Transversals
+%   OK Matroids
+%
+
+\include{mydefinitionsmatchings}
+
+\newcommand{\courseoverview}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace Extremal Set Theory}}
+
+\newcommand{\courseoverviewhall}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace           Matching Theory}\\[1mm]
+  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+\newcommand{\courseoverviewhallii}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\
+  {\sc\myspace\myspace\footnotesize Part A: Min-Max Theorems}\\
+  {\sc\myspace\myspace\footnotesize Part B: Graph Algorithms}\\[1mm]
+  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Min-Max Theorems}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Min-Max Theorems}\\[3mm]
+  \darkgreen Lecture 1: Hall's Marriage Theorem\end{center}}
+
+\newcommand{\hallia}[1]{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psline(6.6,4.7)(2.9,6.7)\psline(6.9,4.7)(4.7,6.7)
+  \psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)#1
+  \endpspicture\end{center}}
+
+\newcommand{\halliav}{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psset{linecolor=lightgray}\psline(6.6,4.7)(2.9,6.7)
+  \psline(6.9,4.7)(4.7,6.7)\psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)\psset{linecolor= blue}
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)
+  \endpspicture\end{center}}
+
+\newcommand{\halliaa}{\put(2.3,1.5){\pspicture(0,0)(20,4)
+  \psset{unit=.4,linecolor=gray,fillcolor=offwhite,shadow=true,shadowcolor=nearlywhite,shadowsize=.2,framearc=.3}
+  \psframe(0,-4)(20.6,1.5)\rput(10.2,.6){{\darkgreen The Marriage Theorem}}
+   \rput(10.6,-.8){The girls can each get a boy}
+  \rput(10.2,-1.95){\:\:{\small$\Updownarrow$}} % if and only if}}
+  \rput(10.6,-3.1){Each $\bl k$ girls together like at least $\bl k$ boys.}\endpspicture}}
+
+\newcommand{\hallib}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of sets. }
+\newcommand{\hallibv}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of subsets of a finite set $\bl E$. }
+\newcommand{\hallic}{\\A {\em\dg matching} of $\bl\mathcal{A}$ is
+  a set of distinct elements $\bl\{a_i\}_I$ with $\bl a_i\myin A_i$ ($\bl\forall i\myin I$).}
+\newcommand{\hallid}{\\[3mm]\example}
+\newcommand{\hallida}{\\$\bl {\blue\mathcal{A}} \meq  \{A_1,A_2,A_4\}$ where $\bl A_i$ is the set of boys that girl $\bl i$ likes.}
+\newcommand{\hallidb}{\\Then $\bl \{\textrm{boy \blue1},\textrm{boy \blue2},\textrm{boy \blue3}\}$ is a {\blue matching} of $\bl\mathcal{A}$.}
+\newcommand{\hallide}{\\In contrast, $\bl {\blue\mathcal{B}} \meq  \{A_1,A_2,A_3,A_4\}$ has no matching.}
+\newcommand{\halliea}{\\Set $\bl {\blue\mathcal{A}(J)} \meq  \bigcup_{i\myin J} A_i$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallieaexa}{\\[2mm]\example}
+\newcommand{\hallieaexb}[2]{\\Let $\bl\mathcal{A}\meq \;{{\{A_1,A_2\}}}$ \, where \, $\bl A_1\meq \{1,2\}\quad\text{\black and}\quad A_2\meq \{2,4\}$.
+   \uput[r](-18.3,-.7){{#1{Then $\bl\mathcal{A}(\{1\})\meq A_1\meq \{1,2\}$}} \,
+   {#2{and \, $\bl\mathcal{A}(\{1,2\})\meq A_1\cup A_2\meq \{1,2,4\}$.\vspace*{-15mm}}}}}
+
+\newcommand{\hallieb}{\\[4mm]{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliebv}{{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliec}{\\[3mm]{\gray Also called ``{\green Hall's Theorem}".}}
+
+\newcommand{\hallipfia}{\\[3mm]\proof}
+\newcommand{\hallipfiav}{\\[3mm]\proof {(continued)}}
+\newcommand{\hallipfib}{\\If $\bl |\mathcal{A}(J)|\mlt |J|$ for some $\bl J\msubseteq I$, then $\bl \mathcal{A}$ has no matching.}
+\newcommand{\hallipfic}{\\Suppose therefore that $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallipfid}{\\If $\bl|A_{i_0}| \mgeq 2$ for some $\bl i_0\myin I$, then let $\bl x$ and $\bl y$ be distinct elements of $\bl A_{i_0}$.}
+\newcommand{\hallipfie}{\\Assume that we cannot remove $\bl x$ or $\bl y$ from $\bl A_{i_0}$ without violating the inequality in the theorem. }
+\newcommand{\hallipfif}{Then there are subsets $\bl I_x,I_y\msubseteq I-i_0$ so~that\vspace{-1mm}
+  \begin{align*}\bl
+    |\mathcal{A}(I_x)\cup (A_{i_0}-\{x\})| &\mlt  |I_x|+1\\\bl
+    |\mathcal{A}(I_y)\cup (A_{i_0}-\{y\})| &\mlt  |I_y|+1\vspace{-3mm}
+  \end{align*}}
+\newcommand{\hallipfifv}{Then there are subsets $\bl I_x,I_y\msubseteq I-i_0$ so~that\vspace{-1mm}
+  \begin{align*}\bl
+    |\mathcal{A}(I_x)\cup (A_{i_0}-\{x\})| &\mleq  |I_x|\\\bl
+    |\mathcal{A}(I_y)\cup (A_{i_0}-\{y\})| &\mleq  |I_y|\vspace{-3mm}
+  \end{align*}}
+\newcommand{\hallipfig}[5]{Thus,\vspace{-1mm}
+  \begin{align*}\bl
+         \quad |I_x| + |I_y|
+    &\:{{\mgeq | \mathcal{A}(I_x)\cup (A_{i_0} - x)|  +  |\mathcal{A}(I_y)\cup (A_{i_0} - y)|}}\\\bl
+    &\:{#1{\mgeq | \mathcal{A}(I_x)\cup (A_{i_0} - x)  \cup \mathcal{A}(I_y)\cup (A_{i_0} - y)|
+       +  |\mathcal{A}(I_x)\cap \mathcal{A}(I_y)|}}\\\bl
+    &\:{#2{\meq |\mathcal{A}(I_x\cup I_y \cup \{i_0\})|
+         +|\mathcal{A}(I_x\cap I_y)|}}\\\bl
+    &\:{#3{\mgeq |I_x\cup I_y| + 1
+         +|I_x\cap I_y|}}\\\bl
+    &\:{#4{\meq     |I_x| + |I_y| + 1}}\vspace{-3mm}
+  \end{align*}
+  {#5{which is a contradiction. \qed}}}
+\newcommand{\hallipfigv}{Thus, $\bl|I_x| + |I_y| \mgeq \cdots \mgeq |I_x| + |I_y| + 1$, which is a contradiction.\\}
+\newcommand{\hallipfih}{We can thus remove elements from the sets $\bl A_i$ while preserving the
+  \\inequality in the theorem,
+  until $\bl A_i \meq  \{a_i\}$ for some $\bl a_i$, for each $\bl i\myin I$.}
+\newcommand{\hallipfij}{\\Then $\bl|\{a_i\}_I| \meq  |\mathcal{A}(I)| \mgeq |I|$.}
+\newcommand{\hallipfik}{\\Hence, the elements $\bl a_i$ are distinct,
+  so $\bl \{a_i\}_I$ is a matching of $\bl \mathcal{A}$.\qed}
+
+\newcommand{\hallif}{\\A {\em\dg partial matching} of $\bl\mathcal{A}$ is
+  a matching of some subfamily $\bl \mathcal{B}\msubseteq \mathcal{A}$.}
+
+\newcommand{\halliga}{\\[5mm]\example}
+%\newcommand{\halligav}{\example\vspace{2.5mm}}
+\newcommand{\halligav}{\example}
+\newcommand{\halligb}{\\$\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2\},\{1,2\}\bigr\}$ has no matching.}
+\newcommand{\halligc}{\\However, $\bl\mathcal{A}$ does have the following partial matchings:\vspace{-1mm}
+  \[\bl\emptyset, \{1\}, \{2\}, \{1,2\}\vspace{-2mm}\]}
+
+\newcommand{\halliha}{{\darkgreen\sf Theorem {\gray (Ore 1955)}}\\
+  $\bl\mathcal{A}$ has a partial matching of size $\bl k$ if and only if, for all $\bl J\msubseteq I$,\\
+  $\bl|\mathcal{A}(J)|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihb}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ contains a partial matching of $\bl\mathcal{A}$ of size $\bl k$ {\em iff},
+  for all $\bl J\msubseteq I$, $\bl|\mathcal{A}(J)\cap B|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihc}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl J\msubseteq I$,
+  \\$\bl |\bl\mathcal{A}(J)\cap B|\mgeq |J| - |I| + |B|$.}
+\newcommand{\hallihd}{\\[2mm]{\darkgreen\sf Theorem}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl A\msubseteq B$,
+  \\$\bl|\{i\myin I\::\:A_i\cap A\neq \emptyset\}|\mgeq|A|$.}
+
+\newcommand{\hallipfiia}{\\[3mm]\proof}
+\newcommand{\hallipfiib}{\\Let $\bl D$ be a set of $\bl|I|-k$ elements not in $\bl \mathcal{A}(I)$. }
+\newcommand{\hallipfiic}{Set $\bl \mathcal{B} \meq  \{ A_i \cup D\}_I$. }
+\newcommand{\hallipfiid}{\\Then $\bl \mathcal{A}$ has a partial matching of size $\bl k$ if and only if $\bl \mathcal{B}$ has a matching. }
+\newcommand{\hallipfiie}{\\For each $\bl J\msubseteq I$,\vspace{-3mm}
+  \[\bl
+    |\mathcal{B}(J)| \meq  \bigl|\bigcup_{i\myin J}A_i\cup D\bigr| \meq  |\mathcal{A}(J)| + |D| \meq  |\mathcal{A}(J)| + |I| - k\vspace{-3mm}
+  \]}
+\newcommand{\hallipfiif}{By the {\dg Marriage Theorem}, $\bl \mathcal{B}$ has a matching if and only if $\bl|\mathcal{B}(J)| \mgeq |J|$ for all $\bl J\msubseteq I$. }
+\newcommand{\hallipfiig}{In other words, $\bl \mathcal{A}$ has a partial matching of size $\bl k$ if and only if
+$\bl|\mathcal{A}(J)| \mgeq |J| - |I| + k$ for all $\bl J\msubseteq I$. \qed\vspace{-12mm}}
+
+\newcommand{\hallipfiiia}{\\[3mm]\proof}
+\newcommand{\hallipfiiib}{\\Define $\bl \mathcal{B} \meq  \{ A_i \cap B\}_I$. }
+\newcommand{\hallipfiiic}{\\Then $\bl B$ contains a partial matching of $\bl \mathcal{A}$ of size $\bl k$ if and only if
+  $\bl \mathcal{B}$ has a partial matching of size $\bl k$. }
+\newcommand{\hallipfiiid}{By the previous theorem, this is true precisely when
+  $\bl|\mathcal{A}(J)\cap B| \meq  |\mathcal{B}(J)| \mgeq |J| - |I| + k$ for all $\bl J\msubseteq I$. \qed}
+
+\newcommand{\hallipfiva}{\\[3mm]\proof}
+\newcommand{\hallipfivb}{\\Set $\bl k \meq  |B|$ in the second theorem. \qed\vspace{-12mm}}
+
+\newcommand{\hallipfva}{\\[2mm]\proof}
+\newcommand{\hallipfvb}{Define $\bl \mathcal{C} \meq  \{C_a\}_B$ where $\bl C_a \meq  \{i\myin I\::\: a\myin A_i\}$.}
+\newcommand{\hallipfvc}{\\Now, $\bl B$ is a partial matching of $\bl \mathcal{A}$ if and only if
+  $\bl \mathcal{C}$ has a matching.}
+\newcommand{\hallipfvd}{\\By {\dg Hall's Theorem}, this is true precisely when
+  $\bl|\mathcal{C}(A)| \mgeq |A|$ for all $\bl A\msubseteq B$.}
+\newcommand{\hallipfve}{\\But $\bl|\mathcal{C}(A)| \meq  |\{i\myin I\::\:A_i\cap A\neq \emptyset\}|$,
+  which concludes the proof.\qed}
+\newcommand{\hallipfvev}{\mypicture{\rput(-6.817,-.4){But $\bl|\mathcal{C}(A)| \meq  |\{i\myin I\::\:A_i\cap A\neq \emptyset\}|$,
+  which concludes the proof.}}\mypicture{\rput(-0.18,-.4){$\square$}}}
+
+\newcommand{\hallija}{\\Consider the family $\bl\mathcal{I}(\mathcal{A})$ of partial matchings of $\bl\mathcal{A}$.}
+
+\newcommand{\hallika}{\\[6mm]\example}
+\newcommand{\hallikav}{\example\vspace{2.5mm}}
+\newcommand{\hallikb}{\\Let $\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2,3\}\bigr\}$. }
+\newcommand{\hallikc}{Then\vspace{-1mm}
+  \[{\blue \mathcal{I}(\mathcal{A})} \meq  \bigl\{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}\bigr\}\]}
+
+%Wrong (isn't it?):
+%\newcommand{\hallila}{\example}
+%\newcommand{\hallilav}{\example\vspace{2.5mm}}
+%\newcommand{\hallilb}{\\Let $\bl {\blue\mathcal{A}}$ consist of all $\bl r$-subsets of $\bl E$; that is, $\bl {\blue\mathcal{A}} \meq  \binom{E}{r}$. }
+%\newcommand{\hallilc}{\\Then $\bl E$ is a matching of $\bl\mathcal{A}$, so\vspace{-1mm}
+%  \[{\blue \mathcal{I}(\mathcal{A})} \meq  \mathcal{P}(E) \meq  \textsf{all subsets of $\bl E$}\]}
+
+\newcommand{\hallima}{{\darkgreen Lemma}\\
+  If $\bl A\myin\mathcal{I}(\mathcal{A})$ and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$.}
+\newcommand{\hallimb}{\\Let $\bl \{z_{ai}\::\: a\myin E\,,i\myin I\}$ be independent variables. }
+\newcommand{\hallimc}[1]{\\Define the {\dg formal incidence matrix} $\bl {\blue M_{\mathcal{A}}} \meq  (m_{ai})$ as follows: \vspace{-1mm}
+  \[\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=green,linecolor=lightblue,framearc=.3,shadow=false}
+    \pspicture(-1,1)(16,4.2)\rput(3,2){$\displaystyle \bl m_{ai}\meq \begin{cases}z_{ai}&\text{\black if}\:\;a\myin A_i\\0&\text{\black if}\:\;a\notin A_i\end{cases}$}
+    \rput(12,2.5){\pspicture(-1,0)(6,3)#1\endpspicture}\endpspicture\]}
+\newcommand{\hallimca}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.75)(4,1.25)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](1.45,0)(2.55,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.45,.75)(2.55,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1){$\bl a$}\rput(2,2.5){$\bl A_i$}\rput(2,1){$\bl m_{ai}$}\rput(2,-.75){$\blue M_{\mathcal{A}}$}}
+\newcommand{\hallimcb}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.25)(4,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](.5,0)(3.5,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](.5,1.25)(1.5,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.5, .25)(2.5, .75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](2.5, .75)(3.5,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1.5){$\bl a$}\rput(1,2.5){$\bl A_1$}\rput(1,1.5){$\bl z_{a1}$}
+    \rput(-.5,1  ){$\bl b$}\rput(2,2.5){$\bl A_2$}\rput(2, .5){$\bl z_{c2}$}
+    \rput(-.5, .5){$\bl c$}\rput(3,2.5){$\bl A_3$}\rput(3,1  ){$\bl z_{b3}$}
+    \rput(2,-.75){$\blue M_{\mathcal{A}}$}\rput(-1.5,1){$\blue B$}}
+
+\newcommand{\hallimd}{{\darkgreen Lemma}\\
+  $\bl B\myin\mathcal{I}(\mathcal{A})$  {\em\dg iff}\; the rows of $\bl {\blue M_{\mathcal{A}}}$ indexed by $\bl B$ are linearly independent.}
+
+\newcommand{\hallipfvia}{\\[2.5mm]\proof}
+\newcommand{\hallipfvib}{The rows of $\bl M_{\mathcal{A}}$ indexed by $\bl B$ are linearly independent
+  if~and~only~if\\they contain a non-singular square sub-matrix $\bl N$ of order~$\bl|B|$. }
+\newcommand{\hallipfvic}{\\Such $\bl N$ is non-singular precisely when $\bl \det N \meq  \cdots \pm \prod_{a\myin B} z_{ai_a} + \cdots \neq 0$. }
+\newcommand{\hallipfvid}{This happens exactly when there is at least one non-zero term $\bl \prod_{a\myin B} z_{ai_a}$
+  (since the $\bl z_{ai_a}$ are independent variables and cannot cancel each other).}
+\newcommand{\hallipfvie}{\\This, in turn, occurs when $\bl B$ is a partial matching.\qed}
+
+\newcommand{\hallime}{\\[3mm]{\darkgreen\sf Theorem}\\
+  The family $\bl\mathcal{I}(\mathcal{A})$ satisfies the following properties:
+  \\[.5mm]\mybullet $\bl \emptyset\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A\myin\mathcal{I}(\mathcal{A})$   and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A,B\!\myin\!\mathcal{I}(\mathcal{A})$ and $\bl|A|\!\mlt \!|B|$,
+    then $\bl A\cup\{a\}\!\myin\!\mathcal{I}(\mathcal{A})$ for some $\bl a\!\myin\!B\!-\!A$.}
+
+\newcommand{\hallimf}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\em\dg matroid}\\(or {\em\dg independence structure}, or {\em\dg combinatorial geometry}).}
+\newcommand{\hallimfv}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\em\dg  matroid}.}
+\newcommand{\hallimg}{\\Matroids arise in numerous ways and are very useful in combinatorics.}
+
+\newcommand{\hallimha}{\\[3mm]\example}
+\newcommand{\hallimhav}{\example\vspace{2.5mm}}
+\newcommand{\hallimhb}{\\Let $\bl E$ be a finite set and let $\bl\mathcal{I}$ be the subsets of $\bl E$ of size at most $\bl k$.}
+\newcommand{\hallimhc}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallimja}{\\[3mm]\example}
+\newcommand{\hallimjav}{\example\vspace{2.5mm}}
+\newcommand{\hallimjb}{\\Let $\bl E$ be a finite set of vectors of a vector space.}
+\newcommand{\hallimjc}{\\Let $\bl\mathcal{I}$ be the linearly independent sets of vectors in $\bl E$.}
+\newcommand{\hallimjd}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallipfviia}{\\[2.5mm]\proof}
+\newcommand{\hallipfviib}{\\This follows by the above lemma and the preceding example.\qed}
+
+\newcommand{\hallimk}{\\[3mm]{\darkgreen Corollary}\\
+  The maximal partial matchings of $\bl\mathcal{A}$ have equal size.}
+
+\newcommand{\hallipfviiia}{\\[2.5mm]\proof}
+\newcommand{\hallipfviiib}{\\This follows by the third matroid property.\qed\vspace*{-12mm}}
+
+\newcommand{\halliml}{\\[3mm]{\darkgreen Corollary \gray(Hoffman and Kuhn 1956)}\\
+  A set $\bl M$ is contained in a matching of $\bl\mathcal{A}$ if and only if\\
+  $\bl\mathcal{A}$ has matching and $\bl M$ is a partial matching of $\bl\mathcal{A}$.}
+
+
+
+\begin{document}
+\sf\coursetitle
+\np\courseoverview
+%\np\courseoverviewalt
+\np\courseoverviewhall
+\np\courseoverviewhallii
+\np\lecturetitle
+\np\lecturetitlei
+\newpage\hallia{}
+\newpage\hallia{\halliaa}
+\newpage\hallia{}\hallib
+\newpage\hallia{}\hallib\hallic
+\newpage\hallia{}\hallib\hallic\hallid
+\newpage\hallia{}\hallib\hallic\hallid\hallida
+\newpage\halliav\hallib\hallic\hallid\hallida\hallidb
+\newpage\hallia{}\hallib\hallic\halliea
+\newpage\hallia{}\hallib\hallic\halliea\hallieaexa
+\newpage\hallia{}\hallib\hallic\halliea\hallieaexa\hallieaexb{\ph}{\ph}
+\newpage\hallia{}\hallib\hallic\halliea\hallieaexa\hallieaexb{}{\ph}
+\newpage\hallia{}\hallib\hallic\halliea\hallieaexa\hallieaexb{}{}
+\newpage\hallia{}\hallib\hallic\halliea
+\newpage\hallia{}\hallib\hallic\halliea\hallieb
+\newpage\hallib\hallic\halliea\hallieb
+\newpage\hallib\hallic\halliea\hallieb\halliec
+\newpage\halliebv\hallipfia
+\newpage\halliebv\hallipfia\hallipfib
+\newpage\halliebv\hallipfia\hallipfib\hallipfic
+\newpage\halliebv\hallipfia\hallipfib\hallipfic\hallipfid
+\newpage\halliebv\hallipfia\hallipfib\hallipfic\hallipfid\hallipfie
+\newpage\halliebv\hallipfia\hallipfib\hallipfic\hallipfid\hallipfie\hallipfif
+\newpage\halliebv\hallipfia\hallipfib\hallipfic\hallipfid\hallipfie\hallipfifv
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{\ph}{\ph}{\ph}{\ph}{\ph}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{}{\ph}{\ph}{\ph}{\ph}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{}{}{\ph}{\ph}{\ph}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{}{}{}{\ph}{\ph}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{}{}{}{}{\ph}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfig{}{}{}{}{}
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfigv
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfigv\hallipfih
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfigv\hallipfih\hallipfij
+\newpage\halliebv\hallipfiav\hallipfie\hallipfifv\hallipfigv\hallipfih\hallipfij\hallipfik
+\newpage\hallibv\hallic
+\newpage\hallibv\hallic\hallif
+\newpage\hallibv\hallic\hallif\halliga
+\newpage\hallibv\hallic\hallif\halliga\halligb
+\newpage\hallibv\hallic\hallif\halliga\halligb\halligc
+\newpage\hallibv\hallic\hallif\halliga\halligb\halligc\halliha
+\newpage\halligav\halligb\halligc\halliha
+\newpage\halligav\halligb\halligc\halliha\hallipfiia
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib\hallipfiic
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib\hallipfiic\hallipfiid
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib\hallipfiic\hallipfiid\hallipfiie
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib\hallipfiic\hallipfiid\hallipfiie\hallipfiif
+\newpage\halligav\halligb\halligc\halliha\hallipfiia\hallipfiib\hallipfiic\hallipfiid\hallipfiie\hallipfiif\hallipfiig
+\newpage\halligav\halligb\halligc\halliha
+\newpage\halligav\halligb\halligc\halliha\hallihb
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallipfiiia
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallipfiiia\hallipfiiib
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallipfiiia\hallipfiiib\hallipfiiic
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallipfiiia\hallipfiiib\hallipfiiic\hallipfiiid
+\newpage\halligav\halligb\halligc\halliha\hallihb
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallihc
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallihc\hallipfiva
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallihc\hallipfiva\hallipfivb
+\newpage\halligav\halligb\halligc\halliha\hallihb\hallihc
+\newpage\halliha\hallihb\hallihc
+\newpage\halliha\hallihb\hallihc\hallihd
+\newpage\halliha\hallihb\hallihc\hallihd\hallipfva
+\newpage\halliha\hallihb\hallihc\hallihd\hallipfva\hallipfvb
+\newpage\halliha\hallihb\hallihc\hallihd\hallipfva\hallipfvb\hallipfvc
+\newpage\halliha\hallihb\hallihc\hallihd\hallipfva\hallipfvb\hallipfvc\hallipfvd
+\newpage\halliha\hallihb\hallihc\hallihd\hallipfva\hallipfvb\hallipfvc\hallipfvd\hallipfvev
+\newpage\hallibv
+\newpage\hallibv\hallija
+\newpage\hallibv\hallija\hallika
+\newpage\hallibv\hallija\hallika\hallikb
+\newpage\hallibv\hallija\hallika\hallikb\hallikc
+%\newpage\hallibv\hallija\hallika\hallikb\hallikc\hallila
+%\newpage\hallibv\hallija\hallika\hallikb\hallikc\hallila\hallilb
+%\newpage\hallibv\hallija\hallika\hallikb\hallikc\hallila\hallilb\hallilc
+%\newpage\hallibv\hallija\hallika\hallikb\hallikc\hallila\hallilb\hallilc\hallima
+\newpage\hallibv\hallija\hallika\hallikb\hallikc\hallima
+\newpage\hallibv\hallija
+\newpage\hallibv\hallija\hallimb
+\newpage\hallibv\hallija\hallimb\hallimc{}
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd\hallipfvia
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd\hallipfvia\hallipfvib
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd\hallipfvia\hallipfvib\hallipfvic
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd\hallipfvia\hallipfvib\hallipfvic\hallipfvid
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd\hallipfvia\hallipfvib\hallipfvic\hallipfvid\hallipfvie
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimcb}\hallimd\hallipfvia\hallipfvib\hallipfvic\hallipfvid\hallipfvie
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimcb}\hallimd
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimcb}\hallimd\hallime
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimf
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimf\hallimg
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimf\hallimg\hallimha
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg\hallimha\hallimhb
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg\hallimha\hallimhb\hallimhc
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg\hallimja
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg\hallimja\hallimjb
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimg\hallimja\hallimjb\hallimjc
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallimja\hallimjb\hallimjc\hallimjd
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallipfviia
+\newpage\hallibv\hallija\\[3mm]\hallimd\hallime\hallimfv\hallipfviia\hallipfviib
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk\hallipfviiia
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk\hallipfviiia\hallipfviiib
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk\halliml
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk\halliml\hallipfviiia
+\newpage\hallibv\hallija\hallime\hallimfv\hallimk\halliml\hallipfviiia\hallipfviiib
+
+
+\end{document}

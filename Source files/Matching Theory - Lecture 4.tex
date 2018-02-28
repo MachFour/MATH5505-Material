@@ -1,0 +1,572 @@
+%  Lecture 4: Generalisations
+%
+%  OK Recap
+%  OK Rank function, submodularity
+%  OK Rado's Theorem
+%  OK Example with wedding rings
+%  OK Proof of Rado's Theorem
+%  OK Common matchings
+%  OK Greene's Theorem
+%  OK Graphs, bipartite graphs
+%  OK Tutte's 1-Factor Theorem
+%
+
+\include{mydefinitionsmatchings}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Min-Max Theorems}\end{center}}
+
+\newcommand{\lecturetitleiv}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Min-Max Theorems}\\[3mm]
+  \darkgreen Lecture 4: Generalisations\end{center}}
+
+
+\newcommand{\hallia}[1]{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psline(6.6,4.7)(2.9,6.7)\psline(6.9,4.7)(4.7,6.7)
+  \psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)#1
+  \endpspicture\end{center}}
+
+\newcommand{\halliav}{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psset{linecolor=lightgray}\psline(6.6,4.7)(2.9,6.7)
+  \psline(6.9,4.7)(4.7,6.7)\psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)\psset{linecolor= blue}
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)
+  \endpspicture\end{center}}
+
+\newcommand{\halliaa}{\put(2.3,1.5){\pspicture(0,0)(20,4)
+  \psset{unit=.4,linecolor=gray,fillcolor=offwhite,shadow=true,shadowcolor=nearlywhite,shadowsize=.2,framearc=.3}
+  \psframe(0,-4)(20.6,1.5)\rput(10.2,.6){{\darkgreen The Marriage Theorem}}
+   \rput(10.6,-.8){The girls can each get a boy}
+  \rput(10.2,-1.95){\:\:{\small$\Updownarrow$}} % if and only if}}
+  \rput(10.6,-3.1){Each $\bl k$ girls together like at least $\bl k$ boys.}\endpspicture}}
+
+\newcommand{\hallib}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of sets. }
+\newcommand{\hallibv}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of subsets of a finite set $\bl E$. }
+\newcommand{\hallic}{\\A {\dg matching} of $\bl\mathcal{A}$ is
+  a set of distinct elements $\bl\{a_i\}_I$ with $\bl a_i\myin A_i$ ($\bl\forall i\myin I$).}
+\newcommand{\hallid}{\\[3mm]\example}
+\newcommand{\hallida}{\\$\bl {\blue\mathcal{A}} \meq  \{A_1,A_2,A_4\}$ where $\bl A_i$ is the set of boys that girl $\bl i$ likes.}
+\newcommand{\hallidb}{\\Then $\bl \{\textrm{boy \blue1},\textrm{boy \blue2},\textrm{boy \blue3}\}$ is a {\blue matching} of $\bl\mathcal{A}$.}
+\newcommand{\hallide}{\\In contrast, $\bl {\blue\mathcal{B}} \meq  \{A_1,A_2,A_3,A_4\}$ has no matching.}
+\newcommand{\halliea}{\\Set $\bl \mathcal{A}(J) \meq  \bigcup_{i\myin J} A_i$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallieaexa}{\\[2mm]\example}
+\newcommand{\hallieaexb}[2]{\\Let $\bl\mathcal{A}\meq \;{{\{A_1,A_2\}}}$ \, where \, $\bl A_1\meq \{1,2\}\quad\text{\black and}\quad A_2\meq \{2,4\}$.
+   \uput[r](-18.3,-.7){{#1{Then $\bl\mathcal{A}(\{1\})\meq A_1\meq \{1,2\}$}} \,
+   {#2{and \, $\bl\mathcal{A}(\{1,2\})\meq A_1\cup A_2\meq \{1,2,4\}$.\vspace*{-15mm}}}}}
+
+\newcommand{\hallieb}{\\[4mm]{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliebv}{{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliec}{\\[3mm]{\gray Also called ``{\green Hall's Theorem}".}}
+
+\newcommand{\hallimev}{Let $\bl M\meq (E,\mathcal{I})$ be a matroid, where $\bl\mathcal{I}\msubseteq\mathcal{P}(E)$; in other words,
+  \\[.5mm]\mybullet $\bl\emptyset\myin \mathcal{I}$;
+  \\[.5mm]\mybullet If $\bl A\myin \mathcal{I}$   and $\bl B\msubseteq A$, then $\bl B\myin \mathcal{I}$;
+  \\[.5mm]\mybullet If $\bl A,B\myin \mathcal{I}$ and $\bl |A|\mlt|B|$,
+    then $\bl A\cup\{a\}\myin \mathcal{I}$ for some $\bl a\myin B-A$.}
+
+
+\newcommand{\halliiaa}{Let $\bl A$ be a $\bl (0,1)$-matrix.}
+\newcommand{\halliiab}{\\A {\em\dg line} is a row or a column.}
+\newcommand{\halliiaba}{\mypicture{\rput(-2,-3){\mymatrixi{}{}}}}
+\newcommand{\halliiabb}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](0,2)(7,3)}{}}}}
+\newcommand{\halliiabc}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](1,0)(2,5)}{}}}}
+\newcommand{\halliiac}{\\A {\em\dg  partial transversal} is a set of $\bl 1$-entries with no common line.}
+%\newcommand{\halliiad}{\\The {\em\dg  term rank} of $\bl A$ is the maximal size of a partial transversal in $\bl A$.}
+
+\newcommand{\halliiaca}{\mypicture{\rput(-2,-3){\mymatrixi{}{}}}}
+\newcommand{\halliiacb}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}}}}}
+\newcommand{\halliiacc}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}\psframe(3,4)(4,5)\rput(3.5,4.5){\white1}}}}}
+\newcommand{\halliiacd}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}\psframe(3,4)(4,5)\rput(3.5,4.5){\white1}
+  \psframe(5,0)(6,1)\rput(5.5, .5){\white1}}}}}
+\newcommand{\halliiace}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(0,2)(1,3)\psframe(3,1)(4,2)\psframe(5,4)(6,5)
+  \rput(.5,2.5){\white1}\rput(3.5,1.5){\white1}\rput(5.5,4.5){\white1}}}}}
+\newcommand{\halliiacf}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(0,2)(1,3)\rput(.5,2.5){\white1}\psframe(3,1)(4,2)\rput(3.5,1.5){\white1}
+  \psframe(5,4)(6,5)\rput(5.5,4.5){\white1}\rput[lb](8.5,3){Maximal size of a partial transversal $\bl \meq \blue 3$}}}}}
+\newcommand{\halliiacg}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](0,2)(7,3)
+  \psframe[linecolor=halfgray,fillcolor=halfgray](3,0)(4,5)\psframe[linecolor=halfgray,fillcolor=halfgray](5,0)(6,4)}{
+  \psset{linecolor=gray,fillcolor=gray}\psframe(0,2)(1,3)\rput(.5,2.5){\white1}\psframe(3,1)(4,2)\rput(3.5,1.5){\white1}
+  \psframe(5,4)(6,5)\rput(5.5,4.5){\white1}
+  \rput[lb](8.5,3){Maximal size of a partial transversal $\bl \meq \blue 3$}
+  \rput[lb](8.5,1){Minimal number of lines to cover {\bl1}s $\bl \meq \blue 3$}}}}}
+
+\newcommand{\halliiae}{{\darkgreen K\"onig's Theorem} {\gray (1916)}\\
+   The maximal size $\bl M$ of a partial transversal in $\bl A$ {\em\dg equals}
+   \\the minimal number $\bl m$ of lines needed to cover all {\bl1}-entries of $\bl A$.}
+
+
+\newcommand{\halliica}{A {\dg  partially ordered set} or {\dg  poset} is a set $\bl P$ together with
+  a {\dg partial order} $\bl\mpreceq$ satisfying, for all $\bl x,y,z\myin P$,}
+\newcommand{\halliicav}{A {\dg  poset} $\bl P$ is a set with a {\dg partial order} $\bl\mpreceq$
+  satisfying, for all $\bl x,y,z\myin P$,}
+\newcommand{\halliicb}{\\[1mm]\begin{tabular}{cl}
+    ({\darkgreen R})                       & $\bl x\mpreceq x$\\
+    ({\darkgreen $\overline{\textsf{S}}$}) & If $\bl x\mpreceq y$ and $\bl y\mpreceq x$, then $\bl x\meq y$.\\
+    ({\darkgreen T})                       & If $\bl x\mpreceq y$ and $\bl y\mpreceq z$, then $\bl x\mpreceq z$.
+  \end{tabular}}
+\newcommand{\halliicba}{\\[3mm]\begin{tabular}{ccl}
+    ({\darkgreen R})                       & $\bl \meq $\bl  &{\darkgreen R}eflexive\\
+    ({\darkgreen $\overline{\textsf{S}}$}) & $\bl \meq $\bl  &{\darkgreen A}nti-{\darkgreen S}ymmetric\\
+    ({\darkgreen T})                       & $\bl \meq $\bl  &{\darkgreen T}ransitive
+  \end{tabular}}
+
+\newcommand{\halliicc}[1]{\mypicture{\rput(4.8,-4.2){\psset{unit=15mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45,dash=7pt 5pt}
+  \pspicture(-.7,1)(6,3.7)#1\endpspicture}}\\[-5.2mm]}
+
+\newcommand{\halliicd}{{\darkgreen Dilworth's Theorem} {\gray(1950)}\\
+  The minimal number $\bl m$ of disjoint chains covering a finite poset $\bl P$ {\dg equals}
+  \\the maximal size $\bl M$ of an antichain.}
+
+\newcommand{\halliice}{\\[3mm]{\dg Dual of Dilworth's Theorem} {\gray (Mirsky 1971)}\\
+  The minimal number $\bl m$ of disjoint antichains covering the poset $\bl P$ {\dg equals}\\
+  the maximal size $\bl M$ of a chain.}
+\newcommand{\halliicev}{{\dg Dual of Dilworth's Theorem} {\gray (Mirsky 1971)}\\
+  The minimal number $\bl m$ of disjoint antichains covering the poset $\bl P$ {\dg equals}\\
+  the maximal size $\bl M$ of a chain.}
+
+
+\newcommand{\halliida}{\theorem
+  \\{\dg Hall's Theorem}, {\dg K\"onig's Theorem} and {\dg Dilworth's Theorem} are equivalent.}
+
+\newcommand{\hallif}{\\A {\dg partial matching} of $\bl\mathcal{A}$ is
+  a matching of some subfamily $\bl \mathcal{B}\msubseteq \mathcal{A}$.}
+
+\newcommand{\halliga}{\\[5mm]\example}
+%\newcommand{\halligav}{\example\vspace{2.5mm}}
+\newcommand{\halligav}{\example}
+\newcommand{\halligb}{\\$\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2\},\{1,2\}\bigr\}$ has no matching.}
+\newcommand{\halligc}{\\However, $\bl\mathcal{A}$ does have the following partial matchings:\vspace{-1mm}
+  \[\bl\emptyset, \{1\}, \{2\}, \{1,2\}\vspace{-2mm}\]}
+
+\newcommand{\halliha}{{\darkgreen\sf Theorem {\gray (Ore 1955)}}\\
+  $\bl\mathcal{A}$ has a partial matching of size $\bl k$ if and only if, for all $\bl J\msubseteq I$,\\
+  $\bl|\mathcal{A}(J)|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihb}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ contains a partial matching of $\bl\mathcal{A}$ of size $\bl k$ {\em iff},
+  for all $\bl J\msubseteq I$, $\bl|\mathcal{A}(J)\cap B|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihc}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl J\msubseteq I$,
+  \\$\bl |\bl\mathcal{A}(J)\cap B|\mgeq |J| - |I| + |B|$.}
+\newcommand{\hallihd}{\\[2mm]{\darkgreen\sf Theorem}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl A\msubseteq B$,
+  \\$\bl|\{i\myin I\::\:A_i\cap A\neq \emptyset\}|\mgeq|A|$.}
+
+
+\newcommand{\hallija}{\\Consider the family $\bl\mathcal{I}(\mathcal{A})$ of partial matchings of $\bl\mathcal{A}$.}
+
+\newcommand{\hallika}{\\[6mm]\example}
+\newcommand{\hallikav}{\example\vspace{2.5mm}}
+\newcommand{\hallikb}{\\Let $\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2,3\}\bigr\}$. }
+\newcommand{\hallikc}{Then\vspace{-1mm}
+  \[{\blue \mathcal{I}(\mathcal{A})} \meq  \bigl\{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}\bigr\}\]}
+
+%Wrong (isn't it?):
+%\newcommand{\hallila}{\example}
+%\newcommand{\hallilav}{\example}
+%\newcommand{\hallilb}{\\Let $\bl {\blue\mathcal{A}}$ consist of all $\bl r$-subsets of $\bl E$; that is, $\bl {\blue\mathcal{A}} \meq  \binom{E}{r}$. }
+%\newcommand{\hallilc}{\\Then $\bl E$ is a matching of $\bl\mathcal{A}$, so\vspace{-1mm}
+%  \[{\blue \mathcal{I}(\mathcal{A})} \meq  \mathcal{P}(E) \meq  \textsf{all subsets of $\bl E$}\]}
+
+\newcommand{\hallima}{{\darkgreen Lemma}\\
+  If $\bl A\myin\mathcal{I}(\mathcal{A})$ and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$.}
+\newcommand{\hallimb}{\\Let $\bl \{z_{ai}\::\: a\myin E\,,i\myin I\}$ be independent variables. }
+\newcommand{\hallimc}[1]{\\Define the {\dg formal incidence matrix} $\bl {\blue M_{\mathcal{A}}} \meq  (m_{ai})$ as follows: \vspace{-1mm}
+  \[\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=green,linecolor=lightblue,framearc=.3,shadow=false}
+    \pspicture(-1,1)(16,4.2)\rput(3,2){$\displaystyle \bl m_{ai}\meq \begin{cases}z_{ai}&\text{\black if}\:\;a\myin A_i\\0&\text{\black if}\:\;a\notin A_i\end{cases}$}
+    \rput(12,2.5){\pspicture(-1,0)(6,3)#1\endpspicture}\endpspicture\]}
+\newcommand{\hallimca}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.75)(4,1.25)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](1.45,0)(2.55,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.45,.75)(2.55,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1){$\bl a$}\rput(2,2.5){$\bl A_i$}\rput(2,1){$\bl m_{ai}$}\rput(2,-.75){$\blue M_{\mathcal{A}}$}}
+\newcommand{\hallimcb}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.25)(4,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](.5,0)(3.5,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](.5,1.25)(1.5,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.5, .25)(2.5, .75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](2.5, .75)(3.5,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1.5){$\bl a$}\rput(1,2.5){$\bl A_1$}\rput(1,1.5){$\bl z_{a1}$}
+    \rput(-.5,1  ){$\bl b$}\rput(2,2.5){$\bl A_2$}\rput(2, .5){$\bl z_{c2}$}
+    \rput(-.5, .5){$\bl c$}\rput(3,2.5){$\bl A_3$}\rput(3,1  ){$\bl z_{b3}$}
+    \rput(2,-.75){$\blue M_{\mathcal{A}}$}\rput(-1.5,1){$\blue B$}}
+
+\newcommand{\hallimd}{{\darkgreen Lemma}\\
+  $\bl B\myin\mathcal{I}(\mathcal{A})$  {\em\dg iff}\;  the rows of $\bl {\blue M_{\mathcal{A}}}$ indexed by $\bl B$ are linearly independent.}
+
+\newcommand{\hallipfvia}{\\[2.5mm]\proof}
+\newcommand{\hallipfvib}{The rows of $\bl M_{\mathcal{A}}$ indexed by $\bl B$ are linearly independent
+  if~and~only~if\\they contain a non-singular square sub-matrix $\bl N$ of order~$\bl|B|$. }
+\newcommand{\hallipfvic}{\\Such $\bl N$ is non-singular precisely when $\bl \det N \meq  \cdots \pm \prod_{a\myin B} z_{ai_a} + \cdots \neq 0$. }
+\newcommand{\hallipfvid}{This happens exactly when there is at least one non-zero term $\bl \prod_{a\myin B} z_{ai_a}$
+  (since the $\bl z_{ai_a}$ are independent variables and cannot cancel each other).}
+\newcommand{\hallipfvie}{\\This, in turn, occurs when $\bl B$ is a partial matching.\qed}
+
+\newcommand{\hallime}{\\[3mm]{\darkgreen\sf Theorem}\\
+  The family $\bl\mathcal{I}(\mathcal{A})$ satisfies the following properties:
+  \\[.5mm]\mybullet $\bl \emptyset\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A\myin\mathcal{I}(\mathcal{A})$   and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A,B\!\myin\!\mathcal{I}(\mathcal{A})$ and $\bl|A|\!\mlt \!|B|$,
+    then $\bl A\cup\{a\}\!\myin\!\mathcal{I}(\mathcal{A})$ for some $\bl a\!\myin\!B\!-\!A$.}
+
+\newcommand{\hallimf}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\em\dg matroid}\\(or {\em\dg independence structure}, or {\em\dg combinatorial geometry}).}
+\newcommand{\hallimfv}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\em\dg  matroid}.}
+\newcommand{\hallimg}{\\Matroids arise in numerous ways and are very useful in combinatorics.}
+
+\newcommand{\hallimha}{\\[3mm]\example}
+\newcommand{\hallimhav}{\example\vspace{2.5mm}}
+\newcommand{\hallimhb}{\\Let $\bl E$ be a finite set and let $\bl\mathcal{I}$ be the subsets of $\bl E$ of size at most $\bl k$.}
+\newcommand{\hallimhc}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallimja}{\\[3mm]\example}
+\newcommand{\hallimjav}{\example\vspace{2.5mm}}
+\newcommand{\hallimjb}{\\Let $\bl E$ be a finite set of vectors of a vector space.}
+\newcommand{\hallimjc}{\\Let $\bl\mathcal{I}$ be the linearly independent sets of vectors in $\bl E$.}
+\newcommand{\hallimjd}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallipfviia}{\\[2.5mm]\proof}
+\newcommand{\hallipfviib}{\\This follows by the above lemma and the preceding example.\qed}
+
+\newcommand{\hallimk}{\\[3mm]{\darkgreen Corollary}\\
+  The maximal partial matchings of $\bl\mathcal{A}$ have equal size.}
+
+\newcommand{\hallipfviiia}{\\[2.5mm]\proof}
+\newcommand{\hallipfviiib}{\\This follows by the third matroid property.\qed\vspace*{-12mm}}
+
+\newcommand{\halliml}{\\[3mm]{\darkgreen Corollary \gray(Hoffman and Kuhn 1956)}\\
+  A set $\bl M$ is contained in a matching of $\bl\mathcal{A}$ if and only if\\
+  $\bl\mathcal{A}$ has matching and $\bl M$ is a partial matching of $\bl\mathcal{A}$.}
+
+\newcommand{\hallina}{\\[3mm]The {\dg rank function} $\bl\rho$ of $\bl M$: \:\:% on $\bl \mathcal{P}(E)$:
+  $\bl {\blue\rho(A)} \meq \max\{|B|\::\: B\msubseteq A\,,B\myin \mathcal{I}\}$.}
+\newcommand{\hallinb}{\\A subset $\bl A$ is {\dg independent} with respect to $\bl M$ if $\bl \rho(A) \meq |A|$.}
+\newcommand{\hallinc}{{\darkgreen\sf Theorem}
+  \\For all $\bl A,B\msubseteq E$, we have $\bl \rho(A)+\rho(B)\mgeq \rho(A\cup B)+\rho(A\cap B)$.}
+
+\newcommand{\hallivpfia}{\\[2.5mm]\proof}
+\newcommand{\hallivpfib}{Let $\bl X\msubseteq A\cap B$ be an independent subset with $\bl |X| \meq \rho(A\cap B)$.}
+\newcommand{\hallivpfic}{\\Then $\bl X$ is in an independent
+  subset $\bl Y\msubseteq A\cup B$ with $\bl |Y| \meq \rho(A\cup B)$. }
+\newcommand{\hallivpfid}{Set $\bl Y_A \meq Y - B$ and $\bl Y_B \meq Y - A$ and note that $\bl Y \meq X\cup Y_A\cup Y_B$.}
+\newcommand{\hallivpfie}{\\Then $\bl X\cup Y_A$ is an independent subset of $\bl A$;
+  \\also, $\bl X\cup Y_B$ is an independent subset of~$\bl B$. }
+\newcommand{\hallivpfif}{Hence,\vspace{-1mm}
+  \[\bl \rho(A) +\rho(B) \mgeq |X\cup Y_A| + |X\cup Y_B| \meq |X| + |Y| \meq \rho(A\cap  B) + \rho(A\cup B)\,\black.\,\square\vspace*{-10mm}\]}
+
+\newcommand{\hallind}{{\darkgreen Rado's Theorem} {\gray (1942)}
+  \\$\blue\mathcal{A}$ has an {\em independent} matching if and only if $\bl\rho(\mathcal{A}(J))\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallinda}{\\Let $\bl\rho$ the rank function of some matroid on $\bl E$.}
+
+\newcommand{\halline}{{\darkgreen Example}}
+\newcommand{\hallinea}[1]{
+ \psset{unit=3mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=gray,shadow=false}
+ \pspicture(0,19)(0,19)\multips(4,1)(4,0){4}{\womanv}\multips(2,7)(4,0){3}{\manv}
+  \put(18,7){\sadmanv}\psline(4.7,4.7)(3.5,6.7)\psline(5.3,4.7)(6.3,6.7)
+  \psline(7.8,4.7)(3.9,6.7)\psline(11.6,4.7)(4.3,6.7)\psline(12.1,4.7)(8.1,6.7)
+  \psline(15.9,4.7)(11.7,6.7)\psline(16.7,4.7)(15.5,6.7)#1\endpspicture}
+
+\newcommand{\hallineaa}{\rput(14,7){\manv}}
+\newcommand{\hallineab}{\rput(14,7){\sadmanv}\multips(5,15)(4,0){4}{\ring}
+  \psline(3.5,11.7)(4.5,13.7)
+  \psline(6.5,11.7)(5.6,13.7)\psline(10.5,11.7)(9.6,13.7)\psline(17.1,11.7)(14.4,13.7)
+  \psline(18.5,11.7)(17.6,13.7)\psline(11.5,11.7)(12.5,13.7)}
+\newcommand{\hallineb}{\\Call a set of boys {\em independent} if they can each obtain a ring.}
+
+\newcommand{\hallivpfiia}{\\[2.5mm]\proof}
+\newcommand{\hallivpfiiav}{\\[3.5mm]\proof {\gray (continued)}}
+\newcommand{\hallivpfiib}{If $\bl\rho(\mathcal{A}(J))\mlt |J|$ for some $\bl J\msubseteq I$,
+  then there is no independent \\matching of $\bl \{A_i\}_J$
+  and thus no independent matching of $\bl \mathcal{A}$.\vspace{3mm}}
+\newcommand{\hallivpfiic}{\\[-3mm]Suppose therefore that $\bl \rho(\mathcal{A}(J))\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallivpfiid}{\\If $\bl \rho(A_j)\mgeq 2$ for some $\bl j\myin \mathcal{I}$, then let $\bl x$ and $\bl y$ be distinct elements~of~$\bl A$.}
+\newcommand{\hallivpfiie}{\\Assume that we cannot remove $\bl x$ or $\bl y$ from $\bl A_j$ without violating the inequality in the theorem. }
+\newcommand{\hallivpfiif}{Then there are subsets $\bl I_x,I_y\msubseteq I-j$ so~that\vspace{-1mm}
+  \begin{align*}\bl
+    \rho(\mathcal{A}(I_x)\cup (A_j-\{x\})) &\mlt  |I_x|+1\\\bl
+    \rho(\mathcal{A}(I_y)\cup (A_j-\{y\})) &\mlt  |I_y|+1\vspace{-3mm}
+  \end{align*}}
+\newcommand{\hallivpfiifv}{Then there are subsets $\bl I_x,I_y\msubseteq I-j$ so~that\vspace{-1mm}
+  \begin{align*}\bl
+    \rho(\mathcal{A}(I_x)\cup (A_j-\{x\})) &\mleq  |I_x|\\\bl
+    \rho(\mathcal{A}(I_y)\cup (A_j-\{y\})) &\mleq  |I_y|\\[-7mm]
+  \end{align*}}
+\newcommand{\hallivpfiig}[5]{Thus,\vspace*{-3mm}
+  \begin{align*}\bl
+           |I_x| + |I_y|
+    &\:{{  \mgeq \rho( \mathcal{A}(I_x)\cup (A_j - x))  + \rho(\mathcal{A}(I_y)\cup (A_j - y))}}\\[-.5mm]
+    &\:{#1{\mgeq \rho( \mathcal{A}(I_x)\cup (A_j - x)  \cup \mathcal{A}(I_y)\cup (A_j - y))}}\\[-.5mm]
+    &\:{#1{\bl+\;\rho((\mathcal{A}(I_x)\cup (A_j - x)) \cap(\mathcal{A}(I_y)\cup (A_j - y)))}}\\[-.5mm]
+    &\:{#2{\mgeq \rho( \mathcal{A}(I_x)\cup (A_j - x)  \cup \mathcal{A}(I_y)\cup (A_j - y))
+           \bl+  \rho( \mathcal{A}(I_x)\cap \mathcal{A}(I_y))}}\\[-.5mm]
+    &\:{#3{\mgeq \rho( \mathcal{A}(I_x\cup I_y \cup \{j\}))
+           \bl+  \rho( \mathcal{A}(I_x\cap I_y))}}\\[-.5mm]
+    &\:{#4{\mgeq |I_x\cup I_y| + 1 +|I_x\cap I_y|}}\\[-.5mm]
+    &\:{#5{\meq  |I_x| + |I_y| + 1}}\\[-12mm]
+  \end{align*}}
+\newcommand{\hallivpfiigv}{Thus, $\bl |I_x| + |I_y|\mgeq \cdots\mgeq |I_x| + |I_y| + 1$, which is a contradiction.\\}
+\newcommand{\hallivpfiih}{We can thus remove elements from the sets $\bl A_i$ while preserving the
+  \\inequality in the theorem,
+  until $\bl A_i \meq \{a_i\}$ for some $\bl a_i$, for each $\bl i\myin I$.}
+\newcommand{\hallivpfiij}{\\Then $\bl |\{a_i\}_I| \mgeq \rho(\{a_i\}_I) \meq \rho(\mathcal{A}(I)) \mgeq |I|$.}
+\newcommand{\hallivpfiik}{\\Hence, the elements $\bl a_i$ are distinct,
+  so $\bl \{a_i\}_I$ is a matching of $\bl \mathcal{A}$.\qed}
+
+\newcommand{\hallinf}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ and $\bl {\blue\mathcal{B}} \meq \{B_i\}_I$ be families of finite sets indexed by~$\bl I$. }
+\newcommand{\halling}{{\darkgreen Ford and Fulkerson's Theorem} {\gray (1962)}
+  \\$\blue\mathcal{A}$ and $\bl\mathcal{B}$ have a matching in common
+  if and only if, for all $\bl J_A,J_B\msubseteq I$,
+  \\$\blue|\mathcal{A}(J_A)\cap\mathcal{B}(J_B)|\mgeq |J_A|+|J_B|-|I|$.}
+
+\newcommand{\hallivpfiiia}{\\[2.5mm]\proof}
+\newcommand{\hallivpfiiib}{Let $\bl\rho$ be the rank function of the matroid associated to $\bl\mathcal{I}(\mathcal{A})$. }
+\newcommand{\hallivpfiiic}{\\Then a set is a common matching of $\bl\mathcal{A}$ and $\bl\mathcal{B}$ if and only if
+  \\it is an independent matching of $\bl\mathcal{B}$. }
+\newcommand{\hallivpfiiid}{By {\dg Rado's Theorem}, \\such a set exists if and only if
+  $\bl\rho(\mathcal{B}(J_B))\mgeq |J_B|$ for all $\bl J_B\msubseteq I$}
+\newcommand{\hallivpfiiie}{; \\that is, if and only if
+  $\bl \mathcal{B}(J_B)$ contains a partial matching of $\bl \mathcal{A}$ of size $\bl |J_B|$.}
+\newcommand{\hallivpfiiif}{\\By Ore's theorems, this occurs precisely when, for all $\bl J_A\msubseteq I$,
+ \\$\bl |\mathcal{A}(J_A) \cap \mathcal{B}(J_B)| \mgeq |J_A| - |I| + |J_B|$. \qed}
+\newcommand{\hallivpfiiig}{\vfill
+  {\darkgreen\sf Theorem {\gray (Ore 1955)}}\\
+  A set $\bl B$ contains a partial matching of $\bl\mathcal{A}$ of size $\bl k$ {\em iff},
+  for all $\bl J\msubseteq I$, $\bl |\mathcal{A}(J)\cap B|\mgeq |J| - |I| + k$.}
+
+\newcommand{\hallivq}[1]{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45}
+  \pspicture(0,-1)(5,3.5)#1\endpspicture}
+\newcommand{\hallivqa}{\\[3mm]{\darkgreen Greene's Theorem} {\gray(1976)}\quad{\large$\blue\Delta\:\meq\:{\red\tilde{\Delta}}^T$}}
+
+\newcommand{\posetcav}[2]{\rput[l](2.6,2.78){maximal size of {#1 1 chain}      \meq \;{#2 4}}}
+\newcommand{\posetcbv}[2]{\rput[l](2.6,2.28){maximal size of {#1 2 chains}     \meq \;{#2 6}}}
+\newcommand{\posetccv}[2]{\rput[l](2.6,1.53){maximal size of {#1 1 antichain}  \meq \;{#2 2}}}
+\newcommand{\posetcdv}[2]{\rput[l](2.6,1.03){maximal size of {#1 2 antichains} \meq \;{#2 4}}}
+\newcommand{\posetcev}[2]{\rput[l](2.6, .53){maximal size of {#1 3 antichains} \meq \;{#2 5}}}
+\newcommand{\posetcfv}[2]{\rput[l](2.6, .03){maximal size of {#1 4 antichains} \meq \;{#2 6}}}
+\newcommand{\posetda}[1]{\rput(8.9,2.62){\pspicture(0,0)(0,1)
+  \psset{unit=.4,linecolor=gray,fillcolor=halfgray,shadowsize=.2,framearc=.3}
+  \rput(-1.5,1.065){${#1{\text{\large$\blue\Delta$}}\:#1=}$}
+  \psframe(0.05,1.05)(0.95,1.95)\psframe(1.05,1.05)(1.95,1.95)
+  \psframe(2.05,1.05)(2.95,1.95)\psframe(3.05,1.05)(3.95,1.95)
+  \psframe(0.05,0.05)(0.95,0.95)\psframe(1.05,0.05)(1.95,0.95)
+  \endpspicture}}
+\newcommand{\posetdb}[1]{\rput(8.9,.37){\pspicture(0,0)(0,1)
+  \psset{unit=.4,linecolor=gray,fillcolor=halfgray,shadowsize=.2,framearc=.3}
+  \rput(-1.5,2.165){${#1{\text{\large$\red\tilde{\Delta}$}}\,#1=}$}
+  \psframe(0.05,3.05)(0.95,3.95)\psframe(1.05,3.05)(1.95,3.95)
+  \psframe(0.05,2.05)(0.95,2.95)\psframe(1.05,2.05)(1.95,2.95)
+  \psframe(0.05,1.05)(0.95,1.95)
+  \psframe(0.05,0.05)(0.95,0.95)
+  \endpspicture}}
+
+\newcommand{\hallivra}{A (simple) {\dg graph} $\bl G\meq (V,E)$ consists of {\dg vertices} $\bl V$ and {\dg edges} $\bl E\msubseteq\binom{V}{2}$.}
+\newcommand{\hallivrb}{\\We draw $\bl G$ as dots (vertices) and lines between the dots (edges).}
+\newcommand{\hallivrc}{\\[3mm]\example}
+\newcommand{\hallivrd}{\\Let $\bl G$ be the graph $\bl(V,E)$ where
+  $\bl V \meq \{\textsf{1},\textsf{2},\textsf{3},\textsf{4}\}$ and
+  $\bl E \meq \binom{V}{2}$:} % \meq \bigl\{\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{3,4\},\{2,4\}\bigr\}$:}
+\newcommand{\hallivre}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-.5)(5,2)#1\endpspicture}}
+\newcommand{\hallivrea}{\rput(-.3,0){\pspicture(-1,-1)(1,1)\psline(0,0)(.866,-.5)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(.866,-.5)(0,1)(0,0)(-.866,-.5)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\small\darkgray
+  \rput[b](0,1.2){1}\rput[u](0,-.25){4}\rput[l](-1.216,-.625){2}\rput[r](1.216,-.625){3}\endpspicture}}
+\newcommand{\hallivrec}[2]{\rput(0,1){\pspicture(-.5,0)(2.5,1)#1\psline(0,0)(-.5,.866)
+  \psline[fillstyle=none](0,0)(.5,.866)(1,0)(1.5,.866)(0,0)\pscircle(0,0){.1}
+  \pscircle(1,0){.1}\multips(-.5,.866)(1,0){3}{\pscircle(0,0){.1}}#2\endpspicture}}
+\newcommand{\hallivreca}{{\psset{linecolor=lightgray,fillcolor=offwhite,framearc=1}
+  \psframe(-.7,.666)(1.7,1.066)\psframe(-.2,-.2)(1.2,.2)}
+  \rput(-1,.866){$\darkgray Y$}\rput(-1,0){$\darkgray X$}}
+\newcommand{\hallivrecb}{{\bbl\psline(0,0)(-.5,.866)\psline(1,0)(.5,.866)
+  \pscircle(0,0){.1}\pscircle(1,0){.1}\pscircle(-.5,.866){.1}\pscircle(.5,.866){.1}}}
+\newcommand{\hallivrecc}[1]{\rput(3,.75){\pspicture(-1,-1)(1,1)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(0,0)(.866,-.5)(0,1)
+  #1\psline(-.866,-.5)(.866,-.5)\psline(0,0)(0,1)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\endpspicture}}
+\newcommand{\hallivrecd}{{\psset{linecolor=lightgray,fillcolor=offwhite,framearc=1}
+  \psframe(.3,.666)(1.7,1.066)\psframe(.8,-.2)(1.2,.2)}
+  \rput(1,-.4){$\bl v$}\rput(1,1.35){$\bl N(\{v\})$}}
+
+\newcommand{\hallivrf}{\\The graph $\bl G$ is {\dg bipartite} if
+  there is a bipartition $\bl V \meq X\cup Y$ so that\\ all edges go from one part to the other
+  ($\bl E\cap\binom{X}{2}\meq E\cap\binom{Y}{2}\meq \emptyset$.)}
+\newcommand{\hallivrg}{\\[3mm]\example}
+\newcommand{\hallivrh}{\\A {\dg matching} is a set of disjoint edges.}
+\newcommand{\hallivrj}{\\Vertex set $\bl X\msubseteq V$ is {\dg matched} if it is covered by a matching.}
+\newcommand{\hallivrk}{\\A {\dg complete matching } (or {\dg {\bl1}-factor}) is a matching that covers $\bl V$.}
+\newcommand{\hallivrm}{\\The neighbours of vertices $\bl Z\msubseteq V$ are denoted by $\bl N(Z)$;
+  \\that is, $\bl N(Z)\meq\{u\myin V\::\:\{u,v\}\myin E\:\:\,\mytext{for some}\,\:\:v\myin Z\}$.}
+\newcommand{\hallivrn}{Let $\bl B\meq(X\cup Y,E_B)$ be a bipartite graph.}
+\newcommand{\hallivrp}{{\darkgreen Hall's Theorem}  \;{\gray (Frobenius 1917, Hall 1935)}
+  \\$\blue X$ is matched in $\bl B$ if and only if, for all $\bl A\msubseteq X$, $\bl |N(A)|\mgeq |A|$.}
+
+\newcommand{\hallivrq}{\\[3mm]Let $\bl G \meq (V,E)$ be a graph. }
+\newcommand{\hallivrr}{\\ A {\dg walk} in $\bl G$ is
+  a sequence of vertices $\bl v_1,\ldots,v_n$ with $\bl \{v_i,v_{i+1}\}\myin E$.}
+\newcommand{\hallivrs}{\\If a walk exists between each pair of vertices in $\bl G$, then $\bl G$ is {\dg connected}.}
+\newcommand{\hallivrt}{\\The {\dg maximally connected subgraphs} of $\bl G$ are the {\dg components} of $\bl G$.}
+\newcommand{\hallivru}{\\Let $\bl c_o(G)$ denote the number of components in $\bl G$ of {\em odd} vertex size.}
+\newcommand{\hallivrv}{{\darkgreen Tutte's 1-Factor Theorem} {\gray (1947)}
+  \\$\blue G$ has a complete matching if and only if, for all $\bl S\msubseteq V$, $\bl c_o(G-S)\mleq |S|$.}
+
+\newcommand{\hallivreb}[2]{\rput(-.3,0.3){\pspicture(-1,-1)(2.5,1)#1{#2
+  \psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)}
+  \psline[fillstyle=none](0,1)(.866,-.5)(0,0)(-.866,-.5)
+  \psline[fillstyle=none](.866,1)(2.589,1)(1.732,-.5)
+  \pscircle(.866,1){.1}\pscircle(2.598,1){.1}\pscircle(1.732,-.5){.1}{#2\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}\endpspicture}}
+\newcommand{\hallivreba}{{\psset{linecolor=lightgray,fillcolor=offwhite,linearc=.2,fillstyle=solid}
+  \pspolygon(-1.22,-.7)(0,1.4)(1.22,-.7)\pspolygon(.512,1.2)(1.732,-.9)(2.952,1.2)}}
+\newcommand{\hallivrebb}{\rput(4,.25){$\blue c_o(G)\meq$\:\blue1}}
+
+
+
+\begin{document}
+\sf\coursetitle
+\newpage\lecturetitle
+\newpage\lecturetitleiv
+\newpage\hallia{\halliaa}
+\newpage\hallib\hallic\halliea
+\newpage\hallib\hallic\halliea\blb\halliebv
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa\halliiab\halliiac
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae
+\newpage\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae
+\newpage\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae\blb\halliicav\halliicb
+\newpage\halliebv\blb\halliiae\blb\halliicav\halliicb
+\newpage\halliebv\blb\halliiae\blb\halliicav\halliicb\blb\halliicd
+\newpage\halliebv\blb\halliiae\blb\halliicd
+\newpage\halliebv\blb\halliiae\blb\halliicd\blb\halliida
+\newpage\halliebv\blb\halliiae\blb\halliicd\blb\halliida\blb\halliicev
+\newpage\hallibv\hallic
+\newpage\hallibv\hallic\hallif
+\newpage\hallibv\hallic\hallif\halliga
+\newpage\hallibv\hallic\hallif\halliga\halligb
+\newpage\hallibv\hallic\hallif\halliga\halligb\halligc
+\newpage\halliha
+\newpage\halliha\hallihb
+\newpage\halliha\hallihb\hallihc
+\newpage\halliha\hallihb\hallihc\hallihd
+\newpage\hallibv\hallija
+\newpage\hallibv\hallija\hallimb
+\newpage\hallibv\hallija\hallimb\hallimc{}
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimca}\hallimd
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimcb}\hallimd
+\newpage\hallibv\hallija\hallimb\hallimc{\hallimcb}\hallimd\hallime
+\newpage\hallibv\hallija\lb\hallimd\hallime
+\newpage\hallibv\hallija\lb\hallimd\hallime\hallimfv
+\newpage\hallibv\hallija\lb\hallimd\hallime\hallimfv\hallimg
+\newpage\hallibv\hallija\lb\hallimd\hallime\hallimfv\hallimg\hallimk
+\newpage\hallibv\hallija\hallime\hallimfv\hallimg\hallimk\halliml
+\newpage\hallimev
+\newpage\hallimev\hallina
+\newpage\hallimev\hallina\hallinb
+\newpage\hallimev\hallina\hallinb\blb\hallinc
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia\hallivpfib
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia\hallivpfib\hallivpfic
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia\hallivpfib\hallivpfic\hallivpfid
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia\hallivpfib\hallivpfic\hallivpfid\hallivpfie
+\newpage\hallimev\hallina\hallinb\blb\hallinc\hallivpfia\hallivpfib\hallivpfic\hallivpfid\hallivpfie\hallivpfif
+\newpage\hallimev\hallina\hallinb\blb\hallinc
+\newpage\hallimev\hallina\hallinb\blb\hallinc\blb\hallibv\lb\hallind
+\newpage\hallibv\hallinda\blb\hallind
+\newpage\hallibv\hallinda\blb\hallind\lb\halline
+\newpage\hallibv\hallinda\blb\hallind\lb\halline\hallinea{\hallineaa}
+\newpage\hallibv\hallinda\blb\hallind\lb\halline\hallinea{\hallineab}\hallineb
+\newpage\hallind
+\newpage\hallind\hallivpfiia
+\newpage\hallind\hallivpfiia\hallivpfiib
+\newpage\hallind\hallivpfiia\hallivpfiib\hallivpfiic
+\newpage\hallind\hallivpfiia\hallivpfiib\hallivpfiic\hallivpfiid
+\newpage\hallind\hallivpfiia\hallivpfiib\hallivpfiic\hallivpfiid\hallivpfiie
+\newpage\hallind\hallivpfiia\hallivpfiib\hallivpfiic\hallivpfiid\hallivpfiie\hallivpfiif
+\newpage\hallind\hallivpfiia\hallivpfiib\hallivpfiic\hallivpfiid\hallivpfiie\hallivpfiifv
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{\ph}{\ph}{\ph}{\ph}{\ph}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{}{\ph}{\ph}{\ph}{\ph}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{}{}{\ph}{\ph}{\ph}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{}{}{}{\ph}{\ph}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{}{}{}{}{\ph}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiig{}{}{}{}{}
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiigv
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiigv\hallivpfiih
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiigv\hallivpfiih\hallivpfiij
+\newpage\hallind\hallivpfiiav\hallivpfiie\hallivpfiifv\hallivpfiigv\hallivpfiih\hallivpfiij\hallivpfiik
+\newpage\hallinf
+\newpage\hallinf\blb\halling
+\newpage\hallinf\blb\halling\hallivpfiiia
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib\hallivpfiiic
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib\hallivpfiiic\hallivpfiiid
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib\hallivpfiiic\hallivpfiiid\hallivpfiiie
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib\hallivpfiiic\hallivpfiiid\hallivpfiiie\hallivpfiiig
+\newpage\hallinf\blb\halling\hallivpfiiia\hallivpfiiib\hallivpfiiic\hallivpfiiid\hallivpfiiie\hallivpfiiif\hallivpfiiig
+\newpage\hallivq{\poseta\posetb}
+\newpage\hallivq{\poseta  \posetcav{\bl}{\wh}}
+\newpage\hallivq{\posetava\posetcav{\bl}{\bl}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bl}{\wh}}
+\newpage\hallivq{\posetavh\posetcav{\bk}{\bk}\posetcbv{\bl}{\bl}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\re}{\wh}}
+\newpage\hallivq{\posetave\posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\re}{\re}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\re}{\wh}}
+\newpage\hallivq{\posetavi\posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\re}{\re}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\re}{\wh}}
+\newpage\hallivq{\posetavj\posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\re}{\re}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\re}{\wh}}
+\newpage\hallivq{\posetavk\posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\re}{\re}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\bk}{\bk}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\bk}{\bk}\posetda{\ph}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\bk}{\bk}\posetda{\ph}\posetdb{\ph}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\bk}{\bk}\posetda{}\posetdb{}}
+\newpage\hallivq{\poseta  \posetcav{\bk}{\bk}\posetcbv{\bk}{\bk}\posetccv{\bk}{\bk}\posetcdv{\bk}{\bk}\posetcev{\bk}{\bk}\posetcfv{\bk}{\bk}\posetda{}\posetdb{}}\hallivqa
+\newpage\hallivra
+\newpage\hallivra\hallivrb
+\newpage\hallivra\hallivrb\hallivrc
+\newpage\hallivra\hallivrb\hallivrc\hallivrd
+\newpage\hallivra\hallivrb\hallivrc\hallivrd\hallivre{\hallivrea}
+\newpage\hallivra\hallivrb\hallivrf
+\newpage\hallivra\hallivrb\hallivrf\hallivrg
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{}{}}
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}\hallivrh
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}\hallivrh\hallivrj
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}}\hallivrh\hallivrj
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{\bbl}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{\bbl}}\hallivrh\hallivrj\hallivrk\hallivrm
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}\hallivrecc{\bbl}}\hallivrh\hallivrj\hallivrk\hallivrm
+\newpage\hallivrn
+\newpage\hallivrn\blb\hallivrp
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{}{}}
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{}{}}\hallivrr
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{}{\bbl}}\hallivrr
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{}{\bbl}}\hallivrr\hallivrs
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{}{\bbl}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{\hallivreba}{\bbl}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{\hallivreba}{\bbl}}\hallivrr\hallivrs\hallivrt\hallivru
+\newpage\hallivrn\blb\hallivrp\hallivrq\hallivre{\hallivreb{\hallivreba\hallivrebb}{\bbl}}\hallivrr\hallivrs\hallivrt\hallivru
+\newpage\hallivrn\lb\hallivrp\hallivrq\hallivre{\hallivreb{\hallivreba\hallivrebb}{\bbl}}\vspace{-1mm}\hallivrt\hallivru\lb\hallivrv
+
+
+\end{document}
+
+
+
+
+
+
+
+

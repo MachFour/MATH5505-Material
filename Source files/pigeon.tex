@@ -1,0 +1,30 @@
+\documentclass{standalone}
+\usepackage{pstricks,pst-plot}
+
+%\mag=\magstep4
+
+\newrgbcolor{darkgreen}{0 0.4 0}
+
+\psset{unit=6mm,linewidth=.06,dotscale=1.5,fillcolor=white,fillstyle=none,linecolor=gray,framearc=.3,dash=7pt 5pt}
+
+\newcommand{\pigeon}{{\psset{xunit=6mm,yunit=6mm,runit=6mm,linewidth=.8pt,shadow=false,linecolor=darkgray,fillcolor=white,fillstyle=solid}
+  \begin{pspicture}(0,0)(1.9, 1){\pscustom{\newpath
+    \moveto(1.179, 0.088)
+    \curveto(1.156, 0.239)(1.402, 0.255)(1.451, 0.464)
+    \curveto(1.498, 0.668)(1.42 , 0.774)(1.75 , 0.812)
+    \curveto(1.656, 0.887)(1.528, 0.997)(1.399, 0.979)
+    \curveto(1.067, 0.929)(1.269, 0.646)(0.156, 0.241)
+    \curveto(0    , 0.185)(0.869, 0.396)(1.037, 0.205)
+    \curveto(1.201, 0.016)(0.902, 0    )(1.17 , 0.003)
+    \curveto(1.37 , 0.005)(1.197, 0.003)(1.179, 0.088)
+    \closepath}}
+    \pscircle(1.447, 0.9){0.045}
+  \end{pspicture}}}
+
+\begin{document}
+\begin{pspicture}(0,0)(2.5,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \psframe(0,0)(2.5,2.5)
+    \rput(1.25,1.25){\psset{linecolor=darkgray}\pigeon}
+\end{pspicture}
+\end{document}
+

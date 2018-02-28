@@ -1,0 +1,835 @@
+\include{mydefinitionsIEP}
+%\usepackage{graphicx}
+%\usepackage[utf8]{inputenc}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\\[3mm]
+  \darkgreen Lecture 2: M\"{o}bius Inversion\end{center}}
+
+
+\newcommand{\iepia}{{\dg The Inclusion-Exclusion Principle} {\gray (simple)}\vspace*{0mm}
+  \[\bl
+    |A| + |B| \meq |A\cup B| + |A\cap B|\vspace*{-5mm}
+  \]}
+
+\newcommand{\iepiaa}{Equivalently,\vspace*{0mm}
+  \[\bl
+    |A\cup B| \meq |A| + |B| - |A\cap B|\vspace*{2mm}
+  \]}
+
+\newcommand{\iepiaiii}{{\dg The Inclusion-Exclusion Principle} {\gray (simple)}\vspace*{2mm}
+  \[\bl
+    |A\cup B\cup C| \meq |A| + |B| + |C| - |A\cap B| - |A\cap C| - |B\cap C| + |A\cap B\cap C|\hspace*{-5mm}\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepiab}[1]{\begin{center}
+  \begin{pspicture}(-2.5,0)(5,3)
+    \psset{fillstyle=solid,opacity=0.5,linecolor=darkgray,fillcolor=gray,shadow=false}
+    \pscircle(0  ,0){2.5}
+    \pscircle(2.5,0){2.5}
+    \psset{fillstyle=none}
+    \pscircle(0  ,0){2.5}
+    \pscircle(2.5,0){2.5}
+    \uput[dl](-2.5, 2.5){$\bl A$}
+    \uput[dr]( 5  , 2.5){$\bl B$}#1
+  \end{pspicture}
+\end{center}}
+
+\newcommand{\iepiaba}{
+  \pscircle[fillstyle=solid](1.25,-2.165){2.5}
+  \psset{fillstyle=none}
+  \pscircle(0   , 0    ){2.5}
+  \pscircle(2.5 , 0    ){2.5}
+  \pscircle(1.25,-2.165){2.5}
+  \uput[d](1.25,-5){$\bl C$}}
+
+\newcommand{\iepib}{{\dg The Inclusion-Exclusion Principle}
+  \[\bl
+         \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\vspace*{0mm}
+  \]}
+\newcommand{\iepibv}{{\dg The Inclusion-Exclusion Principle}\vspace*{-3mm}
+  \[\bl
+         \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\vspace*{0mm}
+  \]}
+
+\newcommand{\iepibe}{\corollary\vspace*{-2mm}
+  \[\bl\hspace*{-14.1mm}\displaystyle\sum_{J\subseteq I} (-1)^{|J|} \meq \begin{cases}
+  1 & \mytext{ if } I\meq \emptyset\,;\\[-0mm]
+  0 & \mytext{ otherwise}\black.
+\end{cases}\vspace*{-2mm}\]}
+
+\newcommand{\sumainunion}{\sum_{a\;\myin\, \text{\tiny$\ds\bigcup_{i\myin I}$} A_i}}
+\newcommand{\sumaininter}{\sum_{a\;\myin\, \text{\tiny$\ds\bigcap_{j\myin J}$} A_j}}
+
+\newcommand{\iepibpfia}{\\[-3mm]\proof{\dg I}}
+\newcommand{\iepibpfib}[5]{\vspace*{-1mm}\begin{align*}\bl
+               \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+           \meq\hspace*{-1mm}\sumainunion \hspace*{-1.5mm}1 \hspace*{1.5mm}
+    &\,{#1{\meq\sumainunion \bigl(1-\hspace*{-4mm}\sum_{J\msubseteq \{j\,:\, a\myin A_j\}}\hspace*{-2mm} (-1)^{|J|}\Bigr)}}\\[-1mm]
+    &\,{#2{\meq\sumainunion \,\sum_{\emptyset\mneq J\msubseteq \{j\,:\, a\myin A_j\}}\hspace*{-4mm} (-1)^{|J|+1}}}\\[-1mm]
+    &\,{#3{\meq\sum_{\emptyset\mneq J\msubseteq I} \,\sumaininter (-1)^{|J|+1}}}\\[-2mm]
+    &\,{#4{\meq\sum_{\emptyset\mneq J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|}}
+     \;{#5{\meq\sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\quad\black\Box}}\hspace*{-1mm}
+  \end{align*}}
+
+\newcommand{\iepibpfiia}{\\[-3mm]\proof{\dg II}}
+\newcommand{\iepibpfiib}{\\Use the {\dg I-E Principle}
+  $\bl |A\cup B| \meq |A| + |B| - |A\cap B|$ and induction on $\bl|I|$:\vspace*{-2mm}}
+\newcommand{\iepibpfiic}[4]{
+  \begin{align*}\bl
+               \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    &\,{  {\meq\Bigl|A_n\cup\hspace*{-2.5mm}\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|}}\\[-1.5mm]
+    &\,{#1{\meq|A_n|+ \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|
+                    - \Bigl|A_n\cap \hspace*{-2mm} \bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|}}\\[-1.5mm]
+    &\,{#2{\meq|A_n|+ \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|
+                    - \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\cap A_n\Bigr|}}\\[-1.5mm]
+    &\,{#3{\meq|A_n|+ \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|
+                    - \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\cap A_n\Bigr|}}\\[-1.5mm]
+%    &\,{#4{\meq|A_n|+ \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|
+%                    + \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J\cup\{n\}} A_j\Bigr|}}\\
+    &\,{#4{\meq\sum_{J\msubseteq I} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|\qquad\black\Box}}\\[-15mm]
+  \end{align*}}
+
+\newcommand{\vala}{Let $\bl S$ be a set, $\bl G$ an Abelian group,
+  and $\bl\{A_i\}_I$ a finite family of $\bl S$-subsets.}
+\newcommand{\valb}{\\A function $\bl v:\mathcal{P}(S)\to G$ is a {\dg valuation} if,
+  for all $\bl A,B\msubseteq S$,\vspace*{-3mm}
+  \[\bl
+    v(A) + v(B) \meq v(A\cup B) + v(A\cap B)\vspace*{-2mm}
+  \]}
+
+\newcommand{\iepic}{{\dg The Inclusion-Exclusion Principle}\vspace*{-1mm}
+  \[\bl
+         v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepicv}{\\[4mm]{\dg The Inclusion-Exclusion Principle}
+  \\For a valuation $\bl v:\mathcal{P}(S)\to G$,\vspace*{-1mm}
+  \[\bl
+         v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepicpfa}{\\[-6mm]\proof}
+\newcommand{\iepicpfb}{\\Use induction on $\bl|I|$:\vspace*{-4mm}}
+\newcommand{\iepicpfc}[3]{
+  \begin{align*}\bl
+                v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    &\,{  {\meq v\Bigl(A_n\cup\hspace*{-2.5mm}\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr)}}\\[-1.5mm]
+    &\,{#1{\meq v(A_n) + v\Bigl(\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr)
+                       - v\Bigl(\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\cap A_n\Bigr)}}\\[-1.5mm]
+    &\,{#2{\meq v(A_n) + \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}v\Bigl(\bigcap_{j\myin J} A_j\Bigr)
+                       - \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}v\Bigl(\bigcap_{j\myin J} A_j\cap A_n\Bigr)}}\\[-1.5mm]
+    &\,{#3{\meq\sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\qquad\black\Box}}\\[-20mm]
+  \end{align*}}
+
+\newcommand{\iepid}{{\dg The Inclusion-Exclusion Principle} {\gray (probability)}
+  \\For a {\dg probability} $\bl P:\mathcal{P}(S)\to [0,1]$,\vspace*{-2mm}
+  \[\bl
+         P\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} P\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{0mm}
+  \]}
+\newcommand{\iepidpfa}{\proof}
+\newcommand{\iepidpfb}{\\$\bl P(A) + P(B) \meq P(A\cup B) + P(A\cap B)$ for all $\bl A,B\msubseteq S$.\qed}
+
+\newcommand{\iepie}{{\dg The Inclusion-Exclusion Principle} {\gray (weights)}
+  \\For $\bl w:S\to G$,
+    define $\bl w:\mathcal{P}(S)\to G$ by $\ds\bl w(A)\mdef \sum_{a\myin A} w(a)$.\\[-3mm]
+    Then\vspace*{-1mm}
+  \[\bl
+         w\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} w\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{0mm}
+  \]}
+\newcommand{\iepiepfa}{\vspace*{-2mm}\proof}
+\newcommand{\iepiepfb}[2]{\vspace*{-2mm}
+  \begin{align*}\bl
+          w(A) + w(B)
+     \meq \sum_{a\myin A} w(a) + \sum_{a\myin B} w(a)
+    &\;{#1{\meq \sum_{a\myin A\cup B} w(a) + \sum_{a\myin A\cap B} w(a)}}\\
+    &\;{#2{\meq w(A\cup B) + w(A\cap B)\qquad\black\Box}}\\[-15mm]
+  \end{align*}}
+
+\newcommand{\iepiea}{{\gray If each $\lightblue A_i$ is finite,
+  then each valuation $\bl v$ on $\lightblue \mathcal{P}(\cup A_i)$ is in fact\\
+  a weight function on the elements of $\lightblue \cup A_i$
+  since $\lightblue v(A_i) \gray=\lightblue\ds\sum_{a\in A_i} v(a)$.\\[-3mm]
+  This is not true for uncountable sets.}}
+
+\newcommand{\iepif}{{\gray We shall generalise this {\green Principle} further in {\green Lecture 2}.}}
+
+\newcommand{\exaia}{A {\dg derangement} is a permutation $\bl\pi\myin \Sigma_n$ with no fixed point $\bl\pi(i)\meq i$.}
+\newcommand{\exaib}{\\[3mm]\example}
+\newcommand{\exaic}{\begin{center}{\gray\psset{unit=5mm}\pspicture(-1,-.25)(7,1.25)
+    \rput(-1,1){$\bl    i $}\rput(1,1){1}\rput(2,1){2}\rput(3,1){3}\rput(4,1){4}\rput(5,1){5}
+    \rput(-1,0){$\bl\pi(i)$}\rput(1,0){2}\rput(2,0){3}\rput(3,0){1}\rput(4,0){5}\rput(5,0){4}\endpspicture}
+  \end{center}}
+
+\newcommand{\exaid}{\proposition}
+\newcommand{\exaie}{\\[-3mm]The number of derangements of $\bl n$ elements is
+   $\ds\bl D_n\mdef n!\sum_{i=0}^n\frac{(-1)^{i}}{i!}$\,.}
+
+\newcommand{\exaif}{\corollary}
+\newcommand{\exaifv}{\\[1mm]\corollary}
+\newcommand{\exaifa}{\\About $\bl e^{-1}$ of permutations are derangements.}
+
+\newcommand{\exaiga}{\\[4mm]\corollary}
+\newcommand{\exaigb}{\\Let $\bl M$ be an $\bl n\times n$ matrix with $\bl 0$s on its diagonal and $\bl\pm 1$~elsewhere.
+  \\If $\bl n$ is even, then $\bl\det M\mneq 0$.}
+
+\newcommand{\exaiha}{\\[4mm]\corollary}
+\newcommand{\exaihb}{\\[-3mm]The number of $\bl 2\times n$ Latin rectangles is
+   $\ds\bl n!\sum_{i=0}^n\frac{(-1)^{i}}{i!}\mapprox \frac{n!}{e}$\,.}
+
+\newcommand{\intsola}{\theorem}
+\newcommand{\intsolb}{\\The number of integer solutions to $\bl x_1+\cdots+x_n\meq k$ with $\bl x_i\mgeq 0$
+  is $\bl \binom{n+k-1}{n-1}$.\hspace*{-5mm}}
+\newcommand{\intsolapfa}{\\[2mm]\proof}
+\newcommand{\intsolapfb}{\\Draw $\bl k$ dots in a row and draw $\bl n-1$ lines between them.}
+\newcommand{\intsolapfc}{\\Dots bordered by lines represent one of the $\bl x_i$ values and vice virsa.}
+\newcommand{\intsolapfd}{\\Bijectively then, the number of solutions is the number of ways to draw these dots and lines.\qed}
+
+\newcommand{\intsolexta}{\\[2mm]\theorem}
+\newcommand{\intsolextav}{\theorem}
+\newcommand{\intsolextb}{\\The number of integer solutions to $\bl x_1+\cdots+x_n\meq k$ with $\bl 0\mleq x_i\mlt\ell$
+  is\vspace*{-2mm} \[\bl \sum_{i=0}^n (-1)^{i}\binom{n+k-\ell i-1}{n-1}\vspace*{-4mm}\]}
+
+\newcommand{\totienta}{{\dg Euler's totient} $\bl\varphi(n)$ is the function given by
+  \vspace*{-2mm}\[\bl\varphi(n)\mdef|\{i\myin[n]:\,\gcd(n,i)\meq 1\}|\]}
+
+\newcommand{\totientd}{\theorem}
+\newcommand{\totiente}{\vspace*{-2mm}\[\bl\hspace*{-2.3mm} \varphi(n) \meq n\!\prod_{p|n\,,\,p\text{ prime}}\! \Bigl(1-\frac{1}{p}\Bigr)\vspace*{-3mm}\]}
+
+\newcommand{\totientda}{\example}
+\newcommand{\totientdb}[8]{\vspace*{-4mm}\begin{align*}\bl\ph{b\hspace*{11mm}}
+    \varphi(   8) &\meq \,{#1{\textstyle    8\bigl(1-\frac{1}{2}\bigr)}}                          \, {#2{\meq 4}}\\\bl
+    \varphi(  12) &\meq \,{#3{\textstyle   12\bigl(1-\frac{1}{2}\bigr)\bigl(1-\frac{1}{3}\bigr)}} \, {#4{\meq 4}}\\\bl
+    \varphi(   7) &\meq \,{#5{\textstyle    7\bigl(1-\frac{1}{7}\bigr)}}                          \, {#6{\meq 6}}\\\bl
+    \varphi(1000) &\meq \,{#7{\textstyle 1000\bigl(1-\frac{1}{2}\bigr)\bigl(1-\frac{1}{5}\bigr)}} \, {#8{\meq 400}}
+  \end{align*}}
+
+\newcommand{\chromaa}{Let $\bl G = (V,E)$ be a graph. }
+\newcommand{\chromab}{\\A colouring $\bl \chi\,:\,V\to [r]$ is {\dg proper} if $\bl \chi(u)\neq \chi(v)$ whenever $\bl \{u,v\}\myin E$.}
+\newcommand{\chromaexa}{\\[3mm]\example}
+\newcommand{\chromaexb}[1]{\begin{center}\begin{pspicture}(-2,-3.5)(2,1.75)
+  \psset{shadow=false,fillstyle=none,framearc=0,linecolor=darkgray,linewidth=.066}
+%  \pnode(0,1.5){a}\pnode(1.299,-0.75){b}\pnode(-1.299,-0.75){c}
+%  \pnode(0,3  ){d}\pnode(2.598,-1.5 ){e}\pnode(-2.598,-1.5 ){f}
+%  \pscircle(0,0){1.55}\pscircle(0,0){3.05}\psline(a)(d)\psline(b)(e)\psline(c)(f)
+  \pnode(0,1){a}\pnode(0.866,-0.5){b}\pnode(-0.866,-0.5){c}
+  \pnode(0,2){d}\pnode(1.732,-1  ){e}\pnode(-1.732,-1  ){f}
+  \pscircle(0,0){1.05}\pscircle(0,0){2.05}\psline(a)(d)\psline(b)(e)\psline(c)(f)
+  \psset{fillstyle=solid,fillcolor=white,linewidth=.05}
+  \pscircle(a){.22}
+  \pscircle(b){.22}
+  \pscircle(c){.22}
+  \pscircle(d){.22}
+  \pscircle(e){.22}
+  \pscircle(f){.22}#1\end{pspicture}\end{center}}
+\newcommand{\chromaexba}{
+  \pscircle[fillcolor=blue ](a){.22}\rput(a){{\white\tiny1}}
+  \pscircle[fillcolor=green](b){.22}\rput(b){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](c){.22}\rput(c){{\white\tiny3}}
+  \pscircle[fillcolor=green](d){.22}\rput(d){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](e){.22}\rput(e){{\white\tiny3}}
+  \pscircle[fillcolor=blue ](f){.22}\rput(f){{\white\tiny1}}}
+\newcommand{\chromaexbb}{\rput(0,-3){A {\dg proper} colouring}}
+\newcommand{\chromaexbc}{
+  \pscircle[fillcolor=red  ](a){.22}\rput(a){{\white\tiny3}}
+  \pscircle[fillcolor=green](b){.22}\rput(b){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](c){.22}\rput(c){{\white\tiny3}}
+  \pscircle[fillcolor=green](d){.22}\rput(d){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](e){.22}\rput(e){{\white\tiny3}}
+  \pscircle[fillcolor=blue ](f){.22}\rput(f){{\white\tiny1}}}
+\newcommand{\chromaexbd}{\rput(0,-3){{\red Not} a proper colouring}}
+
+\newcommand{\chromb}{Let $\bl c(J)$ be the number of connected components
+  in the subgraph of $\bl G$ with vertices $\bl V$ and edges $\bl J\msubseteq E$.}
+
+\newcommand{\chromca}{\\[3mm]\theorem {\gray (Birkhoff 1912)}}
+\newcommand{\chromcb}{\\[-.5mm]The number of proper $\bl r$-colourings of $\bl V(G)$ is
+  $\ds\bl P(G;r)\mdef \sum_{J\msubseteq E} (-1)^{|J|} r^{c(J)}$.}
+
+\newcommand{\mobiusaa}{A {\dg poset} $\bl P$ is a set with a {\dg partial order} $\bl\mpreceq$
+  satisfying, for all $\bl x,y,z\myin P$,}
+\newcommand{\mobiusab}{\\[1mm]\begin{tabular}{cll}
+    ({\darkgreen R}) &    $\bl x\mpreceq x$                                               & \;{\gray({\green R}eflexivity)}\\
+    ({\darkgreen A}) & If $\bl x\mpreceq y$ and $\bl y\mpreceq x$, then $\bl x\meq y$.    & \;{\gray({\green A}nti-Symmetry)}\\
+    ({\darkgreen T}) & If $\bl x\mpreceq y$ and $\bl y\mpreceq z$, then $\bl x\mpreceq z$.& \;{\gray({\green T}ransitive)}
+  \end{tabular}}
+
+\newcommand{\mobiusac}[1]{\begin{center}
+\mypicture{\rput(0,-1.8){\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45,dash=7pt 5pt}
+  \pspicture(-.7,1)(6,3.7)#1\endpspicture}}\end{center}}
+
+\newcommand{\mobiusba}{A {\dg lattice} $\bl L$ is a poset with binary operations
+  {\dg meet} $\bl\wedge$ and
+  {\dg join} $\bl\vee$ so that
+  \\[1mm]\mybullet $\bl x\wedge y$ is the {\em unique} maximal element smaller than both $\bl x$ and $\bl y$
+  \\[0mm]\mybullet $\bl x\vee   y$ is the {\em unique} minimal element greater than both $\bl x$ and $\bl y$.}
+\newcommand{\mobiusbarank}{\\[1mm]A lattice is {\dg graded} if it has a well-defined {\dg rank function}
+  \vspace*{-2mm}\[\bl\ell(x) \mdef |C|-1 \;\mytext{where $\bl C$ is any maximal chain with $\bl\max(C) \meq x$}\vspace*{-10mm}\]}
+
+
+\newcommand{\mobiusbb}[4]{\vspace*{-5mm}\begin{center}\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(-2.8,-1.5){\pspicture(-.7,1)(6,3.7)
+     \pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}
+     \pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)\psline(1,1.13)(1,1.87)
+     \pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}
+     \pscircle(2,2){.09}\psline(1.09,1.09)(1.91,1.91)\rput(1,-1){#1}\endpspicture}
+  \rput(2.25,-1.5){\pspicture(-.7,1)(6,3.7)
+     \pscircle(0,2){.09}\psline(0   ,1.13)(0   ,1.87)\psline(.09,2.09)(.41,2.41)
+     \pscircle(.5,2.5){.09}\psline(0.59,2.41)(.91,2.09)\psline(.59,.59)(.91,.91)
+     \pscircle(1,2){.09}\psline(0.09,1.09)(0.91,1.91)\psline(.09,1.87)(.91,1.09)
+     \pscircle(0,1){.09}\psline(1,1.13)(1,1.87)\psline(0.09,0.91)(.41,.59)\pscircle(.5,.5){.09}
+     \pscircle(1,1){.09}\rput(0.5,-1){#2}\endpspicture}
+  \rput(6.4,-1.5){\pspicture(-.7,1)(6,3.7)
+     \psline(0.09,2.09)(0.91,2.91)
+     \pscircle(1,3){.09}
+     \pscircle(0,2){.09}\psline(0,1.13)(0,1.87)
+     \pscircle(0,1){.09}\psline(0.09,0.91)(.91,0.09)
+     \psline(1,2.87)(1,1.63)
+     \pscircle(1,1.5){.09}\psline(1,1.37)(1,0.13)
+     \pscircle(1,0){.09}\rput(0.45,-1){#3}\rput(0.45,-1.5){#4}\endpspicture}}\end{center}}
+
+\newcommand{\mobiusbbyes}{A {\dg lattice}}
+\newcommand{\mobiusbbno}{{\red Not} a lattice}
+\newcommand{\mobiusbbgradedyes}{{\dg Graded}}
+\newcommand{\mobiusbbgradedno}{{\red Not} graded}
+
+\newcommand{\mobiusbexaa}{\\[5mm]\example}
+\newcommand{\mobiusbexab}{\\$\bl [n]$ is a graded lattice under the usual order $\bl \mleq$\,.}
+\newcommand{\mobiusbexac}{\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(2.5,-1.75){\pspicture(0,-.5)(0,3.5)
+     \pscircle(0,3){.09}\psline(0,2.13)(0,2.87)\pscircle(0,2){.09}
+     \psline(0,1.13)(0,1.87)
+     \pscircle(0,1){.09}\psline(0,.13)(0,.87)\pscircle(0,0){.09}
+     {\darkgray\small
+      \rput(-.3,0){1}
+      \rput(-.3,1){2}
+      \rput(-.3,2){3}
+      \rput(-.3,3){4}
+      \rput( 0,-1){$\bl[4]$}}\endpspicture}}}
+\newcommand{\mobiusbexad}{
+  \\[11.5mm]\myspace $\bl x\wedge y \meq \min\{x,y\}$
+  \\[ 0  mm]\myspace $\bl x\vee   y \meq \max\{x,y\}$}
+\newcommand{\mobiusbexae}{
+  \\[ 3  mm]\myspace\hspace*{.5mm} $\bl \ell(x) \meq x-1$}
+
+\newcommand{\mobiusbexba}{\\[5mm]\example}
+\newcommand{\mobiusbexbb}{\\$\bl \mathcal{B}_n$ (and $\bl\mathcal{P}(S)$) is a graded lattice under containment $\bl\msubseteq$\,.}
+\newcommand{\mobiusbexbc}{\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(1.7,-1.75){\pspicture(0,-.5)(0,3.5){\small\darkgray\pscircle(0,3){.09}
+  \psline(-.91,2.09)(-.09,2.91)\psline(0,2.13)(0,2.87)\psline(.09,2.91)(.91,2.09)\pscircle(-1,2){.09}
+  \pscircle(0,2){.09}\pscircle(1,2){.09}\psline(-1,1.13)(-1,1.87)\psline(-.91,1.09)(-.09,1.91)
+  \psline(0,1.13)(0,1.87)\psline(.09,1.09)(.91,1.91)\psline(1,1.13)(1,1.87)\pscircle(-1,1){.09}
+  \pscircle(0,1){.09}\pscircle(1,1){.09}{\psset{shadow=false}\psline(-.884,1.94)(.884,1.06)}
+  \psline(-.91,.91)(-.09,.09)\psline(0,.13)(0,.87)\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}\rput(-.3,1){2}\rput(1.3,1){3}\rput(-1.4,2){13}
+  \rput(-.4,2){12}\rput(1.4,2){23}\rput(0,3.4){123}}\rput(0,-1){$\blue\mathcal{B}_3$}\endpspicture}}}
+\newcommand{\mobiusbexbd}{
+  \\[12mm]\myspace $\bl A\wedge B \meq A\cap B$
+  \\[ 0mm]\myspace $\bl A\vee   B \meq A\cup B$}
+\newcommand{\mobiusbexbe}{
+  \\[ 3  mm]\hspace*{1.5mm} \myspace $\bl \ell(A) \meq |A|$}
+
+\newcommand{\mobiusbexca}{\\[5mm]\example}
+\newcommand{\mobiusbexcb}{\\The divisors of $\bl n$ form a graded lattice under division $\bl\mid$\,.}
+\newcommand{\mobiusbexcc}{\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(.5,-1.75){\pspicture(0,-.5)(0,3.5){\small\darkgray
+  \pscircle(1,3){.09}
+  \psline(1.09,2.91)(1.91,2.09)
+  \pscircle(0,2){.09}\pscircle(2,2){.09}
+  \psline(-.91,1.09)(-.09,1.91)
+  \psline(.09,2.09)(.91,2.91)\psline(0.09,1.91)(.91,1.09)\pscircle(-1,1){.09}
+  \pscircle(1,1){.09}\psline(1.09,1.09)(1.91,1.91)
+  \psline(-.91,.91)(-.09,.09)\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}
+  \rput(0,-.4){$1$}\rput(-1.3,1){3}\rput(1.3,1){2}\rput(2.3,2){4}
+  \rput(-.4,2){6}\rput(1,3.4){12}}\rput(0.5,-1){$\bl(\{a:a\,|\,12\},\,|)$}\endpspicture}}}
+\newcommand{\mobiusbexcd}{
+  \\[11mm]\myspace $\bl a\wedge b \meq \gcd(a,b)$
+  \\[ 0mm]\myspace $\bl a\vee   b \meq \lcm(a,b)$}
+\newcommand{\mobiusbexce}{
+  \\[ 3  mm]\myspace\hspace*{.4mm}$\bl \ell(a) \meq \ds\sum_{i=1}^s \alpha^i$ where $\bl a\meq p_1^{\alpha_1}\cdots p_s^{\alpha_s}$}
+
+\newcommand{\twovector}[2]{\begin{pspicture}(-0.25,-.2)(0.25,0.2)
+  \psframe[framearc=0,shadow=false,fillstyle=solid,fillcolor=lightgray](-0.25,-.2)(0.25,0.2)
+  \rput(-0.1,0){#1}
+  \rput( 0.1,0){#2}\end{pspicture}}
+\newcommand{\twomatrix}[4]{\begin{pspicture}(-0.25,-.35)(0.25,0.35)
+  \psframe[framearc=0,shadow=false,fillstyle=solid,fillcolor=lightgray](-0.25,-.35)(0.25,0.35)
+  \rput(-0.1, 0.15){#1}
+  \rput( 0.1, 0.15){#2}
+  \rput(-0.1,-0.15){#3}
+  \rput( 0.1,-0.15){#4}\end{pspicture}}
+
+\newcommand{\mobiusbexda}{\\[5mm]\example}
+\newcommand{\mobiusbexdb}{\\The subspaces of a vector space form a graded lattice under containment~$\bl\subseteq$\,.\hspace*{-5mm}}
+\newcommand{\mobiusbexdc}{\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(-1.5,-1.9){\pspicture(0,-.5)(0,3.5){\footnotesize\darkgray
+  \pscircle(0,2){.09}
+  \psline(-.91,1.09)(-.09,1.91)
+  \psline(0.09,1.91)(.91,1.09)\pscircle(-1,1){.09}
+  \psline(0,1.09)(0,1.91)\pscircle(0,1){.09}\psline(0,.09)(0,.91)
+  \pscircle(1,1){.09}
+  \psline(-.91,.91)(-.09,.09)\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}
+  \rput( 0  ,-.4){\twovector{0}{0}}
+  \rput(-1.5,1  ){\twovector{1}{0}}
+  \rput(-.4 ,1  ){\twovector{1}{1}}
+  \rput( 1.5,1  ){\twovector{0}{1}}
+  \rput( 0  ,2.6){\twomatrix{1}{0}{0}{1}}}\rput(0,-1){Subspaces of $\bl\mathbb{F}_2^2$}\endpspicture}}}
+\newcommand{\mobiusbexdd}{
+  \\[17.5mm]\myspace $\bl U\wedge V \meq U\cap V$
+  \\[ 0  mm]\myspace $\bl U\vee   V \meq \overline{U\cup V}$ \; {\gray(span)}}
+\newcommand{\mobiusbexde}{
+  \\[ 3  mm]\myspace\hspace*{1.65mm} $\bl \ell(U) \meq \dim(U)$}
+
+
+\newcommand{\mobiusbexea}{\\[5mm]\example}
+\newcommand{\mobiusbexeb}{\\The partitions $\bl\Pi_n$ of $\bl[n]$ form a lattice under refinement $\bl\preceq$\,.}
+\newcommand{\mobiusbexec}{\mypicture{\psset{unit=10mm,dotscale=1.5,
+  linewidth=.03,fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+  shadowangle=-45,dash=7pt 5pt}
+  \rput(.25,-1.9){\pspicture(0,-.5)(0,3.5){\footnotesize\darkgray
+  \pscircle(0,2){.09}
+  \psline(-.91,1.09)(-.09,1.91)
+  \psline(0.09,1.91)(.91,1.09)\pscircle(-1,1){.09}
+  \pscircle(1,1){.09}\psline(0,1.09)(0,1.91)
+  \pscircle(0,1){.09}\psline(0,0.09)(0,0.91)
+  \psline(-.91,.91)(-.09,.09)\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}
+  \rput( 0  ,-.4){1,2,3}
+  \rput(-1.5,1  ){12,3}
+  \rput(-0.45,1  ){13,2}
+  \rput( 1.5,1  ){23,1}
+  \rput( 0  ,2.6){123}}\rput(0,-1){$\bl\Pi_3$}\endpspicture}}}
+\newcommand{\mobiusbexee}{
+  \\[20.1mm]\myspace $\bl \ell(\pi) \meq n-|\pi|$}
+
+\newcommand{\mobiusca}{Let $\bl L$ be a lattice and let $\bl G$ be an Abelian group.}
+\newcommand{\mobiuscb}{\\A function $\bl v:L\to G$ is a {\dg valuation} if,
+  for all $\bl x,y\myin L$,\vspace*{-3mm}
+  \[\bl
+    v(x) + v(y) \meq v(x\vee y) + v(x\wedge y)\vspace*{-2mm}
+  \]}
+
+\newcommand{\mobiuscc}{{\dg The Inclusion-Exclusion Principle}\vspace*{-1mm}
+  \[\bl
+         v\Bigl(\bigvee_{x\myin L} x\Bigr)
+    \meq \sum_{J\msubseteq L} (-1)^{|J|+1} v\Bigl(\bigwedge_{y\myin J} y\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\mobiusccv}{\\[4mm]{\dg The Inclusion-Exclusion Principle}
+  \[\bl
+         v\Bigl(\bigvee_{x\myin L} x\Bigr)
+    \meq \sum_{J\msubseteq L} (-1)^{|J|+1} v\Bigl(\bigwedge_{y\myin J} y\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\mobiuscpfa}{\\[-6mm]\proof}
+\newcommand{\mobiuscpfb}{\\Consider an element $\bl z\myin L$ and use induction on $\bl|L|$:\vspace*{-4mm}}
+\newcommand{\mobiuscpfc}[3]{
+  \begin{align*}\bl
+                v\Bigl(\bigvee_{x\myin L} x\Bigr)
+    &\,{  {\meq v\Bigl(z\vee\hspace*{-2.5mm}\bigvee_{x\myin L-\{z\}} \hspace*{-3mm} x\Bigr)}}\\[-1.5mm]
+    &\,{#1{\meq v(z) + v\Bigl(\bigvee_{x\myin L-\{z\}} x\Bigr)
+                     - v\Bigl(\bigvee_{x\myin L-\{z\}} x\wedge z\Bigr)}}\\[-1.5mm]
+    &\,{#2{\meq v(z) + \hspace*{-3mm}\sum_{J\msubseteq L-\{z\}} (-1)^{|J|+1}v\Bigl(\bigwedge_{y\myin J} y\Bigr)
+     - \hspace*{-3mm}\sum_{J\msubseteq L-\{z\}} (-1)^{|J|+1}v\Bigl(\bigwedge_{y\myin J} y\wedge z\Bigr)}}\\[-1.5mm]
+    &\,{#3{\meq\sum_{J\msubseteq L} (-1)^{|J|+1} v\Bigl(\bigwedge_{x\myin J} x\Bigr)\qquad\black\Box}}\\[-20mm]
+  \end{align*}}
+
+
+\newcommand{\mobiusda}{Let $\bl P$ be a finite poset.}
+\newcommand{\mobiusdb}{\\[-3mm]The {\dg zeta function} of $\bl P$ is
+  the matrix $\bl \zeta$ with entries \, $\bl\zeta(x,y)\meq\begin{cases}
+    1 & \mytext{if } x\leq y\\
+    0 & \mytext{otherwise}.
+  \end{cases}$}
+\newcommand{\mobiusdc}{\\[-3mm]The {\dg M\"{o}bius function} of $\bl P$ is the inverse $\bl\mu\mdef\zeta^{-1}$.}
+\newcommand{\mobiusdd}{\\[1mm]{\gray By anti-symmetry, the indices of $\lightblue\zeta$ may be ordered so it is upper-triangular.
+  \\In that case, $\lightblue\mu$ is also upper-triangular.}}
+%  \\By the identity $\lightblue \mu\meq\lightblue \textrm{adj}\,\zeta/\det \zeta \meq\light, }}
+
+
+\newcommand{\mobiusbexaf}{\\[8mm]{\darkgray\myspace\myspace
+   \mysqmatrixiv{\rput(0.5,3.5){1}\rput(1.5,3.5){1}\rput(2.5,3.5){1}\rput(3.5,3.5){1}
+                 \rput(0.5,2.5){0}\rput(1.5,2.5){1}\rput(2.5,2.5){1}\rput(3.5,2.5){1}
+                 \rput(0.5,1.5){0}\rput(1.5,1.5){0}\rput(2.5,1.5){1}\rput(3.5,1.5){1}
+                 \rput(0.5, .5){0}\rput(1.5, .5){0}\rput(2.5, .5){0}\rput(3.5, .5){1}
+                 \rput(2,-1){$\bl\zeta$}}\qquad
+   \mysqmatrixiv{\rput(0.5,3.5){1}\rput(1.5,3.5){-1}\rput(2.5,3.5){ 0}\rput(3.5,3.5){ 0}
+                 \rput(0.5,2.5){0}\rput(1.5,2.5){ 1}\rput(2.5,2.5){-1}\rput(3.5,2.5){ 0}
+                 \rput(0.5,1.5){0}\rput(1.5,1.5){ 0}\rput(2.5,1.5){ 1}\rput(3.5,1.5){-1}
+                 \rput(0.5, .5){0}\rput(1.5, .5){ 0}\rput(2.5, .5){ 0}\rput(3.5, .5){ 1}
+                 \rput(2,-1){$\bl\mu$}}}}
+\newcommand{\mobiusbexag}{\\[10mm]{$\bl \mu(x,y)\meq\begin{cases}
+   (-1)^{\ell(y)-\ell(x)} \meq (-1)^{y-x} & \mytext{if } x\myin\{y-1,y\}\\
+   \ph{-}0 & \mytext{otherwise}.
+  \end{cases}$}}
+
+\newcommand{\mobiusbexbf}{\\[10mm]{$\bl \mu(A,B)\meq\begin{cases}
+   (-1)^{\ell(B)-\ell(A)}\meq (-1)^{|B-A|} & \mytext{if } A\msubseteq B\\
+   \ph{-}0 & \mytext{otherwise}.
+  \end{cases}$}}
+\newcommand{\mobiusbexbg}{\\[4mm]\proof}
+\newcommand{\mobiusbexbgv}{\\[4mm]\proof {\gray(continued)}}
+\newcommand{\mobiusbexbh}[3]{\\For $\bl A\msubseteq B$,\vspace*{-0.15mm}
+  \begin{align*}\bl
+     (\zeta\mu)_{AB}
+   &\;{  {\meq \sum_{C} \zeta(A,C)\mu(C,B)}}\\[-3.5mm]
+%    \meq \sum_{A\subseteq C\subseteq B} \zeta(A,C)\mu(C,B)\\
+   &\;{#1{\meq \hspace*{-3mm}\sum_{A\subseteq C\subseteq B}\hspace*{-2mm} (-1)^{|B-C|}}}
+    \;{#2{\meq (-1)^{|B|}\hspace*{-2.5mm}\sum_{A\subseteq C\subseteq B}\hspace*{-2mm} (-1)^{|C|}}}
+    \;{#3{\meq \begin{cases}\!
+          \bigl((-1)^{|B|}\bigr)^{\!2}\!\meq 1 &\!\!\!\text{\black if } A\meq B\\\!
+                 0 &\!\!\!\text{\black otherwise}
+               \end{cases}}}\\[-20mm]
+  \end{align*}}
+\newcommand{\mobiusbexbj}{\\Hence, $\bl \zeta\mu\meq I$.}
+\newcommand{\mobiusbexbk}{\\Similarly, $\bl \mu\zeta\meq I$, so $\bl\mu\meq \zeta^{-1}$.\qquad\quad$\Box$}
+
+
+\newcommand{\mobiusbexcf}{\\[2mm]{\darkgray\myspace\myspace
+   \mysqmatrixvi{\rput(0.5,5.5){1}\rput(1.5,5.5){1}\rput(2.5,5.5){1}\rput(3.5,5.5){1}\rput(4.5,5.5){1}\rput(5.5,5.5){1}
+                 \rput(0.5,4.5){0}\rput(1.5,4.5){1}\rput(2.5,4.5){0}\rput(3.5,4.5){1}\rput(4.5,4.5){1}\rput(5.5,4.5){1}
+                 \rput(0.5,3.5){0}\rput(1.5,3.5){0}\rput(2.5,3.5){1}\rput(3.5,3.5){0}\rput(4.5,3.5){1}\rput(5.5,3.5){1}
+                 \rput(0.5,2.5){0}\rput(1.5,2.5){0}\rput(2.5,2.5){0}\rput(3.5,2.5){1}\rput(4.5,2.5){0}\rput(5.5,2.5){1}
+                 \rput(0.5,1.5){0}\rput(1.5,1.5){0}\rput(2.5,1.5){0}\rput(3.5,1.5){0}\rput(4.5,1.5){1}\rput(5.5,1.5){1}
+                 \rput(0.5,0.5){0}\rput(1.5,0.5){0}\rput(2.5,0.5){0}\rput(3.5,0.5){0}\rput(4.5,0.5){0}\rput(5.5,0.5){1}
+                 \rput(3,-1){$\bl\zeta$}
+                 {\lightgray\footnotesize
+                  \rput(-0.6,5.5){1}
+                  \rput(-0.6,4.5){2}
+                  \rput(-0.6,3.5){3}
+                  \rput(-0.6,2.5){4}
+                  \rput(-0.6,1.5){6}
+                  \rput(-0.6,0.5){12}}}\qquad
+   \mysqmatrixvi{\rput(0.5,5.5){1}\rput(1.5,5.5){-1}\rput(2.5,5.5){-1}\rput(3.5,5.5){ 0}\rput(4.5,5.5){ 1}\rput(5.5,5.5){ 0}
+                 \rput(0.5,4.5){0}\rput(1.5,4.5){ 1}\rput(2.5,4.5){ 0}\rput(3.5,4.5){-1}\rput(4.5,4.5){-1}\rput(5.5,4.5){ 1}
+                 \rput(0.5,3.5){0}\rput(1.5,3.5){ 0}\rput(2.5,3.5){ 1}\rput(3.5,3.5){ 0}\rput(4.5,3.5){-1}\rput(5.5,3.5){ 0}
+                 \rput(0.5,2.5){0}\rput(1.5,2.5){ 0}\rput(2.5,2.5){ 0}\rput(3.5,2.5){ 1}\rput(4.5,2.5){ 0}\rput(5.5,2.5){-1}
+                 \rput(0.5,1.5){0}\rput(1.5,1.5){ 0}\rput(2.5,1.5){ 0}\rput(3.5,1.5){ 0}\rput(4.5,1.5){ 1}\rput(5.5,1.5){-1}
+                 \rput(0.5,0.5){0}\rput(1.5,0.5){ 0}\rput(2.5,0.5){ 0}\rput(3.5,0.5){ 0}\rput(4.5,0.5){ 0}\rput(5.5,0.5){ 1}
+                 \rput(3,-1){$\bl\mu$}}}}
+\newcommand{\mobiusbexcg}{\\[10mm]{$\bl \mu(a,b)\meq\begin{cases}
+   (-1)^{\ell(b)-\ell(a)}\meq (-1)^{\ell(\frac{b}{a})} & \mytext{if } a|b\\
+   \ph{-}0 & \mytext{otherwise}
+  \end{cases}$\rput(-5.75,-1.75){$\meq \;\mu\bigl(\frac{b}{a}\bigr)$\quad\gray(the original M\"{o}bius function)}}}
+
+\newcommand{\mobiusbexdf}{\\[6mm]{\darkgray\myspace\myspace
+   \mysqmatrixv{\rput(0.5,4.5){1}\rput(1.5,4.5){1}\rput(2.5,4.5){1}\rput(3.5,4.5){1}\rput(4.5,4.5){1}
+                \rput(0.5,3.5){0}\rput(1.5,3.5){1}\rput(2.5,3.5){0}\rput(3.5,3.5){0}\rput(4.5,3.5){1}
+                \rput(0.5,2.5){0}\rput(1.5,2.5){0}\rput(2.5,2.5){1}\rput(3.5,2.5){0}\rput(4.5,2.5){1}
+                \rput(0.5,1.5){0}\rput(1.5,1.5){0}\rput(2.5,1.5){0}\rput(3.5,1.5){1}\rput(4.5,1.5){1}
+                \rput(0.5, .5){0}\rput(1.5, .5){0}\rput(2.5, .5){0}\rput(3.5, .5){0}\rput(4.5,0.5){1}
+                \rput(2,-1){$\bl\zeta$}}\qquad
+   \mysqmatrixv{\rput(0.5,4.5){1}\rput(1.5,4.5){-1}\rput(2.5,4.5){-1}\rput(3.5,4.5){-1}\rput(4.5,4.5){ 2}
+                \rput(0.5,3.5){0}\rput(1.5,3.5){ 1}\rput(2.5,3.5){ 0}\rput(3.5,3.5){ 0}\rput(4.5,3.5){-1}
+                \rput(0.5,2.5){0}\rput(1.5,2.5){ 0}\rput(2.5,2.5){ 1}\rput(3.5,2.5){ 0}\rput(4.5,2.5){-1}
+                \rput(0.5,1.5){0}\rput(1.5,1.5){ 0}\rput(2.5,1.5){ 0}\rput(3.5,1.5){ 1}\rput(4.5,1.5){-1}
+                \rput(0.5, .5){0}\rput(1.5, .5){ 0}\rput(2.5, .5){ 0}\rput(3.5, .5){ 0}\rput(4.5,0.5){ 1}
+                \rput(2,-1){$\bl\mu$}}}}
+
+\newcommand{\mobiusbexdg}{\\[6mm]If the vector space is over $\bl\mathbb{F}_q$, then
+  \\[1mm]$\bl\mu(U,V) \meq
+   \begin{cases}
+     (-1)^k q^{\binom{k}{2}} & \mytext{if } U\msubseteq V\;\\
+                           0 & \mytext{otherwise}
+   \end{cases}$
+  \\[1mm]where  $\bl k\meq \ell(V)-\ell(U)\meq \dim(V)-\dim(U)$\vspace*{-15mm}}
+
+\newcommand{\mobiusdh}{\\[3mm]\theorem}
+\newcommand{\mobiusdha}{\\Let $\bl c_k(x,y)$ denote the number of chains in $\bl P$ of length $\bl k$ from $\bl x$ to $\bl y$.}
+\newcommand{\mobiusdhb}{\\Then\vspace*{-1mm}
+  \[\bl
+    \mu(x,y)\meq \sum_{k\geq 1} (-1)^{k-1} c_k(x,y)
+  \]}
+\newcommand{\mobiusdhc}{\exercise\\Prove this!}
+
+\newcommand{\mobiusea}{\\[6mm]{\dg M\"{o}bius Inversion}\vspace*{-3mm}
+  \begin{align*}\bl
+    g\meq  \zeta f \black\;&\Longleftrightarrow\;\bl f\meq  \mu g\\\bl
+    h\meq f\zeta   \black\;&\Longleftrightarrow\;\bl f\meq h\mu
+  \end{align*}}
+\newcommand{\mobiuseav}{{\dg M\"{o}bius Inversion}\vspace*{-4mm}
+  \begin{align*}\bl
+    g\meq  \zeta f \black\;&\Longleftrightarrow\;\bl f\meq  \mu g\\\bl
+    h\meq f\zeta   \black\;&\Longleftrightarrow\;\bl f\meq h\mu\\[-8mm]
+  \end{align*}}
+\newcommand{\mobiuseb}{Equivalently,\vspace*{-2mm}
+  \begin{align*}\bl
+    g(x)\meq \sum_{a:a\leq x}\!f(a) \;\mytext{for all $\bl x\in P$}\black\;\;&\Longleftrightarrow\;\;\bl f(x) \meq \sum_{a:a\leq x}\!\mu(a,x)g(a)\;\mytext{for all $\bl x\in P$} \\\bl
+    h(x)\meq \sum_{b:b\geq x}\!f(a) \;\mytext{for all $\bl x\in P$}\black\;\;&\Longleftrightarrow\;\;\bl f(x) \meq \sum_{b:b\geq x}\!\mu(x,b)h(b)\;\mytext{for all $\bl x\in P$}
+  \end{align*}}
+
+\newcommand{\iepibpfiiia}{\\[-8mm]\proof{\dg III}}
+\newcommand{\iepibpfiiib}{\\Let $\bl P\mdef \mathcal{P}(I)\mequiv \mathcal{B}_{|I|}$ and for each $\bl J\in P$,
+  define\vspace*{-3mm}
+  \begin{align*}\bl
+    f(J) &\mdef |\{a\,:\, a\myin A_j \;\mytext{\gray if and only if}\; j\myin J\}|\qquad\mytext{and}\\[-2mm]\bl
+    g(J) &\mdef |\{a\,:\, a\myin A_j \;\mytext{\gray for all}       \; j\myin J\}| \meq \Bigl|\bigcup_{j\in J}A_j\Bigr|\qquad{\lightblue(g(\emptyset) \gray=\lightblue \bigl|\bigcup_{i\in I}A_i\bigr|)}
+  \end{align*}}
+\newcommand{\iepibpfiiic}{\\[-8mm]Then $\bl\ds g(J) \meq \sum_{K\supseteq J} f(K)$ for all $\bl J\myin P$.}
+\newcommand{\iepibpfiiica}[2]{\iepiabv{#1}{#2}}
+
+\newcommand{\iepiabv}[2]{\begin{center}
+  \begin{pspicture}(-5.5,-2.5)(-3,1)
+    \psset{fillstyle=solid,opacity=0.5,linecolor=darkgray,fillcolor=gray,shadow=false}#1
+    \pscircle(0  ,0){2.5}
+    \pscircle(2.5,0){2.5}
+    \pscircle(1.25,-2.165){2.5}
+    \psset{fillstyle=none}
+    \pscircle(0   , 0    ){2.5}
+    \pscircle(2.5 , 0    ){2.5}
+    \pscircle(0   , 0    ){2.5}
+    \pscircle(2.5 , 0    ){2.5}
+    \pscircle(1.25,-2.165){2.5}
+    \uput[dl](-2.5, 0.75 ){$\bl A_1$}
+    \uput[dr]( 5  , 0.75 ){$\bl A_2$}
+    \uput[d ](1.25,-4.65 ){$\bl A_3$}
+    \psset{linecolor=white,linewidth=0.08}#2
+  \end{pspicture}
+\end{center}}
+
+\newcommand{\iepibpfiiicaa}{\rput( 1.25 , 1    ){$\white f(12)$}
+                            \psarc(0    , 0    ){2.5}{  0}{ 60}
+                            \psarc(2.5  , 0    ){2.5}{120}{180}
+                            \psarc(1.25 ,-2.165){2.5}{ 60}{120}}
+\newcommand{\iepibpfiiicab}{\rput( 1.25 ,-0.625){$\white f(123)$}
+                            \psarc(0    , 0    ){2.5}{-60}{  0}
+                            \psarc(2.5  , 0    ){2.5}{180}{240}
+                            \psarc(1.25 ,-2.165){2.5}{ 60}{120}}
+\newcommand{\iepibpfiiicac}{\rput( 1.25 , 1    ){$\white f(12)$}
+                            \rput( 1.25 ,-0.625){$\white f(123)$}
+                            \rput(-8    ,-1.082){$\bl g(12)\meq f(12)+f(123)$}
+                            \psarc(0    , 0    ){2.5}{-60}{ 60}
+                            \psarc(2.5  , 0    ){2.5}{120}{240}}
+
+\newcommand{\nofill}{\psset{fillstyle=none}}
+
+\newcommand{\iepibpfiiid}{\\By {\dg M\"{o}bius Inversion},\vspace*{-4mm}
+  \[\bl\hspace*{10mm}f(J) \meq \sum_{K\supseteq J} \mu(J,K)g(K)
+             \meq \sum_{K\supseteq J} (-1)^{|K-J|}g(K)\vspace*{-6mm}\]}
+\newcommand{\iepibpfiiie}[4]{Hence,\vspace*{-2mm}
+  \begin{align*}\bl&\bl
+               \Bigl|\bigcup_{i\myin I}\hspace*{-.5mm} A_i\Bigr|
+           \meq g(\emptyset)
+     \;{#1{\meq \sum_{K\subseteq I} (-1)^{|K|}g(K)
+                  -  \hspace*{-3mm}  \sum_{\emptyset\neq K\subseteq I} \hspace*{-2.5mm} (-1)^{|K|}g(K)}}\\\hspace*{-2mm}
+     \;{#2{\meq}}\;&\bl{#2{f(\emptyset)
+                  -  \hspace*{-3.5mm}\sum_{\emptyset\neq K\subseteq I} \hspace*{-2.5mm} (-1)^{|K|}g(K)}}
+     \;{#3{\meq 0 -  \hspace*{-3.5mm}\sum_{\emptyset\neq K\subseteq I} \hspace*{-2.5mm} (-1)^{|K|}  \Bigl|\bigcap_{j\myin K} \hspace*{-1mm} A_j\Bigr|}}
+     \;{#4{\meq      \hspace*{-2.5mm}\sum_{\emptyset\neq J\subseteq I} \hspace*{-2.5mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} \hspace*{-1mm} A_j\Bigr|\;\black\Box}}\\[-25mm]
+  \end{align*}}
+
+\newcommand{\qnoma}{\theorem}
+\newcommand{\qnomb}{\\The number of $\bl k$-dimensional subspaces of $\bl\mathbb{F}_q^n$ over the field $\bl\mathbb{F}_q$ of size $\bl q$~is\vspace*{-3mm}
+  \[\bl
+          \qnom{n}{k}_q
+    \mdef \prod_{i=1}^k\frac{q^{n-i+1}-1}{q^i-1}
+    \meq  \frac{(q^n-1)(q^{n-1}-1)\cdots (q^{n-k+1}-1)}
+               {(q^k-1)(q^{k-1}-1)\cdots (q     -   1)}
+  \]}
+\newcommand{\qnomc}{{\gray These numbers are called $\lightblue q${\green-nomials} and generalise binomials
+  \\(which are obtained in the limit $\lightblue q\to 1$).
+  \\Many set results have vector space analogies and vice versa.}}
+
+\newcommand{\qnomaexa}{\example}
+\newcommand{\qnomaexb}{\\The number of $\bl 2$-dimensional subspaces of $\bl \mathbb{F}_2^3$ is\vspace*{-1mm}
+  \[\bl
+          \qnom{3}{2}
+    \meq  \frac{(2^3-1)(2^2-1)}
+               {(2^2-1)(2-1)}
+    \meq 7\vspace*{-1mm}
+  \]}
+\newcommand{\qnomaexc}{These are:
+  \[\bl
+    \mymatrixb{1}{0}{0}
+              {0}{1}{0}
+    \quad\;
+    \mymatrixb{1}{0}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{0}{1}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{1}{1}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{1}{0}{1}
+              {0}{1}{0}
+    \quad\;
+    \mymatrixb{1}{0}{0}
+              {0}{1}{1}
+    \quad\;
+    \mymatrixb{1}{1}{0}
+              {0}{1}{1}\vspace*{-3mm}
+  \]}
+
+\newcommand{\qnomapfa}{\proof}
+\newcommand{\qnomapfb}{\\There are $\bl (q^n-1)\cdots (q^{n-k+1}-1)$ ordered independent sets of size $\bl k$}
+\newcommand{\qnomapfc}{\\and each $\bl k$-dimensional subspace contains $\bl (q^k-1)\cdots (q-1)$ of these. \qed\vspace*{-3mm}}
+
+
+\begin{document}
+\sf\lecturetitle
+\np\lecturetitlei
+\np\iepia
+\np\iepia\iepiaa
+\np\iepia\iepiaa\iepiab{}
+\np\iepiaiii\iepiab{\iepiaba}
+\np\iepib
+\np\vala\valb
+\np\vala\valb\iepic
+\np\vala\valb\iepic\iepid\iepie\vspace*{-8mm}
+\np\exaia\exaib\exaic
+\np\exaia\exaib\exaic\exaid\exaie
+\np\exaia\exaib\exaic\exaid\exaie\exaifv\exaifa
+\np\exaia\exaib\exaic\exaid\exaie\exaifv\exaifa\exaiga\exaigb
+\np\exaia\exaib\exaic\exaid\exaie\exaifv\exaifa\exaiga\exaigb\exaiha\exaihb
+\np\intsolextav\intsolextb
+\np\totienta
+\np\totienta\totientd\totiente
+\np\chromaa\chromab\\\chromb
+\np\chromaa\chromab\\\chromb\chromca\chromcb
+\np\mobiusaa\mobiusab
+\np\mobiusaa\mobiusab\mobiusac{\poseta}
+\np\mobiusaa\mobiusab\mobiusac{\poseta\posetb}
+\np\mobiusaa\mobiusab\mobiusac{\poseta{\footnotesize\darkgray\posetaa}}
+\np\mobiusaa\mobiusab\mobiusac{\poseta{\footnotesize\darkgray\posetab}}
+\np\mobiusba
+\np\mobiusba\mobiusbarank
+\np\mobiusba\mobiusbarank\mobiusbb{}{}{}{}
+\np\mobiusba\mobiusbarank\mobiusbb{\mobiusbbno}{}{}{}
+\np\mobiusba\mobiusbarank\mobiusbb{\mobiusbbno}{\mobiusbbno}{}{}
+\np\mobiusba\mobiusbarank\mobiusbb{\mobiusbbno}{\mobiusbbno}{\mobiusbbyes}{}
+\np\mobiusba\mobiusbarank\mobiusbb{\mobiusbbno}{\mobiusbbno}{\mobiusbbyes}{\mobiusbbgradedno}
+\np\mobiusba\mobiusbarank
+\np\mobiusba\mobiusbarank\mobiusbexaa
+\np\mobiusba\mobiusbarank\mobiusbexaa\mobiusbexab
+\np\mobiusba\mobiusbarank\mobiusbexaa\mobiusbexab\mobiusbexac
+\np\mobiusba\mobiusbarank\mobiusbexaa\mobiusbexab\mobiusbexac\mobiusbexad
+\np\mobiusba\mobiusbarank\mobiusbexaa\mobiusbexab\mobiusbexac\mobiusbexad\mobiusbexae
+\np\mobiusba\mobiusbarank\mobiusbexba
+\np\mobiusba\mobiusbarank\mobiusbexba\mobiusbexbb
+\np\mobiusba\mobiusbarank\mobiusbexba\mobiusbexbb\mobiusbexbc
+\np\mobiusba\mobiusbarank\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbd
+\np\mobiusba\mobiusbarank\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbd\mobiusbexbe
+\np\mobiusba\mobiusbarank\mobiusbexca
+\np\mobiusba\mobiusbarank\mobiusbexca\mobiusbexcb
+\np\mobiusba\mobiusbarank\mobiusbexca\mobiusbexcb\mobiusbexcc
+\np\mobiusba\mobiusbarank\mobiusbexca\mobiusbexcb\mobiusbexcc\mobiusbexcd
+\np\mobiusba\mobiusbarank\mobiusbexca\mobiusbexcb\mobiusbexcc\mobiusbexcd\mobiusbexce
+\np\mobiusba\mobiusbarank\mobiusbexda
+\np\mobiusba\mobiusbarank\mobiusbexda\mobiusbexdb
+\np\mobiusba\mobiusbarank\mobiusbexda\mobiusbexdb\mobiusbexdc
+\np\mobiusba\mobiusbarank\mobiusbexda\mobiusbexdb\mobiusbexdc\mobiusbexdd
+\np\mobiusba\mobiusbarank\mobiusbexda\mobiusbexdb\mobiusbexdc\mobiusbexdd\mobiusbexde
+\np\mobiusba\mobiusbarank\mobiusbexea
+\np\mobiusba\mobiusbarank\mobiusbexea\mobiusbexeb
+\np\mobiusba\mobiusbarank\mobiusbexea\mobiusbexeb\mobiusbexec
+\np\mobiusba\mobiusbarank\mobiusbexea\mobiusbexeb\mobiusbexec\mobiusbexee
+%\np\mobiusca
+%\np\mobiusca\mobiuscb
+%\np\mobiusca\mobiuscb\mobiuscc
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa\mobiuscpfb
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa\mobiuscpfb\mobiuscpfc{\ph}{\ph}{\ph}
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa\mobiuscpfb\mobiuscpfc{}{\ph}{\ph}
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa\mobiuscpfb\mobiuscpfc{}{}{\ph}
+%\np\mobiusca\mobiuscb\mobiuscc\mobiuscpfa\mobiuscpfb\mobiuscpfc{}{}{}
+\np\mobiusda
+\np\mobiusda\mobiusdb
+\np\mobiusda\mobiusdb\mobiusdc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusdd
+\np\mobiusda\mobiusdb\mobiusdc\mobiusdd\mobiusdh
+\np\mobiusda\mobiusdb\mobiusdc\mobiusdd\mobiusdh\mobiusdha
+\np\mobiusda\mobiusdb\mobiusdc\mobiusdd\mobiusdh\mobiusdha\mobiusdhb
+\np\mobiusda\mobiusdb\mobiusdc\mobiusdd\mobiusdh\mobiusdha\mobiusdhb\mobiusdhc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexaa
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexaa\mobiusbexab
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexaa\mobiusbexab\mobiusbexac
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexaa\mobiusbexab\mobiusbexac\mobiusbexaf
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexaa\mobiusbexab\mobiusbexac\mobiusbexaf\mobiusbexag
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbg
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbg\mobiusbexbh{\ph}{\ph}{\ph}
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbg\mobiusbexbh{}{\ph}{\ph}
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbg\mobiusbexbh{}{}{\ph}
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbg\mobiusbexbh{}{}{}
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbgv\mobiusbexbj
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexba\mobiusbexbb\mobiusbexbc\mobiusbexbf\mobiusbexbgv\mobiusbexbj\mobiusbexbk
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexca\mobiusbexcb
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexca\mobiusbexcb\mobiusbexcc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexca\mobiusbexcb\mobiusbexcc\mobiusbexcf
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexca\mobiusbexcb\mobiusbexcc\mobiusbexcf\mobiusbexcg
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexda\mobiusbexdb
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexda\mobiusbexdb\mobiusbexdc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexda\mobiusbexdb\mobiusbexdc\mobiusbexdf
+\np\mobiusda\mobiusdb\mobiusdc\mobiusbexda\mobiusbexdb\mobiusbexdc\mobiusbexdf\mobiusbexdg
+\np\mobiusda\mobiusdb\mobiusdc
+\np\mobiusda\mobiusdb\mobiusdc\mobiusea
+\np\mobiusda\mobiusdb\mobiusdc\mobiusea\mobiuseb
+\np\iepibv
+\np\iepibv\iepibpfiiia
+\np\iepibv\iepibpfiiia\iepibpfiiib
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiica{}{}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiica{}{\iepibpfiiicaa}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiica{}{\iepibpfiiicab}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiica{}{\iepibpfiiicac}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid\iepibpfiiie{\ph}{\ph}{\ph}{\ph}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid\iepibpfiiie{}{\ph}{\ph}{\ph}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid\iepibpfiiie{}{}{\ph}{\ph}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid\iepibpfiiie{}{}{}{\ph}
+\np\iepibv\iepibpfiiia\iepibpfiiib\iepibpfiiic\iepibpfiiid\iepibpfiiie{}{}{}{}
+%\np\contents
+%\np\contents\references
+
+%Kaplansky & Riordan (1946): number of nonattacking rooks on a board etc. - application of Incl.-Excl.
+%(See Stanley Combin. Vol. 1)
+
+
+
+%\np\qnoma
+%\np\qnoma\qnomb
+%\np\qnoma\qnomb\qnomc
+%\np\qnoma\qnomb\qnomaexa
+%\np\qnoma\qnomb\qnomaexa\qnomaexb
+%\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc
+%\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa
+%\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa\qnomapfb
+%\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa\qnomapfb\qnomapfc
+
+% Some non-Boolean example, like the number of subspaces avoiding a given subspace
+
+
+
+
+
+\end{document}
+
+
+
+
+
+

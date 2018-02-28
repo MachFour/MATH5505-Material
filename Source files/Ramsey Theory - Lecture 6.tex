@@ -1,0 +1,478 @@
+%%  MATH5505 Ramsey Theory Lecture 6: Applications
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+%% OK Overview of Ramsey Theory Chapter
+%% OK The classical geometrical convexity(?) theorem using Ramsey's Theorem
+%% OK Erdos' & co' application of Ramsey's Theorem
+%% OK Others? The links and lists
+%%%%  More Pigeonhole Principle stuff:
+%% OK   Euclid's Theorem/Bezout's Identity
+%% OK   Chinese Remainder Theorem
+%% OK   Proizvolov's Identity
+%%      Mankel's Theorem and mention Turan's Theorem
+%%      Brouwer's Fixed Point Theorem.
+%%      Also, maybe: Dirichlet's Approximation Theorem to show that x^2 - Dy^2 =1 or something always has a solution
+%%%%    Or include in first lecture along with this theorem? Might be better...
+%%%%    And move some of the 1st lecture stuff to this lecture?
+
+
+\include{mydefinitionsramsey}
+\usepackage{hyperref}
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 6: Applications\end{center}}
+
+\newcommand{\pigeonthma}{{\dg The Pigeonhole Principle}
+  \\[1mm]If $\bl k+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least two pigeons.}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\pigeonthmstrong}{{\dg The Pigeonhole Principle} {\gray (strong)}
+  \\[1mm]If $\bl (n_1-1) +\cdots+(n_k-1) + 1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some $\bl i$th pigeonhole contains at least $\bl n_i$ pigeons.}
+
+\newcommand{\pigeonthmexaa}{\\[8mm]\example}
+\newcommand{\pigeonthmexab}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}\psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+\newcommand{\pigeonthmexaba}{\rput(0  ,0){\pigeon}}
+\newcommand{\pigeonthmexabb}{\rput(3.5,0){\pigeon}}
+\newcommand{\pigeonthmexabc}{\rput(7  ,0){\pigeon}}
+\newcommand{\pigeonthmexabd}{\rput(3.4,-4){$\begin{array}{rcl}\bl k &\meq&\bl 3\\\bl m &\meq&\bl 2\end{array}$}}
+\newcommand{\pigeonthmexabaii}{\rput(-0.25,0){\pigeon}\rput( .25,0){\pigeon}}
+\newcommand{\pigeonthmexabbii}{\rput( 3.25,0){\pigeon}\rput(3.75,0){\pigeon}}
+\newcommand{\pigeonthmexabcii}{\rput( 6.75,0){\pigeon}\rput(7.25,0){\pigeon}}
+\newcommand{\pigeonthmexabciii}{\rput(6.7 ,0){\pigeon}\rput(7   ,0){\pigeon}\rput(7.3,0){\pigeon}}
+
+\newcommand{\pigeonthmexma}{\\[8mm]\example}
+\newcommand{\pigeonthmexmb}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}
+    \rput[t](0  ,-2.5){$\bl n_1\meq 1$}
+    \rput[t](3.5,-2.5){$\bl n_2\meq 3$}
+    \rput[t](7  ,-2.5){$\bl n_3\meq 2$}
+    \psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\dirichleta}{\\[3mm]{\dg Dirichlet's Approximation Theorem} {\gray (1889)}}
+\newcommand{\dirichletb}{\\[-1mm]If $\bl\alpha\myin\mathbb{R}$ and $\bl N\myin\mathbb{N}$,
+  then $\bl p,q\myin\mathbb{N}$ exist so that $\bl q\!\leq\! N$ and
+  $\bl\ds \Bigl|\alpha - \frac{p}{q}\Bigr| \mlt \frac{1}{Nq}$\,.\hspace*{-6mm}}
+\newcommand{\dirichletc}{\\[2mm]{\gray Each real number can thus be approximated arbitrarily well by rationals.}}
+
+\newcommand{\dirichletpfa}{\\[2mm]\proof}
+\newcommand{\dirichletpfb}{\\Replace the latter inequality equivalently by
+  $\bl \bigl|q\alpha - p\bigr| \mlt \frac{1}{N}$.}
+\newcommand{\dirichletpfc}{\\Partition the unit interval $\bl[0,1)$ into $\bl N$ equal subintervals.
+  \begin{pspicture}(-1.5,.5)(8,.5)\psset{shadow=false}\psline(0,0)(4,0)\multirput(0,0)(.8,0){6}{\psline(0,-.2)(0,.2)}
+    \rput[t](0,-.5){{\gray0}}
+    \rput[t](4,-.5){{\gray1}}
+    \rput[u](3.6,1.4){$\bl\frac{1}{N}$}
+    \psline[linecolor=halfgray](3.2,.4)(3.2,.6)(4,.6)(4,.4)\psline[linecolor=halfgray](3.6,.6)(3.6,.8)\end{pspicture}}
+\newcommand{\dirichletpfd}{\\Define $\bl N+1$ residues
+  $\bl r_i\mdef i\alpha - \lfloor i\alpha\rfloor$ for $\bl i \meq 0,1,\ldots,N$.}
+\newcommand{\dirichletpfe}{\\These lie in the $\bl N$ subintervals.}
+\newcommand{\dirichletpff}{\\By the {\dg Pigeonhole Principle},
+  residues $\bl r_i$, $\bl r_j$ ($\bl i\!\mlt\!j$) lie in some subinterval.}
+%\newcommand{\dirichletpfg}{so $\bl |r_i-r_j|\mlt \frac{1}{N}$. }
+\newcommand{\dirichletpfg}{\\Set $\bl p\mdef \lfloor j\alpha\rfloor - \lfloor i\alpha\rfloor$
+                           and $\bl q\mdef j-i$. }
+\newcommand{\dirichletpfh}{\\Then $\bl 0\mlt q\mleq N$ }
+\newcommand{\dirichletpfj}[3]{and\vspace*{-2mm}
+  \begin{align*}\bl
+    |p-q\alpha|&\meq |\lfloor j\alpha\rfloor - \lfloor i\alpha\rfloor - (j-i)\alpha|\\[-2mm]
+    &\;{#1{\meq |i\alpha - \lfloor i\alpha\rfloor - (j\alpha - \lfloor j\alpha\rfloor)|}}
+    \;{#2{\meq |r_i-r_j|}}
+    \;{#3{\mlt \frac{1}{N}\,\black.\qquad\Box}}\\[-12mm]\end{align*}}
+
+\newcommand{\ramseyb}{{\dg Ramsey's Theorem} {\gray (1930)} {\halfgray (simple)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_n$ gives a complete monochromatic subgraph $\bl K_m$.}
+
+\newcommand{\ramseye}{{\dg Ramsey's Theorem} {\gray (1930)}\\
+   If $\bl n_1,\ldots,n_k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{r}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{r}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseyea}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R_r(n_1,\ldots,n_k)$.}}
+
+\newcommand{\convexa}{{\dg The Happy Ending Problem} {\gray (Erd\H{o}s \&\ Szekeres 1935)}
+  \\If $\bl k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+  then among any $\bl n$ points in the plane, no three collinear, there are $\bl k$ that form a convex polygon.}
+\newcommand{\convexb}{\\[2mm]{\gray This was first pointed out by Esther Klein
+  (for $\lightblue k\gray\meq\lightblue 4$) who discussed it with Paul Erd\H{o}s and George Szekeres.
+  George found a general proof and he and Erd\H{o}s published their famous 1935 paper
+  containing this result and the Erd\H{o}s-Szekeres Theorem.
+  The marked the beginning of Ramsey Theory for the mathematical public,
+  and it marked the beginning of Esther's and George's love and life with each other,
+  hence the theorem's name by Erd\H{o}s.
+  The couple remained together until 70 years later,
+  when in 2005 they died within an hour of each other.
+  They were brilliant and humble founders of combinatorics,
+  and our School here at UNSW was lucky to have George as professor, and Esther involved,
+  for 41 years.}}
+
+\newcommand{\convexexa}{\\[4mm]\example}
+\newcommand{\convexexb}[1]{\begin{center}
+  \begin{pspicture}(0,0)(10,6.5)\psset{shadow=false,shadow=false,fillstyle=solid,framearc=0}
+  #1\psset{linecolor=darkgray}\qdisk(0,1){.1}\qdisk(1,2){.1}\qdisk(1,5){.1}\qdisk(2,4){.1}
+  \qdisk(4,0){.1}\qdisk(3,1){.1}\qdisk(5,4){.1}\qdisk(4,3){.1}
+  \end{pspicture}\end{center}}
+\newcommand{\convexexba}{\psset{linecolor=green,fillcolor=white}
+  \psline(2,4)(4,3)(3,1)(1,2)(2,4)
+  \pscircle(2,4){.2}\pscircle(4,3){.2}\pscircle(3,1){.2}\pscircle(1,2){.2}}
+\newcommand{\convexexbb}{\psset{linecolor=green,fillcolor=white}
+  \psline(2,4)(5,4)(4,0)(1,2)(2,4)
+  \pscircle(2,4){.2}\pscircle(5,4){.2}\pscircle(4,0){.2}\pscircle(1,2){.2}}
+\newcommand{\convexexbc}{\psset{linecolor=red,fillcolor=white}
+  \psline(2,4)(4,3)(5,4)(4,0)(1,2)(2,4)
+  \pscircle(2,4){.2}\pscircle(4,3){.2}\pscircle(5,4){.2}\pscircle(4,0){.2}\pscircle(1,2){.2}}
+
+\newcommand{\convexpfa}{\\[4mm]\proof\quad}
+\newcommand{\convexpfb}[1]{Set $\bl n\mdef R_3(k,k)$.\rput(1.5,-8.5){\begin{pspicture}(0,0)(4,3)
+  \pnode(0,1){a}\pnode(1,3){b}\pnode(3,2){c}\pnode(4,3){d}\pnode(3.5,0){e}
+  \psset{shadow=false,shadow=false,fillstyle=solid,framearc=0}#1\end{pspicture}}}
+\newcommand{\convexpfc}{\\Then, given any $\bl n$ points, label them $\bl 1,\ldots,n$ in any order.}
+\newcommand{\convexpfd}{\\Colour every triple $\bl\{i,j,\ell\}$ {\dg green} if $\bl i\mlt j\mlt\ell$ is a {\dg clockwise} sequence,
+  \\\ph{b}\hspace*{40mm}and {\red red} if they form an {\red anti-clockwise} sequence.}
+\newcommand{\convexpfe}{\\Then there are $\bl k$ points whose triples are all {\dg green} or all {\red red}, say {\dg green}.}
+\newcommand{\convexpff}{\\In other words, each triangle among these $\bl k$ points is oriented {\dg clockwise}.}
+\newcommand{\convexpfg}{\\But then the $\bl k$ points form a convex polygon.\qed}
+\newcommand{\convexpfbz}{\psset{linecolor=darkgray}
+  \qdisk(a){.1}\qdisk(b){.1}\qdisk(c){.1}\qdisk(d){.1}\qdisk(e){.1}}
+\newcommand{\convexpfby}{{\bl\small\uput[l](a){1}\uput[ul](b){2}\uput[d](2.8,2){3}\uput[ur](d){4}\uput[dr](e){5}}}
+\newcommand{\convexpfbc}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(c)(e)(a)\pscircle(a){.2}\pscircle(c){.2}\pscircle(e){.2}}
+\newcommand{\convexpfbd}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(a)(c)(b)(a)\pscircle(a){.2}\pscircle(c){.2}\pscircle(b){.2}}
+\newcommand{\convexpfbe}{\psset{linecolor=red,fillcolor=white}
+  \pspolygon(c)(b)(d)\pscircle(d){.2}\pscircle(c){.2}\pscircle(b){.2}}
+\newcommand{\convexpfbf}{\psset{linecolor=lightgray,fillcolor=white}
+  \pspolygon(b)(c)(e)(a)\pscircle(a){.2}\pscircle(b){.2}\pscircle(c){.2}\pscircle(e){.2}}
+\newcommand{\convexpfbfa}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(c)(e)(a)\pscircle(a){.2}\pscircle(c){.2}\pscircle(e){.2}}
+\newcommand{\convexpfbfb}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(b)(e)(a)\pscircle(a){.2}\pscircle(b){.2}\pscircle(e){.2}}
+\newcommand{\convexpfbfc}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(b)(c)(a)\pscircle(a){.2}\pscircle(b){.2}\pscircle(c){.2}}
+\newcommand{\convexpfbfd}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(b)(c)(e)\pscircle(b){.2}\pscircle(c){.2}\pscircle(e){.2}}
+\newcommand{\convexpfbg}{\psset{linecolor=green,fillcolor=white}
+  \pspolygon(b)(c)(e)(a)\pscircle(a){.2}\pscircle(b){.2}\pscircle(c){.2}\pscircle(e){.2}}
+
+\newcommand{\erdosa}{\theorem {\gray(Erd\H{o}s 1964)}\\
+Let $\bl A\subseteq\mathbb{N}$ so that for which each $\bl n\myin\mathbb{N}$
+there are $\bl a,b\myin A$ with $\bl n\meq ab$.
+Then for each $\bl k\myin\mathbb{N}$ there is some integer $\bl n\myin\mathbb{N}$ so that
+the equation $\bl n\meq ab$ has at least $\bl k$ solutions with $\bl a,b\myin A$.}
+
+\newcommand{\erdospfa}{\\[4mm]\proof {\gray (Ne\v{s}et\v{r}il 1984; Ne\v{s}et\v{r}il \&\ R\"odl 1985)}}
+\newcommand{\erdospfb}{\\Consider square-free integers $\bl n$ only.
+\\For such $\bl n$, let $\bl M(n)$ be the set of primes factors of $\bl n$.
+\\We can find a partition $\bl M(n) \meq M'\cup M''$ so that\\
+$\bl a \mdef \prod M'\mdef \prod_{p\in M'}p$ and
+$\bl b \mdef \prod M''$ both belong to $\bl A$.
+\\By {\dg Ramsey's Theorem},
+there is a finite set $\bl X\subseteq\mathbb{N}$ with $\bl|X|\mgeq 2k^2$
+so that for each $\bl M\myin\binom{X}{k}$,
+{\red the partition $M = M'\cup M''$ is of the same~`type'.
+\\Hence, there exists $Y\subseteq X$, $|Y|\geq 2k$, such that $\binom{Y}{m}\subseteq A$
+for an $m\geq\frac{1}{2}$.
+\\Thus, for every $M\in\binom{M}{2m}$, $n:=\prod M$ has
+$\binom{2m}{m}$ solutions $n=ab$ in $A$.}\qed}
+
+\newcommand{\erdosb}{\\[4mm]{\dg Challenge}}
+\newcommand{\erdosc}{\\Figure out what this proof says and write out a clean and intelligible proof!}
+
+\newcommand{\biglist}{Look here for many more {\dg Ramsey Theory} applications:\\[4mm]\begin{center}\url{http://www.cs.umd.edu/~gasarch/TOPICS/ramsey/ramsey.html}\end{center}}
+
+\newcommand{\euclida}{{\dg Euclid's Lemma} aka {\dg Bezout's Identity}
+\\[1mm]For any coprime $\bl a, b\myin\mathbb{Z}$,
+there are $\bl x, y\myin\mathbb{Z}$ such that $\bl ax + by \meq 1$.}
+
+\newcommand{\euclidpfa}{\\[4mm]\proof}
+\newcommand{\euclidpfb}{\\Consider the $\bl b-1$ remainders of $\bl a, 2a, \ldots, (b-1)a$ modulo $\bl b$.}
+\newcommand{\euclidpfc}{\\Since $\bl a$ and $\bl b$ are coprime, none of the remainders equal $\bl0$.}
+\newcommand{\euclidpfd}{\\Now assume that no remainder equals $\bl1$.}
+\newcommand{\euclidpfe}{\\Then the $\bl b-1$ remainders must be among the numbers $\bl 2,\ldots,b-1$.}
+\newcommand{\euclidpff}{\\By the {\dg Pigeonhole Principle},
+  two of the remainders must be equal}
+\newcommand{\euclidpfg}{\\so $\bl ma \mequiv na \pmod{b}$ for distinct $\bl m,n\mgt 0$.}
+\newcommand{\euclidpfh}{\\Hence $\bl (m - n)a\mequiv0\pmod{b}$.}
+\newcommand{\euclidpfj}{\\Since $\bl a$ and $\bl b$ are coprime, $\bl m-n\mequiv 0\pmod{b}$}
+\newcommand{\euclidpfk}{,\\or $\bl m\mequiv n\pmod{b}$, a contradiction.}
+\newcommand{\euclidpfm}{\\Hence, $\bl xa \mequiv 1 \pmod{b}$ for some $\bl x\myin\mathbb{Z}$}
+\newcommand{\euclidpfn}{\\and so $\bl ax + by \meq 1$ for some $\bl y\myin\mathbb{Z}$.\qed}
+
+\newcommand{\euclidb}{\\[4mm]{\gray Modified just slightly,
+  this proof gives the {\green Chinese Remainder Theorem}.}}
+
+\newcommand{\proizvolova}{{\dg Proizvolov's Identity}
+  \\Bipartition $\bl[2n]$ into sets
+  $\bl A \meq \{a_1\mgt \cdots \mgt a_n\}$ and $\bl B \meq \{b_1\mlt\cdots\mlt b_n\}$.
+  Then\vspace*{-1mm}
+  \[\bl
+    \sum_{i=1}^n |a_i - b_i| \meq n^2\,\black.\vspace*{-2mm}
+  \]}
+
+\newcommand{\proizvolovpfa}{\proof}
+\newcommand{\proizvolovpfb}{\\Assume that $\bl a_i,b_i\mleq n$ for some $\bl i$.}
+\newcommand{\proizvolovpfc}{\\Then at least $\bl n - (i - 1)$ of the $\bl a_j$s are in $\bl [n]$.}
+\newcommand{\proizvolovpfd}{\\Also, at least $\bl i$ of the $\bl b_j$s are in $\bl [n]$.}
+\newcommand{\proizvolovpfe}{\\Then at least $\bl n-(i-1) + i \meq n+1$ of the $\bl a_j$s and $\bl b_j$s in $\bl [n]$.}
+\newcommand{\proizvolovpff}{\\By the {\dg Pigeonhole Principle}, two of these are identical, a contradiction.}
+\newcommand{\proizvolovpfg}{\\Hence, $\bl a_i$ and $\bl b_i$ cannot both be less than or equal to $\bl n$.}
+\newcommand{\proizvolovpfh}{\\Similarly, $\bl a_i$ and $\bl b_i$ cannot both be bigger than or equal to $\bl n+1$.}
+\newcommand{\proizvolovpfj}{\\Hence, one of $\bl a_i,b_i$ is in $\bl [n]$ and the other is in $\bl[2n]-[n]\meq \{n+1,\ldots,2n\}$.}
+\newcommand{\proizvolovpfk}[2]{\\Then\vspace*{-1mm}
+  \begin{align*}\bl
+               \sum_{i=1}^n |a_i - b_i|
+    & \;{  {\meq ((n+1) + \cdots + 2n) - (1+\cdots +n)}}\\[-4mm]
+    & \;{#1{\meq (n+\cdots+n) + (1+\cdots+n) - (1+\cdots+n)}}
+      \;{#2{\meq n^2\,\black.\;\Box}}\\[-12mm] \end{align*}}
+
+
+\newcommand{\mantela}{{\dg Mantel's Theorem} {\gray (1907)}\\[-2mm]
+If $\bl G\meq (V,E)$ is a simple graph on $\bl n$ vertices with $\bl |E|\mgt\dfrac{n^2}{4}$ edges,
+\\[-1mm]then $\bl G$ has at least one triangle.}
+\newcommand{\mantelb}{\\[2mm]{\gray This is a special case of {\green Tur\'{a}n's Theorem} stating when $\lightblue G$ must contain~$\lightblue K_p$.}}
+
+\newcommand{\mantelexa}{\\[8mm]\example}
+\newcommand{\mantelexb}[3]{\vspace*{10mm}\begin{center}\hspace*{-35mm}\myhexagon{#1}{\uput[l](7,0){$\bl|E|\meq #3$}#2}\hspace*{35mm}\end{center}}
+\newcommand{\mantelexba}{\psline(a)(d)}
+\newcommand{\mantelexbb}{\psline(b)(e)}
+\newcommand{\mantelexbc}{\psline(c)(f)}
+\newcommand{\mantelexbd}{\psline(a)(c)}
+\newcommand{\mantelexbe}{\psset{linecolor=green,linewidth=0.075,fillcolor=white}\pspolygon[fillstyle=none](a)(c)(d)\pscircle(a){.2}\pscircle(c){.2}\pscircle(d){.2}}
+
+\newcommand{\mantelexpfa}{\\[4mm]\proof}
+\newcommand{\mantelexpfb}{\\If $\bl n\meq 3$, then if $\bl |E|\mgt \frac{n^2}{4} \meq 2.25$, then $\bl |E|\meq 3$, so $\bl G$ is itself a triangle.}
+\newcommand{\mantelexpfc}{\\Assume for induction that the theorem is true for all values up to $\bl n-1$.}
+\newcommand{\mantelexpfd}{\\Choose an edge $\bl\{u,v\}$ of $\bl E$.}
+\newcommand{\mantelexpfe}{\\Let $\bl H$ be the subgraph of $\bl G$ obtained by deleting $\bl u$ and $\bl v$.}
+\newcommand{\mantelexpff}{\\If $\bl |E(H)|\!\mgt\!\bl\frac{(n-2)^2}{4}$ edges, then $\bl H$ and thus $\bl G$ has a triangle, by assumption.}
+\newcommand{\mantelexpfg}{\\Suppose that $\bl |E(H)|\mleq\frac{(n-2)^2}{4} \;\lightblue(\gray=\lightblue \frac{n^2}{4} - n + 1)$.}
+\newcommand{\mantelexpfh}{\\There are $\bl|E-\{u,v\}|-|E(H)|\mgt\frac{n^2}{4}-1-\frac{(n-2)^2}{4}\meq n-2$
+  edges between $\bl H$ and $\bl\{u,v\}$, so at least $\bl (n-2)+1$ edges}
+\newcommand{\mantelexpfj}{, but only $\bl n-2$ vertices in $\bl H$.}
+\newcommand{\mantelexpfk}{\\By the {\dg Pigeonhole Principle}, some vertex in $\bl H$
+  is adjacent to both $\bl u$ and~$\bl v$.}
+\newcommand{\mantelexpfm}{\\Thus, $\bl G$ has a triangle.\qed}
+
+\newcommand{\contents}{\pspicture(0,0)(0,0)\endpspicture\\[-8mm]
+  {{\sc\Large Ramsey Theory}\footnotesize\dg
+  \\[- .2mm]The Pigeonhole Principle
+  \\[-1.6mm]Ramsey's Theory
+  \\[-1.6mm]Van der Waerden's Theorem
+  \\[-1.6mm]S($\bl k,m$) (The Hales-Jewett Theorem)
+  \\[-1.6mm]Schur's Theorem
+  \\[-1.6mm]Schur's $\bl x^m+y^m\mequiv z^m\pmod{p}$ theorem
+  \\[-1.6mm]Generalisation of Schur's Theorem and Van der Waerden's Theorem
+  \\[-1.6mm]Rado's Theorem, Folkman's Theorem, Hindman's Theorem
+  \\[-1.6mm]Ramras' intersection set theorem
+  \\[-1.6mm]The Bipartite Ramsey Theorem
+  \\[-1.6mm]The Chv\'{a}tal-Harary theorem
+  \\[-1.6mm]Chv\'{a}tal's theorem
+  \\[-1.6mm]The Vector Space Ramsey Theorem, The Gallai-Witt Theorem
+  \\[-1.6mm]Applications
+  \\[-1mm]\myspace Mixon's proof of infinitely many primes
+  \\[-1.6mm]\myspace Dirichlet's Approximation Theorem
+  \\[-1.6mm]\myspace Fermat's Sum of Squares Theorem
+  \\[-1.6mm]\myspace No lossless compression algorithm is perfect
+  \\[-1.6mm]\myspace The Erd\H{o}s-Szekeres Theorem
+  \\[-1.6mm]\myspace The Happy Ending Problem
+  \\[-1.6mm]\myspace Erd\H{o}s' $\bl n\meq ab$ theorem
+  \\[-1.6mm]\myspace Euclid's Lemma/Bezout's Identity
+  \\[-1.6mm]\myspace The Chinese Remainder Theorem
+  \rput[l](-9.48,-.4){\myspace Proizvolov's Identity}
+  \rput[l](-9.49,-.9){\myspace Mantel's Theorem}}}
+
+\newcommand{\references}{{\dg References}\small
+  \\[2mm]M.~Aigner and G.M.~Ziegler,
+  \\\myspace {\sl\dg Proofs from The Book}, 4th edition, Springer-Verlag, Berlin, 2010.
+  \\[1mm]A.~Bogomolny, {\sl\dg Pigeonhole Principle},
+  \\\myspace \url{http://www.cut-the-knot.org/do_you_know/pigeon.shtml}, 2016-03.
+  \\[1mm]J.~Brandt, {\sl\dg Kombinatorik}, Aarhus University, lecture notes, 2001.
+  \\[1mm]R.L.~Graham, M.~Gr\"otschel, and L.~Lov\'asz (eds.),
+  \\\myspace {\sl\dg Handbook of Combinatorics. I--II}, North-Holland, Amsterdam, 1995.
+  \\[1mm]R.L.~Graham, B.L.~Rothschild, and J.~Spencer,
+  \\\myspace {\sl\dg Ramsey Theory}, 2nd edition, John Wiley \&\ Sons, Inc., New York, 1990.
+  \\[1mm]B.M.~Landman and A.~Robertson,
+  \\\myspace {\sl\dg Ramsey Theory on the Integers}, 2nd edition, AMS, Providence, RI, 2014.
+  \\[1mm]J.H.~van Lint and R.M.~Wilson,
+  \\\myspace {\sl\dg A Course in Combinatorics}, Cambridge University Press, 1992.
+}
+
+%  \\J.~Ne\v{s}et\v{r}il and V.~R\"{o}dl, Two proofs in combinatorial number theory,
+%  \\\myspace{\sl Proc.\ Amer.\ Math.\ Soc.}~{\bf 93}, (1985), 185--188
+%P. Erdős, On the multiplicative representation of integers, Israel J. Math. 2 (1964), 251--261.
+%J. Nešetřil and V. Rödl, Simple proof of the existence of restricted Ramsey graphs by means of partite construction, Combinatorica 2 (1981), 199-202.
+
+\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+\np\pigeonthma
+\np\pigeonthma\pigeonthmexaa
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabcii}
+\np\pigeonthmplusa
+\np\pigeonthmplusa\\[4mm]\ramseyb
+\np\pigeonthmplusa\\[4mm]\ramseyb\\[4mm]\ramseye
+\np\pigeonthmplusa\\[4mm]\ramseyb\\[4mm]\ramseye\ramseyea
+\np\convexa
+\np\convexa\convexb
+\np\convexa\convexexa
+\np\convexa\convexexa\convexexb{}
+\np\convexa\convexexa\convexexb{\convexexba}
+\np\convexa\convexexa\convexexb{\convexexbb}
+\np\convexa\convexexa\convexexb{\convexexbc}
+\np\convexa
+\np\convexa\convexpfa
+\np\convexa\convexpfa\convexpfb{}
+\np\convexa\convexpfa\convexpfb{}\convexpfc
+\np\convexa\convexpfa\convexpfb{\convexpfbz}\convexpfc
+\np\convexa\convexpfa\convexpfb{\convexpfby\convexpfbz}\convexpfc
+\np\convexa\convexpfa\convexpfb{\convexpfby\convexpfbz}\convexpfc\convexpfd
+\np\convexa\convexpfa\convexpfb{\convexpfbc\convexpfby\convexpfbz}\convexpfc\convexpfd
+\np\convexa\convexpfa\convexpfb{\convexpfbd\convexpfby\convexpfbz}\convexpfc\convexpfd
+\np\convexa\convexpfa\convexpfb{\convexpfbe\convexpfby\convexpfbz}\convexpfc\convexpfd
+\np\convexa\convexpfa\convexpfb{\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfbfa\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfbfb\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfbfc\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbf\convexpfbfd\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbg\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff
+\np\convexa\convexpfa\convexpfb{\convexpfbg\convexpfby\convexpfbz}\convexpfc\convexpfd\convexpfe\convexpff\convexpfg
+\np\erdosa
+\np\erdosa\erdospfa
+\np\erdosa\erdospfa\erdospfb
+\np\erdosa\erdospfa\erdospfb\erdosb
+\np\erdosa\erdospfa\erdospfb\erdosb\erdosc
+\np\biglist
+\np\euclida
+\np\euclida\euclidpfa
+\np\euclida\euclidpfa\euclidpfb
+\np\euclida\euclidpfa\euclidpfb\euclidpfc
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh\euclidpfj
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh\euclidpfj\euclidpfk
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh\euclidpfj\euclidpfk\euclidpfm
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh\euclidpfj\euclidpfk\euclidpfm\euclidpfn
+\np\euclida\euclidpfa\euclidpfb\euclidpfc\euclidpfd\euclidpfe\euclidpff\euclidpfg\euclidpfh\euclidpfj\euclidpfk\euclidpfm\euclidpfn\euclidb
+\np\proizvolova
+\np\proizvolova\proizvolovpfa
+\np\proizvolova\proizvolovpfa\proizvolovpfb
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg\proizvolovpfh
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg\proizvolovpfh\proizvolovpfj
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg\proizvolovpfh\proizvolovpfj\proizvolovpfk{\ph}{\ph}
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg\proizvolovpfh\proizvolovpfj\proizvolovpfk{}{\ph}
+\np\proizvolova\proizvolovpfa\proizvolovpfb\proizvolovpfc\proizvolovpfd\proizvolovpfe\proizvolovpff\proizvolovpfg\proizvolovpfh\proizvolovpfj\proizvolovpfk{}{}
+\np\mantela
+\np\mantela\mantelb
+\np\mantela\mantelb\mantelexa
+\np\mantela\mantelb\mantelexa\mantelexb{}{}{6}
+\np\mantela\mantelb\mantelexa\mantelexb{\mantelexba}{}{7}
+\np\mantela\mantelb\mantelexa\mantelexb{\mantelexba\mantelexbb}{}{8}
+\np\mantela\mantelb\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc}{}{9}
+\np\mantela\mantelb\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc\mantelexbd}{}{10}
+\np\mantela\mantelb\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc\mantelexbd}{\mantelexbe}{10}
+\np\mantela\mantelb
+\np\mantela\mantelb\mantelexpfa
+\np\mantela\mantelb\mantelexpfa\mantelexpfb
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff\mantelexpfg
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff\mantelexpfg\mantelexpfh
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff\mantelexpfg\mantelexpfh\mantelexpfj
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff\mantelexpfg\mantelexpfh\mantelexpfj\mantelexpfk
+\np\mantela\mantelb\mantelexpfa\mantelexpfb\mantelexpfc\mantelexpfd\mantelexpfe\mantelexpff\mantelexpfg\mantelexpfh\mantelexpfj\mantelexpfk\mantelexpfm
+\np\contents
+\np\references
+
+
+
+
+
+\end{document}
+
+%\np\pigeonthma
+%\np\pigeonthma\dirichleta
+%\np\pigeonthma\dirichleta\dirichletb
+%\np\pigeonthma\dirichleta\dirichletb\dirichletc
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{\ph}{\ph}{\ph}
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{\ph}{\ph}
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{}{\ph}
+%\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{}{}
+
+
+\newcommand{\spernerlemma}{{\dg Sperner's Lemma} {\gray(1928)}
+  \\Triangulate a triangle with vertices $\bl v_1,v_2,v_3$ into smaller triangles.
+  \\Colour each of the vertices in the colours $\bl\{1,2,3\}$ so that
+  \\\mybullet $\bl v_i$ has colour $\bl i$ for each $\bl i\meq 1,2,3$;
+  \\\mybullet each vertex along the edge from $\bl v_i$ to $\bl v_j$ has colour $\bl i$ or $\bl j$;
+  \\\mybullet all other (interior) vertices may have any colour $\bl 1,2,3$.
+  \\Then there is a triangle whose vertices have all three colours.}
+
+\newcommand{\spernerlemmaexa}{\example}
+\newcommand{\spernerlemmaexb}{}
+
+\newcommand{\spernerlemmapfa}{\\[2mm]\proof}
+\newcommand{\spernerlemmapfb}{\\Let $\bl G$ be the graph with a vertex in each triangle, including the outer triangle,
+  and edges that cross the triangle sides whose vertices are coloured $\bl 1$ and $\bl2$.}
+\newcommand{\spernerlemmapfc}{\\{\gray (Then $\lightblue G$ is a subgraph of the dual graph of the triangulation.)}}
+\newcommand{\spernerlemmapfd}{\\The number of edges crossing the triangle side $\bl v1$ from $\bl v_2$ is odd.}
+\newcommand{\spernerlemmapfe}{\\Hence, the degree of the other vertex of $\bl G$ is odd.}
+\newcommand{\spernerlemmapff}{\\The degree of each other vertex is 1 if it lies in a tricoloured triangle and is 2 otherwise.}
+\newcommand{\spernerlemmapfg}{\\By the {\dg Handshaking Lemma}, the sum of vertex degrees is even}
+\newcommand{\spernerlemmapfh}{\\so there must be an odd number of $\bl 1$-degree vertices.}
+\newcommand{\spernerlemmapfj}{\\In particular, there is at least one such vertex.}
+\newcommand{\spernerlemmapfk}{\\Hence, there is a tri-coloured triangle.\qed}
+
+\np\spernerlemma
+
+
+\newcommand{\brouwera}{{\dg Brouwer's Fixed Point Theorem} {\gray (1912)}
+  \\Every continuous function $\bl f\,:\,B\to B$ on an $\bl n$-dimensional ball $\bl B\subseteq \mathbb{R}^n$
+    has a fixed point $\bl x\myin B$ with $\bl f(x)\meq (x)$.}
+

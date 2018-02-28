@@ -1,0 +1,639 @@
+%  Lecture 6: Spanning trees
+%
+%  OK Graph defs recap
+%  OK Trees (def + example + a few results)
+%  OK Spanning trees (def + example + a few results)
+%  OK Greedy Algorithm/Kruskal
+%  OK Example
+%  OK Proof (matroid result as well?)
+%  OK a-minimal spanning trees
+%  OK Dijkstra's Algorithm
+%  OK Example
+%  OK Proof
+%
+
+\include{mydefinitionsmatchings}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\end{center}}
+
+\newcommand{\lecturetitlevi}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\\[3mm]
+  \darkgreen Lecture 6: Spanning Trees\end{center}}
+
+\newcommand{\hallivra}{A (simple) {\dg graph} $\bl G\meq (V,E)$ consists of {\dg vertices} $\bl V$ and {\dg edges} $\bl {\blue E}\msubseteq\binom{V}{2}$.}
+\newcommand{\hallivrb}{\\We draw $\bl G$ as dots (vertices) and lines between the dots (edges).}
+
+\newcommand{\hallivrc}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallivrcv}{{\darkgreen Example}}
+\newcommand{\hallivrd}{\\Let $\bl G$ be the graph $\bl (V,E)$ where
+  $\bl V \meq \{\textsf{1},\textsf{2},\textsf{3},\textsf{4}\}$ and
+  $\bl E \meq \binom{V}{2}$:} % \meq \bigl\{\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{3,4\},\{2,4\}\bigr\}$:}
+\newcommand{\hallivre}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-1)(5,2)#1\endpspicture}}
+\newcommand{\hallivrev}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-.75)(5,1.75)#1\endpspicture}}
+\newcommand{\hallivrea}{\rput(-.3,0){\pspicture(-1,-1)(1,1)\psline(0,0)(.866,-.5)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(.866,-.5)(0,1)(0,0)(-.866,-.5)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\small\darkgray
+  \rput[b](0,1.2){1}\rput[u](0,-.25){4}\rput[l](-1.216,-.625){2}\rput[r](1.216,-.625){3}\endpspicture}}
+\newcommand{\hallivreb}[2]{\rput(-.3,0.3){\pspicture(-1,-1)(2.5,1)#1{#2
+  \psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)}
+  \psline[fillstyle=none](0,1)(.866,-.5)(0,0)(-.866,-.5)
+  \psline[fillstyle=none](.866,1)(2.589,1)(1.732,-.5)
+  \pscircle(.866,1){.1}\pscircle(2.598,1){.1}\pscircle(1.732,-.5){.1}{#2\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}\endpspicture}}
+\newcommand{\hallivreba}{{\psset{linecolor=lightgray,fillcolor=offwhite,linearc=.2,fillstyle=solid}
+  \pspolygon(-1.22,-.7)(0,1.4)(1.22,-.7)\pspolygon(.512,1.2)(1.732,-.9)(2.952,1.2)}}
+\newcommand{\hallivrebb}{\psline[linecolor=blue](0,0)(.866,-.5)}
+\newcommand{\hallvira}[2]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}
+  \pspicture(-4.5,-.5)(5,2)\rput(-1.5,.75){#1}\rput(2,.75){#2}\endpspicture}}
+\newcommand{\hallviraa}[1]{\pspicture(-1,-1)(1,1)\psline(0,0)(-.866,-.5)\psline(0,0)(0,1)
+  \psline(0,0)(.866,-.5)#1\pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}
+  \pscircle(.866,-.5){.1}\endpspicture}
+\newcommand{\hallviraaa}{\rput(0,-1){A tree}}
+\newcommand{\hallviraab}{\rput(0,-1){{\red Not} a tree}\psline(-.866,-.5)(.866,-.5)}
+\newcommand{\hallvirab}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-.5)(5,2)
+  \rput(-1.5,.5){\pspicture(-1,-1)(1,1)\psline(0,0)(.866,-.5)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(.866,-.5)(0,1)(0,0)(-.866,-.5)\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}#1\endpspicture}\endpspicture}}
+\newcommand{\hallviraba}{\bhg\psline(0,0)(-.866,-.5)\psline(0,0)(0,1)\psline(0,0)(.866,-.5)
+  \pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}
+\newcommand{\hallvirabb}{\bhg\psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)
+  \pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}
+\newcommand{\hallvirabc}{\bhg\psline[fillstyle=none](0,1)(0,0)(-.866,-.5)(.866,-.5)
+  \pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}
+
+\newcommand{\hallivrq}{\\[3mm]Let $\bl G \meq (V,E)$ be a graph. }
+\newcommand{\hallivrqv}{Let $\bl G \meq (V,E)$ be a (simple) graph. }
+\newcommand{\hallivrr}{\\ A {\dg walk} in $\bl G$ is
+  a sequence of vertices $\bl v_1,v_2,\ldots,v_n$ with $\bl \{v_i,v_{i+1}\}\myin E$.}
+\newcommand{\hallivrs}{\\If a walk exists between each pair of vertices in $\bl G$, then $\bl G$ is {\blue connected}.}
+\newcommand{\hallivrt}{\\The {\em maximally connected subgraphs} of $\bl G$ are the {\dg components} of $\bl G$.}
+
+\newcommand{\hallivrx}{\\ A {\dg path} in $\bl G$ is a walk with no repeated vertex.}
+\newcommand{\hallivry}{\\ A {\dg closed walk} in $\bl G$ is a walk of the form $\bl v_1,v_2,\ldots,v_n,v_1$.}
+\newcommand{\hallivrz}{\\ A {\dg cycle} in $\bl G$ is a closed walk with no repeated vertex but the first and~last.}
+
+
+\newcommand{\hexagonpic}{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadow=false,fillstyle=solid}\pspicture(-4.5,-1)(5,2)
+  \rput(-1,.5){\pspicture(-1,-1)(1,1)
+  \pspolygon[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+  \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}\endpspicture}}
+
+\newcommand{\treea}{\\A {\dg tree} is a connected graph containing no cycle.}
+\newcommand{\treec}{\\A {\dg spanning tree} in $\bl G$ is a tree in $\bl G$ that contains all vertices of $\bl G$.}
+
+\newcommand{\treed}{{\darkgreen\sf Theorem}
+  \\Every tree on $\bl n$ vertices has $\bl n-1$ edges. }
+
+\newcommand{\treepfia}{\\[3mm]\proof }
+\newcommand{\treepfib}{\\We can build up a tree by starting with a single vertex and adding edges to the existing graph. }
+\newcommand{\treepfic}{The single vertex has {\bl1} vertex and {\bl0} edges. }
+\newcommand{\treepfid}{\\Each added edge adds just one vertex, so the final tree will have one fewer edges ($\bl n-1$) than vertices.\qed}
+
+\newcommand{\hallvirac}[3]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-.5)(5,2)\rput(-1.5,0){\pspicture(-1,-1)(1,1)
+  \rput[l](2,.5){{\blue$|V|\meq$\;#1}}\rput[l](2,0){{\blue$|E|\meq $\blue\:#2}}#3\endpspicture}\endpspicture}}
+
+\newcommand{\hallviraca}{\bhg\pscircle(0,0){.1}}
+\newcommand{\hallviracb}{\bhg\psline(0,0)(0,1)\psline(0,0)(0,1)\pscircle(0,0){.1}\pscircle(0,1){.1}}
+\newcommand{\hallviracc}{\bhg\psline(0,0)(-.866,-.5)\psline(0,0)(0,1)
+  \pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}}
+\newcommand{\hallviracd}{\bhg\psline(0,0)(-.866,-.5)\psline(0,0)(0,1)\psline(0,0)(.866,-.5)
+  \pscircle(0,1){.1}\pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}
+
+\newcommand{\treee}{{\darkgreen\sf Theorem}
+  \\The spanning trees of a connected graph have the same number of~edges.}
+
+\newcommand{\treepfiia}{\\[2.5mm]\proof }
+\newcommand{\treepfiib}{\\If $\bl G$ is a connected graph on $\bl n$ vertices,
+  \\then any spanning tree $\bl T$ of $\bl G$ will contain all $\bl n$ vertices. }
+\newcommand{\treepfiic}{\\Hence, $\bl T$ has $\bl n-1$ edges.\qed}
+
+\newcommand{\treef}{{\darkgreen\sf Theorem}
+  \\Every connected graph contains a spanning tree.}
+
+\newcommand{\treepfiiia}{\\[2.5mm]\proof }
+\newcommand{\treepfiiib}{\\Let $\bl G$ be a connected graph. }
+\newcommand{\treepfiiic}{\\If $\bl G$ is a tree, then $\bl G$ is a spanning tree for itself.}
+\newcommand{\treepfiiid}{\\If $\bl G$ is not a tree, then $\bl G$ contains at least one cycle. }
+\newcommand{\treepfiiie}{\\Remove an edge from a cycle in $\bl G$. }
+\newcommand{\treepfiiif}{\\The resulting graph is still connected and contains all vertices of $\bl G$. }
+\newcommand{\treepfiiig}{\\Continue to remove an edge from each cycle until no cycles remain. }
+\newcommand{\treepfiiih}{\\The resulting graph is a tree that contains all vertices of $\bl G$. }
+\newcommand{\treepfiiij}{\\In other words, it is a spanning tree of $\bl G$.\qed}
+
+\newcommand{\treeg}{{\darkgreen\sf Theorem}
+  \\A connected graph on  {\blue$n$}   vertices is a {\blue tree}
+    if and only if it has {\blue$n-1$} edges.}
+
+\newcommand{\treepfiva}{\\[2mm]\proof }
+\newcommand{\treepfivb}{Let $\bl G$ be a connected graph with $\bl n$ vertices. }
+\newcommand{\treepfivc}{\\If $\bl G$ is a tree, then it has $\bl n-1$ edges. }
+\newcommand{\treepfivd}{\\Conversely, suppose that $\bl G$ has $\bl n-1$ edges. }
+\newcommand{\treepfive}{\\Let $\bl T$ be a spanning tree of $\bl G$. }
+\newcommand{\treepfivf}{\\Then $\bl T$ is contained in $\bl G$ and has as many vertices and edges as~$\bl G$. }
+\newcommand{\treepfivg}{\\Therefore, $\bl T$ is in fact equal to $\bl G$. }
+\newcommand{\treepfivh}{\\Hence, $\bl G$ is a tree.\qed}
+
+\newcommand{\treeh}{A {\dg weighted graph} $\bl G$ is a graph whose edges have been assigned numbers.}
+\newcommand{\treeha}{\\The {\dg weight} of an edge {\blue$e$} is denoted by {\blue $\bl w(e)$}.}
+\newcommand{\treehb}{\\The {\dg weight} $\bl w(G)$ of $\bl G$ is the sum of edge weights in $\bl G$.}
+\newcommand{\treehc}{\\A {\dg minimal spanning tree} $\bl T$ in $\bl G$ is a spanning tree
+ whose weight $\bl w(T)$ is \\{\em less than or equal to} the weight of any other spanning tree.}
+
+\newcommand{\treehd}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-3,-1.5)(5,1.5)
+  \psline[fillstyle=none](0,1)(-1,0)(0,-1)(1,0)(0,1)(0,-1)\rput(-.65,.65){\darkgray3}
+  \rput(.65,.65){\darkgray2}\rput(-.65,-.65){\darkgray2}\rput(.65,-.65){\darkgray2}
+  \rput(.2,0){\darkgray1}#1\multips(-1,0)(1,1){2}{\mydot}\multips(0,-1)(1,1){2}{\mydot}\endpspicture}}
+
+\newcommand{\treehda}{\bhg\psline[fillstyle=none](-1,0)(0,-1)(0,1)(1,0)
+   \rput[u](-.25,0){$\blue T$}\rput[l](2,.25){$\blue w(T)\meq2+1+2\meq5$}
+   \rput[l](2,-.25){$\blue T$ is a minimal spanning tree}}
+\newcommand{\treehdb}{\bhg\psline[fillstyle=none](-1,0)(0,-1)(0,1)\psline(0,-1)(1,0)
+   \rput[u](-.25,0){$\blue T$}\rput[l](2,.25){$\blue w(T)\meq2+1+2\meq5$}
+   \rput[l](2,-.25){$\blue T$ is a minimal spanning tree}}
+\newcommand{\treehdc}{\rhg\psline[fillstyle=none](-1,0)(0,1)(1,0)
+   \psline(0,-1)(0,1)\rput[u](-.25,0){$\red T$}\rput[l](2,.25){$\red w(T)\black=\red 3+2+1\black=\red6$}
+   \rput[l](2,-.25){$\red T$ is {\red not} a minimal spanning tree}}
+\newcommand{\treehdd}{\rhg\psline[fillstyle=none](-1,0)(0,1)(1,0)
+   \psline(0,-1)(1,0)\rput[u](-.25,0){$\red T$}\rput[l](2,.25){$\red w(T)\black=\red 3+2+2\black=\red7$}
+   \rput[l](2,-.25){$\red T$ is {\red not} a minimal spanning tree}}
+
+\newcommand{\treej}{Let $\bl G\meq (V,E)$ be a (simple) connected graph on $\bl n$ vertices.}
+
+\newcommand{\treek}{{\dg\sc Greedy Algorithm}}
+\newcommand{\treeka}{\\[1mm]\mybullet Set $\bl T =\emptyset$.}
+\newcommand{\treekb}{\\\mybullet Let $\bl A$ be the edges in $\bl E-E(T)$ that form no cycle with edges~in~$\bl T$.}
+\newcommand{\treekc}{\\\mybullet Choose an edge $\bl e$ from $\bl A$ that has smallest weight.}
+\newcommand{\treekd}{\\\mybullet Add $\bl e$ to $\bl T$.}
+\newcommand{\treeke}{\\\mybullet Continue until $\bl T$ has $\bl n-1$ edges.}
+\newcommand{\treekf}{\\\mybullet Then $\bl T$ is a minimal spanning tree for $\bl G$.}
+\newcommand{\treekav}{\\[1mm]\mystep Set $\bl T\meq\emptyset$.}
+\newcommand{\treekbv}{\\\mystep Let $\bl \green A$ be the edges in $\bl E-E(T)$ that form no cycle with edges~in~$\blue T$.}
+\newcommand{\treekcv}{\\\mystep Choose an edge $\bl \darkred e$ from $\bl \green A$ that has smallest weight.}
+\newcommand{\treekdv}{\\\mystep Add $\bl \darkred e$ to $\bl T$.}
+\newcommand{\treekev}{\\\mystep Continue until $\bl T$ has $\bl n-1$ edges.}
+\newcommand{\treekfv}{\\\mystep Then $\bl T$ is a minimal spanning tree for $\bl G$.}
+
+\newcommand{\nodea}{\nput[labelsep=0]{0}{a}{\mydot}}
+\newcommand{\nodeb}{\nput[labelsep=0]{0}{b}{\mydot}}
+\newcommand{\nodec}{\nput[labelsep=0]{0}{c}{\mydot}}
+\newcommand{\noded}{\nput[labelsep=0]{0}{d}{\mydot}}
+\newcommand{\nodee}{\nput[labelsep=0]{0}{e}{\mydot}}
+\newcommand{\nodef}{\nput[labelsep=0]{0}{f}{\mydot}}
+\newcommand{\nodeg}{\nput[labelsep=0]{0}{g}{\mydot}}
+\newcommand{\nodeh}{\nput[labelsep=0]{0}{h}{\mydot}}
+\newcommand{\nodei}{\nput[labelsep=0]{0}{i}{\mydot}}
+\newcommand{\nodej}{\nput[labelsep=0]{0}{j}{\mydot}}
+
+\newcommand{\edgeab}{\ncline{-}{a}{b}\Aput[.1 ]{5}\nodea\nodeb}
+\newcommand{\edgeae}{\ncline{-}{a}{e}\Bput[.1 ]{3}\nodea\nodee}
+\newcommand{\edgebc}{\ncline{-}{b}{c}\Aput[.1 ]{4}\nodeb\nodec}
+\newcommand{\edgebe}{\ncline{-}{b}{e}\Aput[.08]{3}\nodeb\nodee}
+\newcommand{\edgebi}{\ncline{-}{b}{i}\Bput[.1 ]{2}\nodeb\nodei}
+\newcommand{\edgecd}{\ncline{-}{c}{d}\Aput[.1 ]{2}\nodec\noded}
+\newcommand{\edgecf}{\ncline{-}{c}{f}\Bput[.06]{8}\nodec\nodef}
+\newcommand{\edgecg}{\ncline{-}{c}{g}\Aput[.06]{3}\nodec\nodeg}
+\newcommand{\edgedj}{\ncline{-}{d}{j}\Aput[.1 ]{1}\noded\nodej}
+\newcommand{\edgeeh}{\ncline{-}{e}{h}\Bput[.1 ]{4}\nodee\nodeh}
+\newcommand{\edgeei}{\ncline{-}{e}{i}\Aput[.08]{1}\nodee\nodei}
+\newcommand{\edgefg}{\ncline{-}{f}{g}\Bput[.09]{2}\nodef\nodeg}
+\newcommand{\edgefi}{\ncline{-}{f}{i}\Aput[.06]{3}\nodef\nodei}
+\newcommand{\edgegj}{\ncline{-}{g}{j}\Bput[.06]{2}\nodeg\nodej}
+\newcommand{\edgehi}{\ncline{-}{h}{i}\Bput[.1 ]{6}\nodeh\nodei}
+\newcommand{\edgeij}{\ncline{-}{i}{j}\Bput[.1 ]{4}\nodei\nodej}
+
+\newcommand{\treem}[3]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-1,-.25)(7,3)\gray
+  \pnode(0  ,2){a}\pnode(2  ,2){b}\pnode(3  ,2){c}\pnode(4  ,2){d}\pnode(0  ,1){e}
+  \pnode(2.5,1){f}\pnode(3.5,1){g}\pnode(0  ,0){h}\pnode(2  ,0){i}\pnode(4  ,0){j}
+  \edgeab\edgeae\edgebc\edgebe\edgebi\edgecd\edgecf\edgecg
+  \edgedj\edgeeh\edgeei\edgefg\edgefi\edgegj\edgehi\edgeij
+  \psset{linecolor=blue}\blue#1\psset{linecolor=green}\green#2\psset{linecolor=darkred}\darkred#3\endpspicture}}
+
+\newcommand{\treen}{\rput[l](5.25,1){$\blue T$ \black has weight $\bl w(T)\meq20$.}}
+
+\newcommand{\greedaa}{\edgeab\edgeae\edgebc\edgebe\edgebi\edgecd\edgecf\edgecg\edgedj\edgeeh\edgeei\edgefg\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greedab}{\edgedj}
+\newcommand{\greedac}{\edgedj}
+\newcommand{\greedba}{\edgeab\edgeae\edgebc\edgebe\edgebi\edgecd\edgecf\edgecg\edgeeh\edgeei\edgefg\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greedbb}{\edgeei}
+\newcommand{\greedbc}{\edgedj\edgeei}
+\newcommand{\greedca}{\edgeab\edgeae\edgebc\edgebe\edgebi\edgecd\edgecf\edgecg\edgeeh\edgefg\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greedcb}{\edgebi}
+\newcommand{\greedcc}{\edgedj\edgeei\edgebi}
+\newcommand{\greedda}{\edgeab\edgeae\edgebc\edgecd\edgecf\edgecg\edgeeh\edgefg\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greeddb}{\edgecd}
+\newcommand{\greeddc}{\edgedj\edgeei\edgebi\edgecd}
+\newcommand{\greedea}{\edgeab\edgeae\edgebc\edgecf\edgecg\edgeeh\edgefg\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greedeb}{\edgefg}
+\newcommand{\greedec}{\edgedj\edgeei\edgebi\edgecd\edgefg}
+\newcommand{\greedfa}{\edgeab\edgeae\edgebc\edgecf\edgecg\edgeeh\edgefi\edgegj\edgehi\edgeij}
+\newcommand{\greedfb}{\edgegj}
+\newcommand{\greedfc}{\edgedj\edgeei\edgebi\edgecd\edgefg\edgegj}
+\newcommand{\greedga}{\edgeab\edgeae\edgebc\edgeeh\edgefi\edgehi\edgeij}
+\newcommand{\greedgb}{\edgeae}
+\newcommand{\greedgc}{\edgedj\edgeei\edgebi\edgecd\edgefg\edgegj\edgeae}
+\newcommand{\greedha}{\edgeeh\edgefi\edgehi\edgeij}
+\newcommand{\greedhb}{\edgefi}
+\newcommand{\greedhc}{\edgedj\edgeei\edgebi\edgecd\edgefg\edgegj\edgeae\edgefi}
+\newcommand{\greedia}{\edgeeh\edgehi}
+\newcommand{\greedib}{\edgeeh}
+\newcommand{\greedic}{\edgedj\edgeei\edgebi\edgecd\edgefg\edgegj\edgeae\edgefi\edgeeh}
+
+\newcommand{\greedstepn}{\treeka \treekb \treekc \treekd \treeke \treekf }
+\newcommand{\greedstepa}{\treekav\treekb \treekc \treekd \treeke \treekf }
+\newcommand{\greedstepb}{\treeka \treekbv\treekc \treekd \treeke \treekf }
+\newcommand{\greedstepc}{\treeka \treekb \treekcv\treekd \treeke \treekf }
+\newcommand{\greedstepd}{\treeka \treekb \treekc \treekdv\treeke \treekf }
+\newcommand{\greedstepe}{\treeka \treekb \treekc \treekd \treekev\treekf }
+\newcommand{\greedstepf}{\treeka \treekb \treekc \treekd \treeke \treekfv}
+\newcommand{\greedstepo}{\treekav\treekbv\treekcv\treekdv\treekev\treekfv}
+
+\newcommand{\treep}{We will prove this in {\darkgreen Lecture 8}.
+  \\[5mm]The {\sc\dg Greedy Algorithm} (also called {\sc\dg Kruskal's Algorithm})
+    also works for weighted matchings, weighted matroids, and even more general and abstract objects!}
+
+\newcommand{\treepfva}{\\[2mm]\proof}
+\newcommand{\treepfvb}{We need to show that $\bl T$ is a minimal spanning tree for $\bl G$. }
+\newcommand{\treepfvc}{\\Since there are only finitely many edges and we keep adding edges and avoiding cycles,
+  the algorithm will terminate and return a spanning tree~$\bl T$.}
+\newcommand{\treepfvd}{\\We therefore only need to show that the tree $\bl T$ is minimal. }
+\newcommand{\treepfve}{Assume that $\bl T$ is not minimal.
+  \\In other words, $\bl w(S)\mlt w(T)$ for some minimal spanning tree~$\bl S$.}
+\newcommand{\treepfvf}{\\Let $\bl s_1,\ldots,s_{n-1}$ and $\bl t_1,\ldots,t_{n-1}$ be the sequences of edges
+  chosen by the algorithm to produce $\bl S$ and $\bl T$. }
+\newcommand{\treepfvg}{Set $\bl i=\min\{j:w(s_j)\mlt w(t_j)\}$. }
+\newcommand{\treepfvh}{\\Now, at least one edge $\bl s_j$ with $\bl 1\mleq j\mleq i$ lies outside $\bl \{t_1,\ldots,t_{i-1}\}$
+  and can be added to it without making cycles. }
+\newcommand{\treepfvj}{Also, $\bl w(s_j)\mleq w(s_i)\mlt w(t_i)$. }
+\newcommand{\treepfvk}{However, this means that the algorithm would not have chosen $\bl t_i$ at the $\bl i$th step for $\bl T$, a contraction. }
+\newcommand{\treepfvm}{Thus, $\bl T$ is a minimal spanning tree.\qed}
+
+\newcommand{\dijka}{Let $\bl G$ be a connected graph with positive edge-weights, and let $\bl \red\mathsf{a}\black\myin \blue V(G)$.}
+\newcommand{\dijkb}{\\Consider a {\dg shortest path} from $\bl \red\mathsf{a}$  to $\bl\mathsf{v}$ for each vertex $\bl\mathsf{v}$ in $\bl G$
+  \\(here, a {\dg shortest path} is one with {\dg minimal weight}).}
+\newcommand{\dijkc}{\\The union of these paths forms a \emph{\dg minimal $\bl \red\mathsf{a}$-path spanning tree} for {\blue$G$}.}
+
+\newcommand{\minnotmin}{A {\em minimal $\bl \red\mathsf{a}$-path spanning tree} is {\red not} generally a {\em minimal spanning tree}.}
+\newcommand{\minnotminexa}[3]{\\The tree $\bl T_1$ below  is a minimal spanning tree in $\bl G$
+  \\whereas $\bl T_2$ is a minimal $\bl \red\mathsf{a}$-path spanning tree in $\bl G$.
+  \\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,linecolor=gray,
+     fillstyle=solid,shadow=false}\pspicture(-.5,-.25)(7,2.9)\gray
+  \put(0  ,0){\pspicture(0,0)(2,2)\gray\minnotminexba#1\minnotminnodes\endpspicture}
+  \put(3.5,0){\pspicture(0,0)(2,2)\blue\psset{linecolor=blue}\minnotminexba#2\minnotminnodes\endpspicture}
+  \put(7  ,0){\pspicture(0,0)(2,2)\blue\psset{linecolor=blue}\minnotminexba#3\minnotminnodes\endpspicture}\endpspicture}}
+\newcommand{\minnotminexba}{\pnode(1,2){a}\pnode(0,1){b}\pnode(1,1){c}\pnode(2,1){d}\pnode(1,0){e}
+ \ncline{-}{a}{c}\Bput[.06]{1}\ncline{-}{a}{d}\Aput[.08]{4}\ncline{-}{c}{e}\Aput[.06]{1}}
+\newcommand{\minnotminexbaa}{\ncline{-}{a}{b}\Bput[.08]{5}\ncline{-}{b}{c}\Bput[.06]{2}
+ \ncline{-}{b}{e}\Bput[.08]{1}\ncline{-}{c}{d}\Aput[.06]{5}\ncline{-}{d}{e}\Aput[.08]{4}
+ \uput[d](1,-.25){$\blue G$}}
+\newcommand{\minnotminexbab}{\ncline{-}{b}{e}\Bput[.08]{1}\uput[d](1,-.25){$\red T_1$}}
+\newcommand{\minnotminexbac}{\ncline{-}{b}{c}\Bput[.08]{2}\uput[d](1,-.25){$\red T_2$}}
+\newcommand{\minnotminnodes}{\nodea\nodeb\nodec\noded\nodee\nput[labelsep=.25]{90}{a}{$\red\mathsf{a}$}}
+
+\newcommand{\dijkd}{{\dg\sc Dijkstra's Algorithm} {\gray(1959)}}
+\newcommand{\dijkda}{\\[1mm]\mybullet Set $\bl T \meq \{\mathsf{a}\}$.}
+\newcommand{\dijkdb}{\\\mybullet Let $\bl A$ be the edges with one vertex $\bl \mathsf{v}$ not in $\bl T$ and the other in $\bl T$.}
+\newcommand{\dijkdc}{\\\mybullet Choose an edge $\bl e$ from $\bl A$ that gives a shortest path from $\bl \mathsf{a}$ to any $\bl \mathsf{v}$.}
+\newcommand{\dijkdd}{\\\mybullet Add $\bl e$ to $\bl T$.}
+\newcommand{\dijkde}{\\\mybullet Continue until $\bl T$ contains all vertices of $\bl G$.}
+\newcommand{\dijkdf}{\\\mybullet Then $\bl T$ is a minimal $\bl \mathsf{a}$-path spanning tree for $\bl G$.}
+\newcommand{\dijkdav}{\\[1mm]\mystep Set $\bl T \meq\{{\red\mathsf{a}}\}$.}
+\newcommand{\dijkdbv}{\\\mystep Let $\bl \green A$ be the edges with
+  one vertex $\bl \red\mathsf{v}$ {\red not} in~$\blue T$ and the other in $\bl T$.}
+\newcommand{\dijkdcv}{\\\mystep Choose an edge $\bl \red e$ from $\bl \green A$ that gives a shortest path from $\bl \red\mathsf{a}$ to any $\bl \red\mathsf{v}$.}
+\newcommand{\dijkddv}{\\\mystep Add $\bl \red e$ to $\bl T$.}
+\newcommand{\dijkdev}{\\\mystep Continue until $\bl T$ contains all vertices of $\bl G$.}
+\newcommand{\dijkdfv}{\\\mystep Then $\bl T$ is a minimal $\bl \red\mathsf{a}$-path spanning tree for $\bl G$.}
+
+\newcommand{\edgab}{\ncline{-}{a}{b}\Bput[.1 ]{2}\nodea\nodeb}
+\newcommand{\edgac}{\ncline{-}{a}{c}\Aput[.07]{7}\nodea\nodec}
+\newcommand{\edgae}{\ncline{-}{a}{e}\Bput[.07]{1}\nodea\nodee}
+\newcommand{\edgbd}{\ncline{-}{b}{d}\Bput[.08]{6}\nodeb\noded}
+\newcommand{\edgbe}{\ncline{-}{b}{e}\Bput[.08]{1}\nodeb\nodee}
+\newcommand{\edgcf}{\ncline{-}{c}{f}\Aput[.1 ]{2}\nodec\nodef}
+\newcommand{\edgdg}{\ncline{-}{d}{g}\Bput[.08]{2}\noded\nodeg}
+\newcommand{\edgef}{\ncline{-}{e}{f}\Aput[.09]{3}\nodee\nodef}
+\newcommand{\edgeg}{\ncline{-}{e}{g}\Bput[.08]{2}\nodee\nodeg}
+\newcommand{\edgeh}{\ncline{-}{e}{h}\Bput[.06]{3}\nodee\nodeh}
+\newcommand{\edgfi}{\ncline{-}{f}{i}\Aput[.1 ]{4}\nodef\nodei}
+\newcommand{\edggh}{\ncline{-}{g}{h}\Bput[.1 ]{4}\nodeg\nodeh}
+\newcommand{\edghi}{\ncline{-}{h}{i}\Bput[.1 ]{1}\nodeh\nodei}
+
+\newcommand{\verta}{\nput[labelsep=.2]{ 90}{a}{$\red\mathsf{a}$}}
+\newcommand{\vertb}{\nput[labelsep=.2]{135}{b}{$\mathsf{b}$}}
+\newcommand{\vertc}{\nput[labelsep=.2]{ 45}{c}{$\mathsf{c}$}}
+\newcommand{\vertd}{\nput[labelsep=.2]{180}{d}{$\mathsf{d}$}}
+\newcommand{\verte}{\nput[labelsep=.2]{180}{e}{$\mathsf{e}$}}
+\newcommand{\vertf}{\nput[labelsep=.2]{  0}{f}{$\mathsf{f}$}}
+\newcommand{\vertg}{\nput[labelsep=.2]{225}{g}{$\mathsf{g}$}}
+\newcommand{\verth}{\nput[labelsep=.2]{270}{h}{$\mathsf{h}$}}
+\newcommand{\verti}{\nput[labelsep=.2]{315}{i}{$\mathsf{i}$}}
+
+\newcommand{\dijke}[3]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-.6,-.25)(7,3)\gray
+  \pnode(3,2){a}\pnode(1,2){b}\pnode(4,2){c}\pnode(0,1){d}\pnode(2,1){e}
+  \pnode(4,1){f}\pnode(1,0){g}\pnode(3,0){h}\pnode(4,0){i}
+  \edgab\edgac\edgae\edgbd\edgbe\edgcf\edgdg\edgef\edgeg\edgeh\edgfi\edggh\edghi
+  \verta\vertb\vertc\vertd\verte\vertf\vertg\verth\verti
+  \psset{linecolor=blue}\blue#1\psset{linecolor=green}\green#2\psset{linecolor=darkred}\darkred#3\endpspicture}}
+
+\newcommand{\dijkraa}{\edgab\edgac\edgae\vertb\vertc\verte}
+\newcommand{\dijkrab}{\edgae\verte}
+\newcommand{\dijkrac}{\edgae\verte}
+\newcommand{\dijkrba}{\edgab\edgac\edgbe\edgeg\edgeh\edgef\vertb\vertc\vertf\vertg}
+\newcommand{\dijkrbb}{\edgab\vertb}
+\newcommand{\dijkrbc}{\edgab\edgae\vertb\verte}
+\newcommand{\dijkrca}{\edgac\edgbd\edgeg\edgeh\edgef\vertc\vertd\vertf\vertg}
+\newcommand{\dijkrcb}{\edgeg\vertg}
+\newcommand{\dijkrcc}{\edgab\edgae\edgeg\vertb\verte\vertg}
+\newcommand{\dijkrda}{\edgac\edgbd\edgdg\edgeh\edgef\edggh\vertc\vertd\vertf\verth}
+\newcommand{\dijkrdb}{\edgeh\verth}
+\newcommand{\dijkrdc}{\edgab\edgae\edgeg\edgeh\vertb\verte\vertg\verth}
+\newcommand{\dijkrea}{\edgac\edgbd\edgdg\edgef\edghi\vertc\vertd\vertf\verti}
+\newcommand{\dijkreb}{\edgef\vertf}
+\newcommand{\dijkrec}{\edgab\edgae\edgef\edgeg\edgeh\vertb\verte\vertf\vertg\verth}
+\newcommand{\dijkrfa}{\edgac\edgbd\edgcf\edgdg\edgfi\edghi\vertc\vertd\verti}
+\newcommand{\dijkrfb}{\edgdg\vertd}
+\newcommand{\dijkrfc}{\edgab\edgae\edgdg\edgef\edgeg\edgeh\vertb\vertd\verte\vertf\vertg\verth}
+\newcommand{\dijkrga}{\edgac\edgcf\edgfi\edghi\vertc\verti}
+\newcommand{\dijkrgb}{\edghi\verti}
+\newcommand{\dijkrgc}{\edgab\edgae\edgdg\edgef\edgeg\edgeh\edghi\vertb\vertd\verte\vertf\vertg\verth\verti}
+\newcommand{\dijkrha}{\edgac\edgcf\vertc}
+\newcommand{\dijkrhb}{\edgcf\vertc}
+\newcommand{\dijkrhc}{\edgab\edgae\edgcf\edgdg\edgef\edgeg\edgeh\edghi\vertb\vertc\vertd\verte\vertf\vertg\verth\verti}
+
+\newcommand{\dijkstepn}{\dijkda \dijkdb \dijkdc \dijkdd \dijkde \dijkdf }
+\newcommand{\dijkstepa}{\dijkdav\dijkdb \dijkdc \dijkdd \dijkde \dijkdf }
+\newcommand{\dijkstepb}{\dijkda \dijkdbv\dijkdc \dijkdd \dijkde \dijkdf }
+\newcommand{\dijkstepc}{\dijkda \dijkdb \dijkdcv\dijkdd \dijkde \dijkdf }
+\newcommand{\dijkstepd}{\dijkda \dijkdb \dijkdc \dijkddv\dijkde \dijkdf }
+\newcommand{\dijkstepe}{\dijkda \dijkdb \dijkdc \dijkdd \dijkdev\dijkdf }
+\newcommand{\dijkstepf}{\dijkda \dijkdb \dijkdc \dijkdd \dijkde \dijkdfv}
+\newcommand{\dijkstepo}{\dijkda \dijkdb \dijkdc \dijkdd \dijkde \dijkdf }
+
+\newcommand{\dijksconlc}{\rput[l](5.3,2){\black The shortest distances from $\bl \red\mathsf{a}$}
+ \rput[l](5.3,1.6){\black to the other vertices are:}
+ \rput[l](5.3,.7){\black
+  $\bl \begin{array}{|c|c|c|c|c|c|c|c|}\hline
+   \mathsf{b} & \mathsf{c} & \mathsf{d} & \mathsf{e} & \mathsf{f} & \mathsf{g} & \mathsf{h} & \mathsf{i} \\\hline
+   \mathsf{2} & \mathsf{6} & \mathsf{5} & \mathsf{1} & \mathsf{4} & \mathsf{3} & \mathsf{4} & \mathsf{5} \\\hline
+ \end{array}$}}
+
+\newcommand{\dijkcomment}{This algorithm also works for directed graphs and other generalisations.}
+
+\newcommand{\treepfvia}{\\[2mm]\proof}
+\newcommand{\treepfvib}{It is easy to see that $\bl T$ is a spanning tree. }
+\newcommand{\treepfvic}{We must therefore show that the distances given by $\bl T$ from $\bl \mathsf{a}$
+ to each vertex $\bl \mathsf{v}$ indeed equal $\bl \mathsf{d}(\mathsf{a},\mathsf{v})$ in $\bl G$,
+ where, for any vertices $\bl \mathsf{w},\mathsf{x}\myin V(G)$,
+ $\bl \textsf{d(w,x)}$ denotes the shortest distance between them. }
+\newcommand{\treepfvid}{Assume that this is not true - that the algorithm fails, and let $\bl \mathsf{v}$ be the first vertex for which this happens. }
+\newcommand{\treepfvidv}{Assume that the algorithm fails, and let $\bl \mathsf{v}$ be the first vertex for which this happens. }
+\newcommand{\treepfvie}{Let $\bl T'$ be the tree generated up till this point,
+  and let $\bl \mathsf{u}$ be the vertex preceding $\bl \mathsf{v}$ in $\bl T'$. }
+\newcommand{\treepfvif}{Let $\bl P$ be a shortest path from $\bl \mathsf{a}$ to~$\bl \mathsf{v}$,
+and let $\bl \mathsf{z}$ be the first vertex along this path that is not in $\bl T'$. }
+\newcommand{\treepfvig}{\\Also, let $\bl \mathsf{y}$ be the preceding vertex in $\bl P$. }
+\newcommand{\treepfvih}{Since the algorithm first failed with $\bl \mathsf{v}$,
+ and $\bl \mathsf{v}$ was chosen to be in $\bl T'$ and $\bl \mathsf{z}$ was not,
+ we have\vspace{-1mm}
+  \[\bl\textsf{d(a,v)}\mlt \textsf{d(a,u)}+w(\textsf{u,v})\mleq\textsf{d(a,y)}+w(\textsf{y,z})\mlt \textsf{d(a,y)}+\textsf{d(y,v)}\meq\textsf{d(a,v)}\,,\]
+\\[-6.5mm]a contradiction. \qed}
+
+
+\begin{document}
+\sf\coursetitle
+\newpage\lecturetitle
+\newpage\lecturetitlevi
+\newpage\hallivra
+\newpage\hallivra\hallivrb
+\newpage\hallivra\hallivrb\hallivrc
+\newpage\hallivra\hallivrb\hallivrc\hallivrd
+\newpage\hallivra\hallivrb\hallivrc\hallivrd\hallivrev{\hallivrea}
+\newpage\hallivra\hallivrb\hallivrc
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{}}
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{}}\hallivrr
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr\hallivrs
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz
+\newpage\hallivra\hallivrb\hallivrc\hallivrev{\hallivreb{\hallivreba}{\hallivrebb\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\treea
+\newpage\hallivra\hallivrb\hallivrc\hallvira{\hallviraa{\hallviraaa}}{\hallviraa{\hallviraab}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz\treea
+\newpage\hallivra\hallivrb\hallivrc\hallvira{\hallviraa{\hallviraaa}}{\hallviraa{\hallviraab}}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea
+\newpage\hallivra\hallivrb\hallivrc\hallvira{\hallviraa{\hallviraaa}}{\hallviraa{\hallviraab}}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea\treec
+\newpage\hallivra\hallivrb\hallivrc\hallvirab{}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea\treec
+\newpage\hallivra\hallivrb\hallivrc\hallvirab{\hallvirabb}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea\treec
+\newpage\hallivra\hallivrb\hallivrc\hallvirab{\hallvirabc}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea\treec
+\newpage\hallivra\hallivrb\hallivrc\hallvirab{\hallviraba}\hallivrr\hallivrs\hallivrx\hallivry\hallivrz\treea\treec
+\newpage\treed
+\newpage\treed\treepfia
+\newpage\treed\treepfia\treepfib
+\newpage\treed\treepfia\treepfib\treepfic
+\newpage\treed\treepfia\treepfib\treepfic\treepfid
+\newpage\treed\treepfia\treepfib\treepfic\treepfid\hallvirac{1}{0}{\hallviraca}
+\newpage\treed\treepfia\treepfib\treepfic\treepfid\hallvirac{2}{1}{\hallviracb}
+\newpage\treed\treepfia\treepfib\treepfic\treepfid\hallvirac{3}{2}{\hallviracc}
+\newpage\treed\treepfia\treepfib\treepfic\treepfid\hallvirac{4}{3}{\hallviracd}
+\newpage\treed\\[3mm]\treee
+\newpage\treed\\[3mm]\treee\treepfiia
+\newpage\treed\\[3mm]\treee\treepfiia\treepfiib
+\newpage\treed\\[3mm]\treee\treepfiia\treepfiib\treepfiic
+\newpage\treed\\[3mm]\treee
+\newpage\treed\\[3mm]\treee\\[3mm]\treef
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid\treepfiiie
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid\treepfiiie\treepfiiif
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid\treepfiiie\treepfiiif\treepfiiig
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid\treepfiiie\treepfiiif\treepfiiig\treepfiiih
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\treepfiiia\treepfiiib\treepfiiic\treepfiiid\treepfiiie\treepfiiif\treepfiiig\treepfiiih\treepfiiij
+\newpage\treed\\[3mm]\treee\\[3mm]\treef
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc\treepfivd
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc\treepfivd\treepfive
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc\treepfivd\treepfive\treepfivf
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc\treepfivd\treepfive\treepfivf\treepfivg
+\newpage\treed\\[3mm]\treee\\[3mm]\treef\\[3mm]\treeg\treepfiva\treepfivb\treepfivc\treepfivd\treepfive\treepfivf\treepfivg\treepfivh
+\newpage\treeh
+\newpage\treeh\treeha
+\newpage\treeh\treeha\treehb
+\newpage\treeh\treeha\treehb\treehc
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example\treehd{}
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example\treehd{\treehda}
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example\treehd{\treehdb}
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example\treehd{\treehdc}
+\newpage\treeh\treeha\treehb\treehc\\[3mm]\example\treehd{\treehdd}
+\newpage\treej
+\newpage\treej\lb\treek\greedstepo
+\newpage\treej\lb\treek\greedstepn\treem{}{}{}
+\newpage\treej\lb\treek\greedstepa\treem{}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{}{\greedaa}{}
+\newpage\treej\lb\treek\greedstepc\treem{}{\greedaa}{}
+\newpage\treej\lb\treek\greedstepc\treem{}{\greedaa}{\greedab}
+\newpage\treej\lb\treek\greedstepd\treem{}{\greedaa}{\greedab}
+\newpage\treej\lb\treek\greedstepd\treem{\greedac}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedac}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedac}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedac}{\greedba}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedac}{\greedba}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedac}{\greedba}{\greedbb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedac}{\greedba}{\greedbb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedbc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedbc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedbc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedbc}{\greedca}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedbc}{\greedca}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedbc}{\greedca}{\greedcb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedbc}{\greedca}{\greedcb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedcc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedcc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedcc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedcc}{\greedda}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedcc}{\greedda}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedcc}{\greedda}{\greeddb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedcc}{\greedda}{\greeddb}
+\newpage\treej\lb\treek\greedstepd\treem{\greeddc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greeddc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greeddc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greeddc}{\greedea}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greeddc}{\greedea}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greeddc}{\greedea}{\greedeb}
+\newpage\treej\lb\treek\greedstepd\treem{\greeddc}{\greedea}{\greedeb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedec}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedec}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedec}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedec}{\greedfa}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedec}{\greedfa}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedec}{\greedfa}{\greedfb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedec}{\greedfa}{\greedfb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedfc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedfc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedfc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedfc}{\greedga}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedfc}{\greedga}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedfc}{\greedga}{\greedgb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedfc}{\greedga}{\greedgb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedgc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedgc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedgc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedgc}{\greedha}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedgc}{\greedha}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedgc}{\greedha}{\greedhb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedgc}{\greedha}{\greedhb}
+\newpage\treej\lb\treek\greedstepd\treem{\greedhc}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedhc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedhc}{}{}
+\newpage\treej\lb\treek\greedstepb\treem{\greedhc}{\greedia}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedhc}{\greedia}{}
+\newpage\treej\lb\treek\greedstepc\treem{\greedhc}{\greedia}{\greedib}
+\newpage\treej\lb\treek\greedstepd\treem{\greedhc}{\greedia}{\greedib}
+\newpage\treej\lb\treek\greedstepd\treem{\greedic}{}{}
+\newpage\treej\lb\treek\greedstepe\treem{\greedic}{}{}
+\newpage\treej\lb\treek\greedstepf\treem{\greedic}{}{}
+\newpage\treej\lb\treek\greedstepf\treem{\greedic}{}{\treen}
+\newpage\treej\lb\treek\greedstepf\lb\treep
+\newpage\dijka
+\newpage\dijka\dijkb
+\newpage\dijka\dijkb\dijkc
+\newpage\dijka\dijkb\dijkc\llb\minnotmin
+\newpage\dijka\dijkb\dijkc\llb\minnotmin\lb\example
+\newpage\dijka\dijkb\dijkc\llb\minnotmin\lb\example\minnotminexa{\minnotminexbaa}{\minnotminexbab}{\minnotminexbac}
+\newpage\dijka\dijkb\dijkc\llb\minnotmin
+\newpage\dijka\dijkb\dijkc\llb\minnotmin\lb\dijkd\dijkstepo
+\newpage\dijka\lb\dijkd\dijkstepo
+\newpage\dijka\lb\dijkd\dijkstepn\dijke{}{}{}
+\newpage\dijka\lb\dijkd\dijkstepa\dijke{}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{}{\dijkraa}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{}{\dijkraa}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{}{\dijkraa}{\dijkrab}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{}{\dijkraa}{\dijkrab}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrac}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrac}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrac}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrac}{\dijkrba}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrac}{\dijkrba}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrac}{\dijkrba}{\dijkrbb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrac}{\dijkrba}{\dijkrbb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrbc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrbc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrbc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrbc}{\dijkrca}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrbc}{\dijkrca}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrbc}{\dijkrca}{\dijkrcb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrbc}{\dijkrca}{\dijkrcb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrcc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrcc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrcc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrcc}{\dijkrda}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrcc}{\dijkrda}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrcc}{\dijkrda}{\dijkrdb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrcc}{\dijkrda}{\dijkrdb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrdc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrdc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrdc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrdc}{\dijkrea}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrdc}{\dijkrea}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrdc}{\dijkrea}{\dijkreb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrdc}{\dijkrea}{\dijkreb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrec}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrec}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrec}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrec}{\dijkrfa}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrec}{\dijkrfa}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrec}{\dijkrfa}{\dijkrfb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrec}{\dijkrfa}{\dijkrfb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrfc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrfc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrfc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrfc}{\dijkrga}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrfc}{\dijkrga}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrfc}{\dijkrga}{\dijkrgb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrfc}{\dijkrga}{\dijkrgb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrgc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrgc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrgc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepb\dijke{\dijkrgc}{\dijkrha}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrgc}{\dijkrha}{}
+\newpage\dijka\lb\dijkd\dijkstepc\dijke{\dijkrgc}{\dijkrha}{\dijkrhb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrgc}{\dijkrha}{\dijkrhb}
+\newpage\dijka\lb\dijkd\dijkstepd\dijke{\dijkrhc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepe\dijke{\dijkrhc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepf\dijke{\dijkrhc}{}{}
+\newpage\dijka\lb\dijkd\dijkstepf\dijke{\dijkrhc}{}{\dijksconlc}
+\newpage\dijka\lb\dijkd\dijkstepo
+\newpage\dijka\lb\dijkd\dijkstepo\blb\dijkcomment
+\newpage\dijkd\dijkstepo\treepfvia
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib\treepfvic
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib\treepfvic\treepfvid
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib\treepfvic\treepfvid\treepfvie
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib\treepfvic\treepfvid\treepfvie\treepfvif
+\newpage\dijkd\dijkstepo\treepfvia\treepfvib\treepfvic\treepfvid\treepfvie\treepfvif\treepfvig
+\newpage\dijkd\dijkstepo\treepfvia\treepfvidv\treepfvie\treepfvif\treepfvig
+\newpage\dijkd\dijkstepo\treepfvia\treepfvidv\treepfvie\treepfvif\treepfvig\treepfvih
+
+
+\end{document}
+
+

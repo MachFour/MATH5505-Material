@@ -1,0 +1,740 @@
+\include{mydefinitionsIEP}
+%\usepackage{graphicx}
+%\usepackage[utf8]{inputenc}
+
+
+\newcommand{\courseoverview}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace Extremal Set Theory}}
+
+\newcommand{\courseoverviewEC}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace           Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+\newcommand{\courseoverviewECii}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace           Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\myspace\footnotesize The Inclusion-Exclusion Principle}\\
+  {\sc\myspace\myspace\footnotesize M\"obius Inversion}\\
+  {\sc\myspace\myspace\footnotesize P\'olya Counting}\\
+  {\sc\myspace\myspace\footnotesize Generating Functions}\\
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\\[3mm]
+  \darkgreen Lecture 1: The Inclusion-Exclusion Principle\end{center}}
+
+
+\newcommand{\iepia}{{\dg The Inclusion-Exclusion Principle} {\gray (simple)}\vspace*{0mm}
+  \[\bl
+    |A| + |B| \meq |A\cup B| + |A\cap B|\vspace*{-5mm}
+  \]}
+
+\newcommand{\iepiaa}{Equivalently,\vspace*{0mm}
+  \[\bl
+    |A\cup B| \meq |A| + |B| - |A\cap B|\vspace*{2mm}
+  \]}
+
+\newcommand{\iepiaiii}{{\dg The Inclusion-Exclusion Principle} {\gray (simple)}\vspace*{2mm}
+  \[\bl
+    |A\cup B\cup C| \meq |A| + |B| + |C| - |A\cap B| - |A\cap C| - |B\cap C| + |A\cap B\cap C|\hspace*{-5mm}\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepiab}[1]{\begin{center}
+  \begin{pspicture}(-2.5,0)(5,3)
+    \psset{fillstyle=solid,opacity=0.5,linecolor=darkgray,fillcolor=gray,shadow=false}
+    \pscircle(0  ,0){2.5}
+    \pscircle(2.5,0){2.5}
+    \psset{fillstyle=none}
+    \pscircle(0  ,0){2.5}
+    \pscircle(2.5,0){2.5}
+    \uput[dl](-2.5, 2.5){$\bl A$}
+    \uput[dr]( 5  , 2.5){$\bl B$}#1
+  \end{pspicture}
+\end{center}}
+
+\newcommand{\iepiaba}{
+  \pscircle[fillstyle=solid](1.25,-2.165){2.5}
+  \psset{fillstyle=none}
+  \pscircle(0   , 0    ){2.5}
+  \pscircle(2.5 , 0    ){2.5}
+  \pscircle(1.25,-2.165){2.5}
+  \uput[d](1.25,-5){$\bl C$}}
+
+\newcommand{\iepib}{{\dg The Inclusion-Exclusion Principle}
+  \[\bl
+         \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\vspace*{0mm}
+  \]}
+
+\newcommand{\iepiba}{\\[-2mm]\lemma
+  \[\hspace*{-19.9mm}\bl\displaystyle\sum_{J\msubseteq I} t^{|J|} \meq (t+1)^{|I|}\]}
+
+\newcommand{\iepibapfa}{\\[-1.5mm]\proof}
+\newcommand{\iepibapfb}{\\If $\bl I\meq \emptyset$, then the sum is just the one term $\bl t^{|\emptyset|}\meq 1$.}
+\newcommand{\iepibapfc}{\\Otherwise, choose $\bl i\myin I$.}
+\newcommand{\iepibapfd}[4]{ By induction on $\bl |I|$,\vspace*{-2mm}
+  \[\bl \hspace*{-2mm} \begin{array}{rll}\ds  \sum_{J\msubseteq I}           \hspace*{-0mm} t^{|J|}
+    &\ds\hspace*{-2mm}{  {\meq \hspace*{-0mm} \sum_{i\myin    J\msubseteq I} \hspace*{-0mm} t^{|J|}
+                            +  \hspace*{-0mm} \sum_{i\mynotin J\msubseteq I} \hspace*{-0mm} t^{|J|}}}\\[6mm]
+    &\ds\hspace*{-2mm}{#1{\meq \hspace*{-2mm} \sum_{J\msubseteq I-\{i\}}     \hspace*{-0mm} t^{|J\cup\{i\}|}
+                            +  \hspace*{-2mm} \sum_{J\msubseteq I-\{i\}}     \hspace*{-2mm} t^{|J|}}}
+    &\ds\hspace*{-2mm}{#2{\meq (t+1)\hspace*{-2mm}\sum_{J\msubseteq I-\{i\}} \hspace*{-2mm} t^{|J|}}}\\[6mm]
+   &&\ds\hspace*{-2mm}{#3{\meq (t+1)(t+1)^{|I|-1}}}\;
+                      {#4{\meq (t+1)^{|I|}\quad\black\Box}}\hspace*{-4mm} \\[-12mm]
+  \end{array}\]}
+
+\newcommand{\iepibb}{\\[-3mm]{\gray This generalises the observation that $\lightblue I$ contains $\lightblue 2^{|I|}$ subsets.}}
+\newcommand{\iepibc}{\\[ 0mm]{\gray It also generalises the following well-known result.}}
+\newcommand{\iepibd}{\\[ 2mm]{\dg The Binomial Theorem}\vspace*{-3mm}
+  \[\bl\hspace*{-10mm}
+    (a+b)^n \meq \sum_{k=0}^n \binom{n}{k} a^k b^{n-k}\vspace*{-5mm}
+  \]}
+\newcommand{\iepibdpfa}{\proof}
+\newcommand{\iepibdpfb}[3]{\\Apply the {\dg Lemma} to $\bl t\mdef \dfrac{a}{b}$:\vspace*{-5mm}
+  \[\bl\ds
+            (a+b)^n
+        \meq b^n \Bigl(\frac{a}{b} + 1\Bigr)^n
+    {#1{\meq b^n \hspace*{-1mm}\sum_{J\subseteq[n]} \hspace*{-1mm}\Bigl(\frac{a}{b}\Bigr)^{|J|}}}
+    {#2{\meq b^n \hspace*{-1mm}\sum_{k=0}^n \hspace*{-1mm}\binom{n}{k} \Bigl(\frac{a}{b}\Bigr)^k}}
+    {#3{\meq     \hspace*{-1mm}\sum_{k=0}^n \hspace*{-1mm}\binom{n}{k} a^k b^{n-k}\;\black\Box}}\vspace*{-12mm}\]}
+
+\newcommand{\iepibdpfc}{\\[2mm]{\gray These identities can of course also be proved combinatorially.}}
+
+\newcommand{\iepibe}{\corollary\vspace*{-2mm}
+  \[\bl\hspace*{-14.1mm}\displaystyle\sum_{J\subseteq I} (-1)^{|J|} \meq \begin{cases}
+  1 & \mytext{ if } I\meq \emptyset\,;\\[-0mm]
+  0 & \mytext{ otherwise}\black.
+\end{cases}\vspace*{-2mm}\]}
+
+\newcommand{\iepibf}{\\{\gray This can be proved directly without induction:}\vspace*{-2mm}
+  \[      \lightblue   \hspace*{-4mm} \sum_{J\subseteq I} \hspace*{-0mm} (-1)^{|J|}
+    \gray=\lightblue   \hspace*{-1mm} \sum_{i\in    J\subseteq I} \hspace*{-1mm} (-1)^{|J|}
+                    +  \hspace*{-1mm} \sum_{i\notin J\subseteq I} \hspace*{-1mm} (-1)^{|J|}
+    \gray=\lightblue   \hspace*{-3mm} \sum_{J\subseteq I-\{i\}}   \hspace*{-2mm} (-1)^{|J\cup\{i\}|}
+                    +  \hspace*{-2mm} \sum_{J\subseteq I-\{i\}}   \hspace*{-2mm} (-1)^{|J|}
+    \gray=\lightblue 0 \hspace*{-8mm}
+  \]}
+
+\newcommand{\sumainunion}{\sum_{a\;\myin\, \text{\tiny$\ds\bigcup_{i\myin I}$} A_i}}
+\newcommand{\sumaininter}{\sum_{a\;\myin\, \text{\tiny$\ds\bigcap_{j\myin J}$} A_j}}
+
+\newcommand{\iepibpfia}{\\[-3mm]\proof{\dg I}}
+\newcommand{\iepibpfib}[5]{\vspace*{-1mm}\begin{align*}\bl
+               \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+           \meq\hspace*{-1mm}\sumainunion \hspace*{-1.5mm}1 \hspace*{1.5mm}
+    &\,{#1{\meq\sumainunion \bigl(1-\hspace*{-4mm}\sum_{J\msubseteq \{j\,:\, a\myin A_j\}}\hspace*{-2mm} (-1)^{|J|}\Bigr)}}\\[-1mm]
+    &\,{#2{\meq\sumainunion \,\sum_{\emptyset\mneq J\msubseteq \{j\,:\, a\myin A_j\}}\hspace*{-4mm} (-1)^{|J|+1}}}\\[-1mm]
+    &\,{#3{\meq\sum_{\emptyset\mneq J\msubseteq I} \,\sumaininter (-1)^{|J|+1}}}\\[-2mm]
+    &\,{#4{\meq\sum_{\emptyset\mneq J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|}}
+     \;{#5{\meq\sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\quad\black\Box}}\hspace*{-1mm}
+  \end{align*}}
+
+\newcommand{\iepibpfiia}{\\[-3mm]\proof{\dg II}}
+\newcommand{\iepibpfiib}{\\Use the {\dg I-E Principle}
+  $\bl |A\cup B| \meq |A| + |B| - |A\cap B|$ and induction on $\bl|I|$:\vspace*{-2mm}}
+\newcommand{\iepibpfiic}[4]{
+  \begin{align*}\bl
+               \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    &\,{  {\meq\Bigl|A_n\cup\hspace*{-2.5mm}\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|}}\\[-1.5mm]
+    &\,{#1{\meq|A_n|+ \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|
+                    - \Bigl|A_n\cap \hspace*{-2mm} \bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|}}\\[-1.5mm]
+    &\,{#2{\meq|A_n|+ \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr|
+                    - \Bigl|\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\cap A_n\Bigr|}}\\[-1.5mm]
+    &\,{#3{\meq|A_n|+ \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|
+                    - \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\cap A_n\Bigr|}}\\[-1.5mm]
+%    &\,{#4{\meq|A_n|+ \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|
+%                    + \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J\cup\{n\}} A_j\Bigr|}}\\
+    &\,{#4{\meq\sum_{J\msubseteq I} (-1)^{|J|+1}\Bigl|\bigcap_{j\myin J} A_j\Bigr|\qquad\black\Box}}\\[-15mm]
+  \end{align*}}
+
+\newcommand{\vala}{Let $\bl S$ be a set, $\bl G$ an Abelian group,
+  and $\bl\{A_i\}_I$ a finite family of $\bl S$-subsets.}
+\newcommand{\valb}{\\A function $\bl v:\mathcal{P}(S)\to G$ is a {\dg valuation} if,
+  for all $\bl A,B\msubseteq S$,\vspace*{-3mm}
+  \[\bl
+    v(A) + v(B) \meq v(A\cup B) + v(A\cap B)\vspace*{-2mm}
+  \]}
+
+\newcommand{\iepic}{{\dg The Inclusion-Exclusion Principle}\vspace*{-1mm}
+  \[\bl
+         v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepicv}{\\[4mm]{\dg The Inclusion-Exclusion Principle}
+  \\For a valuation $\bl v:\mathcal{P}(S)\to G$,\vspace*{-1mm}
+  \[\bl
+         v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepicpfa}{\\[-6mm]\proof}
+\newcommand{\iepicpfb}{\\Use induction on $\bl|I|$:\vspace*{-4mm}}
+\newcommand{\iepicpfc}[3]{
+  \begin{align*}\bl
+                v\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    &\,{  {\meq v\Bigl(A_n\cup\hspace*{-2.5mm}\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr)}}\\[-1.5mm]
+    &\,{#1{\meq v(A_n) + v\Bigl(\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\Bigr)
+                       - v\Bigl(\bigcup_{i\myin I-\{n\}} \hspace*{-3mm} A_i\cap A_n\Bigr)}}\\[-1.5mm]
+    &\,{#2{\meq v(A_n) + \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}v\Bigl(\bigcap_{j\myin J} A_j\Bigr)
+                       - \hspace*{-3mm} \sum_{J\msubseteq I-\{n\}}\hspace*{-3mm} (-1)^{|J|+1}v\Bigl(\bigcap_{j\myin J} A_j\cap A_n\Bigr)}}\\[-1.5mm]
+    &\,{#3{\meq\sum_{J\msubseteq I} (-1)^{|J|+1} v\Bigl(\bigcap_{j\myin J} A_j\Bigr)\qquad\black\Box}}\\[-20mm]
+  \end{align*}}
+
+\newcommand{\iepid}{{\dg The Inclusion-Exclusion Principle} {\gray (probability)}
+  \\For a {\dg probability} $\bl P:\mathcal{P}(S)\to [0,1]$,\vspace*{-2mm}
+  \[\bl
+         P\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} P\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{0mm}
+  \]}
+\newcommand{\iepidpfa}{\proof}
+\newcommand{\iepidpfb}{\\$\bl P(A) + P(B) \meq P(A\cup B) + P(A\cap B)$ for all $\bl A,B\msubseteq S$.\qed}
+
+\newcommand{\iepie}{{\dg The Inclusion-Exclusion Principle} {\gray (weights)}
+  \\For $\bl w:S\to G$,
+    define $\bl w:\mathcal{P}(S)\to G$ by $\ds\bl w(A)\mdef \sum_{a\myin A} w(a)$.\\[-3mm]
+    Then\vspace*{-1mm}
+  \[\bl
+         w\Bigl(\bigcup_{i\myin I} A_i\Bigr)
+    \meq \sum_{J\msubseteq I} (-1)^{|J|+1} w\Bigl(\bigcap_{j\myin J} A_j\Bigr)\vspace*{0mm}
+  \]}
+\newcommand{\iepiepfa}{\vspace*{-2mm}\proof}
+\newcommand{\iepiepfb}[2]{\vspace*{-2mm}
+  \begin{align*}\bl
+          w(A) + w(B)
+     \meq \sum_{a\myin A} w(a) + \sum_{a\myin B} w(a)
+    &\;{#1{\meq \sum_{a\myin A\cup B} w(a) + \sum_{a\myin A\cap B} w(a)}}\\
+    &\;{#2{\meq w(A\cup B) + w(A\cap B)\qquad\black\Box}}\\[-15mm]
+  \end{align*}}
+
+\newcommand{\iepiea}{{\gray If each $\lightblue A_i$ is finite,
+  then each valuation $\bl v$ on $\lightblue \mathcal{P}(\cup A_i)$ is in fact\\
+  a weight function on the elements of $\lightblue \cup A_i$
+  since $\lightblue v(A_i) \gray=\lightblue\ds\sum_{a\in A_i} v(a)$.\\[-3mm]
+  This is not true for uncountable sets.}}
+
+\newcommand{\iepif}{{\gray We shall generalise this {\green Principle} further in {\green Lecture 2}.}}
+
+\newcommand{\iepifa}{\lemma}
+\newcommand{\iepifav}{\\[-5mm]\lemma}
+\newcommand{\iepifb}{\\If $\bl A$ and $\bl B$ are disjoint and $\bl v(\emptyset)\meq 0$,
+                       then $\bl v(A\cup B)\meq v(A)+v(B)$.}
+\newcommand{\iepifbpfa}{\\[2mm]\proof }
+\newcommand{\iepifbpfb}[2]{\\$\bl v(A\cup B)\!\meq\! v(A)+v(B)-v(A\cap B)
+  \,{#1{\meq v(A)+v(B)-v(\emptyset)}}
+  \,{#2{\meq v(A)+v(B)\;\black\Box}}$\hspace*{-5mm}}
+
+\newcommand{\iepibaext}{\lemma\vspace*{-1mm}
+  \[\bl\hspace*{-13.5mm}
+    \sum_{K\msubseteq J\msubseteq I} t^{|J|} \meq (t+1)^{|I-K|} t^{|K|}\vspace*{-2mm}\]}
+
+\newcommand{\iepibaextpfa}{\\[-2mm]\proof}
+\newcommand{\iepibaextpfb}[1]{\vspace*{-0mm}
+  \[\bl
+              \sum_{K\msubseteq J\msubseteq I} t^{|J|}
+         \meq \;t^{|K|}\hspace*{-2mm}\sum_{J'\msubseteq I-K} t^{|J'|}
+   \;{#1{\meq (t+1)^{|I-K|} t^{|K|}\quad\black\Box}}\]}
+
+\newcommand{\iepibaextb}{\corollary}
+\newcommand{\iepibaextba}[1]{\vspace*{-2mm}
+  \[\bl\hspace*{-7.9mm}
+       \sum_{K\msubseteq J\msubseteq I} (-1)^{|J|}
+       \meq \begin{cases}
+         (-1)^{|K|} & \mytext{ if } K\meq I\,;\\[-0mm]
+         0 & \mytext{ otherwise}\black.
+\end{cases}\vspace*{-2mm}\]}
+
+\newcommand{\iepig}{\\[-3mm]{\dg Bonferroni Inequalities} {\gray (Dunn 1959)}}
+\newcommand{\iepigv}{{\dg Bonferroni Inequalities} {\gray (Dunn 1959)}}
+\newcommand{\iepiga}{\\For even $\bl s$ and odd $\bl t$ with $\bl s,t\mleq |I|$,\vspace*{-2mm}
+  \[\bl
+          \sum_{J\msubseteq I\,:\,|J|\mleq s} (-1)^{|J|+1}
+             \Bigl|\bigcap_{j\myin J} A_j\Bigr|
+    \mleq    \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+    \mleq \sum_{J\msubseteq I\,:\,|J|\mleq t} (-1)^{|J|+1}
+             \Bigl|\bigcap_{j\myin J} A_j\Bigr|\vspace*{-1mm}
+  \]}
+
+\newcommand{\iepigb}{{\gray This result is useful for approximating solutions to counting problems.}}
+
+\newcommand{\iepigpfa}{\proof}
+\newcommand{\iepigpfb}{\\For each $\bl a\myin\ds \bigcup_{i\myin I}A_i$,
+  set $\bl I_a\mdef \{i\,:\, a\myin A_i\}$ and choose $\bl i_a\myin I_a$. }
+\newcommand{\iepigpfc}[4]{Then \vspace*{-5mm}
+  \begin{align*}\bl
+    \Delta &\mdef                                                        \Bigl|\bigcup_{i\myin I} A_i\Bigr|
+                    - \sum_{J\msubseteq I\,:\,|J|\mleq r  } (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|
+            \;{#1{\,\meq\sum_{J\msubseteq I\,:\,|J|\mgeq r+1} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|}}\\[-0.5mm]
+           &\;{#2{\,\meq\sum_{J\msubseteq I\,:\,|J|\mgeq r+1} \sumaininter (-1)^{|J|+1}}}\\[-3mm]
+           &\;{#3{\,\meq\sumainunion \sum_{J\msubseteq I_a\,:\,|J|\mgeq r+1} (-1)^{|J|+1}}}
+            \;{#4{\,\meq(-1)^r \sumainunion \binom{|I_a|-1}{r}}}\\[-8mm]
+  \end{align*}}
+\newcommand{\iepigpfd}{Thus, $\bl\Delta \mlt 0$ when $\bl r$ is odd
+                         and $\bl\Delta \mgt 0$ when $\bl r$ is even.
+                     \\The proposition follows.\qed\vspace*{-12mm}}
+
+\newcommand{\iepigauxa}{\lemma}
+\newcommand{\iepigauxb}{\vspace*{-2mm}
+  \[\bl
+         \sum_{J\msubseteq I\,:\,|J|\mgeq r+1} (-1)^{|J|+1}
+    \meq (-1)^r\binom{|I|-1}{r}
+  \]}
+
+\newcommand{\iepigauxapfa}{\proof}
+\newcommand{\iepigauxapfb}[3]{\\Suppose that $\bl i\myin I$. Then\vspace*{-2mm}
+  \begin{align*}\bl
+                \sum_{          J\msubseteq I      \,:\,|J|\mgeq r+1} (-1)^{|J|+1}
+    &\;{  {\meq \sum_{i\myin    J\msubseteq I      \,:\,|J|\mgeq r+1} (-1)^{|J|+1}
+              + \sum_{i\mynotin J\msubseteq I      \,:\,|J|\mgeq r+1} (-1)^{|J|+1}}}\\
+    &\;{#1{\meq \sum_{          J\msubseteq I-\{i\}\,:\,|J|\mgeq r  } (-1)^{|J\cup\{i\}|+1}
+              - \sum_{          J\msubseteq I-\{i\}\,:\,|J|\mgeq r+1} (-1)^{|J|}}}\\
+    &\;{#2{\meq \sum_{          J\msubseteq I-\{i\}\,:\,|J|\meq r} (-1)^{|J|}}}\\
+    &\;{#3{\meq(-1)^r \binom{|I|-1}{r}\quad\black\Box}}
+  \end{align*}}
+
+\newcommand{\iepige}{{\gray This sort of proof can also be used to generalise the {\green Principle}.}}
+
+\newcommand{\exaia}{A {\dg derangement} is a permutation $\bl\pi\myin \Sigma_n$ with no fixed point $\bl\pi(i)\meq i$.}
+\newcommand{\exaib}{\\[3mm]\example}
+\newcommand{\exaic}{\begin{center}{\gray\psset{unit=5mm}\pspicture(-1,-.25)(7,1.25)
+    \rput(-1,1){$\bl    i $}\rput(1,1){1}\rput(2,1){2}\rput(3,1){3}\rput(4,1){4}\rput(5,1){5}
+    \rput(-1,0){$\bl\pi(i)$}\rput(1,0){2}\rput(2,0){3}\rput(3,0){1}\rput(4,0){5}\rput(5,0){4}\endpspicture}
+  \end{center}}
+
+\newcommand{\exaid}{\proposition}
+\newcommand{\exaie}{\\[-3mm]The number of derangements of $\bl n$ elements is
+   $\ds\bl D_n\mdef n!\sum_{i=0}^n\frac{(-1)^{i}}{i!}$\,.}
+
+\newcommand{\exaidpfa}{\\[0mm]\proof}
+\newcommand{\exaidpfb}{\\For $\bl i\myin I\mdef [n]$, let $\bl A_i$ be
+   the set of permutations $\bl \pi\myin \Sigma_n$ with $\bl\pi(i)\meq i$.}
+\newcommand{\exaidpfc}{\\Note that $\bl|\Sigma_n|\meq n!$
+                          and that $\bl\bigl|\bigcap_{j\myin J} A_j\bigr|\meq (n-|J|)!$
+                          for each $\bl \emptyset\mneq J\msubseteq I$.}
+\newcommand{\exaidpfd}[4]{\\By {\dg The Inclusion-Exclusion Principle},
+  \begin{align*}\bl
+    D_n  \meq \Bigl|\Sigma_n - \bigcup_{i\myin I} A_i\Bigr|
+        &\;{#1{\meq n! - \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|}}\\
+        &\;{#2{\meq n! + \sum_{\emptyset\mneq J\msubseteq I} (-1)^{|J|} (n-|J|)!}}\\
+        &\;{#3{\meq n! + \sum_{i=1}^n \binom{n}{i} (-1)^{i} (n-i)!}}
+         \;{#4{\meq n!   \sum_{i=0}^n \frac{ (-1)^{i}}{i!}\qquad\black\Box}}\\[-9mm]
+  \end{align*}}
+
+\newcommand{\exaif}{\corollary}
+\newcommand{\exaifv}{\\[1mm]\corollary}
+\newcommand{\exaifa}{\\About $\bl e^{-1}$ of permutations are derangements.}
+
+\newcommand{\exaifc}{\\[3mm]\lemma\quad $\bl D_n\meq (-1)^n + nD_{n-1}$}
+\newcommand{\exaifcpfa}{\\[2mm]\proof}
+\newcommand{\exaifcpfb}[1]{\vspace*{-4mm}\[\bl
+    D_n \meq n!\frac{(-1)^n}{n!} + n (n-1)!\sum_{i=0}^{n-1}\frac{(-1)^i}{i!}
+  \;{#1{\meq (-1)^n + n D_{n-1}\qquad\black\Box}}\]}
+
+\newcommand{\exaiga}{\\[4mm]\corollary}
+\newcommand{\exaigb}{\\Let $\bl M$ be an $\bl n\times n$ matrix with $\bl 0$s on its diagonal and $\bl\pm 1$~elsewhere.
+  \\If $\bl n$ is even, then $\bl\det M\mneq 0$.}
+
+\newcommand{\exaigpfa}{\\[2mm]\proof}
+\newcommand{\exaigpfb}{\\Let $\bl\Delta_n$ be the set of derangements on $\bl[n]$ and write $\bl M\meq (m_{ij})$.}
+\newcommand{\exaigpfc}[3]{\\Then\vspace*{-4mm}
+ \[\bl
+   \det M \meq    \!\!\sum_{\pi\myin\Sigma_n}\!\!\textrm{sgn}(\pi)\prod_{i=1}^n m_{i\pi(i)}
+    \;{#1{\meq    \!\!\sum_{\pi\myin\Delta_n}\!\!\textrm{sgn}(\pi)\prod_{i=1}^n m_{i\pi(i)}}}
+    \;{#2{\mequiv \!\!\sum_{\pi\myin\Delta_n}\!\!  1}}
+%    \;{#3{\mequiv |\Delta_n|}}
+    \;{#3{\mequiv D_n}}\!\!
+    \!{#2{\pmod{2}}}\vspace*{-1mm}
+ \]}
+\newcommand{\exaigpfd}[1]{By the above {\dg Lemma}, $\bl D_n$ is odd for even $\bl n${#1{,
+   so $\bl\det M$ must also be odd.\;$\Box$}}\hspace*{-8mm}\vspace*{-4mm}}
+
+\newcommand{\exaiha}{\\[4mm]\corollary}
+\newcommand{\exaihb}{\\[-3mm]The number of $\bl 2\times n$ Latin rectangles is
+   $\ds\bl n!\sum_{i=0}^n\frac{(-1)^{i}}{i!}\mapprox \frac{n!}{e}$\,.}
+
+\newcommand{\intsola}{\theorem}
+\newcommand{\intsolb}{\\The number of integer solutions to $\bl x_1+\cdots+x_n\meq k$ with $\bl x_i\mgeq 0$
+  is $\bl \binom{n+k-1}{n-1}$.\hspace*{-5mm}}
+\newcommand{\intsolapfa}{\\[2mm]\proof}
+\newcommand{\intsolapfb}{\\Draw $\bl k$ dots in a row and draw $\bl n-1$ lines between them.}
+\newcommand{\intsolapfc}{\\Dots bordered by lines represent one of the $\bl x_i$ values and vice virsa.}
+\newcommand{\intsolapfd}{\\Bijectively then, the number of solutions is the number of ways to draw these dots and lines.\qed}
+
+\newcommand{\intsolexta}{\\[2mm]\theorem}
+\newcommand{\intsolextav}{\theorem}
+\newcommand{\intsolextb}{\\The number of integer solutions to $\bl x_1+\cdots+x_n\meq k$ with $\bl 0\mleq x_i\mlt\ell$
+  is\vspace*{-2mm} \[\bl \sum_{i=0}^n (-1)^{i}\binom{n+k-\ell i-1}{n-1}\vspace*{-4mm}\]}
+\newcommand{\intsolextpfa}{\proof}
+\newcommand{\intsolextpfav}{\proof {\gray(continued)}}
+\newcommand{\intsolextpfb}{\\Set $\bl I\mdef [n]$ and let $\bl S$ be the set of all non-negative integer solutions.}
+\newcommand{\intsolextpfc}{\\Let $\bl A_i$ be the set of non-negative solutions with $\bl x_i\mgeq\ell$ for $\bl i\myin I$.}
+\newcommand{\intsolextpfd}{\\For $\bl J\msubseteq I$, $\bl\cap_{j\myin J} A_j$ is the set of integer solutions
+  with $\bl x_j\mgeq\ell$ for $\bl j\myin J$.}
+\newcommand{\intsolextpfe}{\\By substituting $\bl y_j\mdef x_j-\ell$ for each $\bl j\myin J$ and $\bl y_j\meq x_j$ otherwise,\\
+  we get non-negative integer solutions to $\bl y_1+\cdots+y_n\meq k-\ell|J|$.}
+\newcommand{\intsolextpff}{\\There are $\bl \binom{n+k-\ell|J|-1}{n-1}$ non-negative integer solutions to this new equation,
+  and thus, bijectively, that many solutions to the initial equation.}
+\newcommand{\intsolextpfg}[3]{\\By {\dg The Inclusion-Exclusion Principle},
+  the number of solutions is thus\vspace*{-2mm}
+  \begin{align*}\bl
+    |S-\bigcup_{i\in I}A_i| &\meq \binom{n+k-1}{n-1} - \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|\\[-1mm]
+        &\;{#1{\meq \binom{n+k-1}{n-1} + \sum_{\emptyset\mneq J\msubseteq I} (-1)^{|J|} \binom{n+k-\ell|J|-1}{n-1}}}\\[-1mm]
+        &\;{#2{\meq \binom{n+k-1}{n-1} + \sum_{i=1}^n \binom{n}{i} (-1)^{i} \binom{n+k-\ell i-1}{n-1}}}\\
+        &\;{#3{\meq \sum_{i=0}^n (-1)^{i}\binom{n+k-\ell i-1}{n-1}\qquad\black\Box}}\\[-13mm]
+  \end{align*}}
+
+\newcommand{\totienta}{{\dg Euler's totient} $\bl\varphi(n)$ is the function given by
+  \vspace*{-2mm}\[\bl\varphi(n)\mdef|\{i\myin[n]:\,\gcd(n,i)\meq 1\}|\]}
+
+\newcommand{\totientb}{\example}
+\newcommand{\totientc}[6]{\vspace*{-4mm}\begin{align*}\bl
+    \varphi(8)  &\meq \,{#1{|\{1,3,5,7\}|}}     \, {#2{\meq 4}}\\\bl
+    \varphi(12) &\meq \,{#3{|\{1,5,7,11\}|}}    \, {#4{\meq 4}}\\\bl
+    \varphi(7 ) &\meq \,{#5{|\{1,2,3,4,5,6\}|}} \, {#6{\meq 6}}
+  \end{align*}}
+
+\newcommand{\totientd}{\theorem}
+\newcommand{\totiente}{\vspace*{-2mm}\[\bl\hspace*{-2.3mm} \varphi(n) \meq n\!\prod_{p|n\,,\,p\text{ prime}}\! \Bigl(1-\frac{1}{p}\Bigr)\vspace*{-3mm}\]}
+
+\newcommand{\totientda}{\example}
+\newcommand{\totientdb}[8]{\vspace*{-4mm}\begin{align*}\bl\ph{b\hspace*{11mm}}
+    \varphi(   8) &\meq \,{#1{\textstyle    8\bigl(1-\frac{1}{2}\bigr)}}                          \, {#2{\meq 4}}\\\bl
+    \varphi(  12) &\meq \,{#3{\textstyle   12\bigl(1-\frac{1}{2}\bigr)\bigl(1-\frac{1}{3}\bigr)}} \, {#4{\meq 4}}\\\bl
+    \varphi(   7) &\meq \,{#5{\textstyle    7\bigl(1-\frac{1}{7}\bigr)}}                          \, {#6{\meq 6}}\\\bl
+    \varphi(1000) &\meq \,{#7{\textstyle 1000\bigl(1-\frac{1}{2}\bigr)\bigl(1-\frac{1}{5}\bigr)}} \, {#8{\meq 400}}
+  \end{align*}}
+
+\newcommand{\totientdpfa}{\proof}
+\newcommand{\totientdpfb}{\\Write $\bl n\meq p_1^{\alpha_1}\cdots p_s^{\alpha_s}$ where $\bl p_i$ is prime\\
+                            and set $\bl A_i\meq \{m\myin[n]\::\: p_i\,|\,m\}$ for $\bl i\myin I\mdef[s]$.}
+\newcommand{\totientdpfc}{\\For $\bl J\msubseteq I$, $\bl|\cap_{j\myin J} A_j| \meq \frac{n}{\prod_{j\myin J} p_j}$.}
+\newcommand{\totientdpfd}[4]{\\By {\dg The Inclusion-Exclusion Principle},\vspace*{-3mm}
+  \[\bl\begin{array}{rll}\ds
+    \varphi(n) \meq\ds \Bigl|[n]-\bigcup_{a\myin I}A_i\Bigr|
+        &\hspace*{-2mm}{#1{\meq\ds n - \sum_{J\msubseteq I} (-1)^{|J|+1} \Bigl|\bigcap_{j\myin J} A_j\Bigr|}}\\\ds
+        &\hspace*{-2mm}{#2{\meq\ds n + \sum_{\emptyset\mneq J\msubseteq I} (-1)^{|J|}   \frac{n}{\ds\prod_{j\myin J} p_j}}}
+        &\hspace*{-2mm}{#3{\meq\ds n \sum_{J\msubseteq I} \prod_{j\myin J} \frac{-1}{p_j}}}\\[-3mm]\ds
+       &&\hspace*{-2mm}{#4{\meq\ds n \prod_{i=1}^{s} \Bigl(1-\frac{1}{p_i}\Bigr)\quad\black\Box}}\\[-15mm]
+  \end{array}\]}
+
+\newcommand{\chromaa}{Let $\bl G = (V,E)$ be a graph. }
+\newcommand{\chromab}{\\A colouring $\bl \chi\,:\,V\to [r]$ is {\dg proper} if $\bl \chi(u)\neq \chi(v)$ whenever $\bl \{u,v\}\myin E$.}
+\newcommand{\chromaexa}{\\[3mm]\example}
+\newcommand{\chromaexb}[1]{\begin{center}\begin{pspicture}(-2,-3.5)(2,1.75)
+  \psset{shadow=false,fillstyle=none,framearc=0,linecolor=darkgray,linewidth=.066}
+%  \pnode(0,1.5){a}\pnode(1.299,-0.75){b}\pnode(-1.299,-0.75){c}
+%  \pnode(0,3  ){d}\pnode(2.598,-1.5 ){e}\pnode(-2.598,-1.5 ){f}
+%  \pscircle(0,0){1.55}\pscircle(0,0){3.05}\psline(a)(d)\psline(b)(e)\psline(c)(f)
+  \pnode(0,1){a}\pnode(0.866,-0.5){b}\pnode(-0.866,-0.5){c}
+  \pnode(0,2){d}\pnode(1.732,-1  ){e}\pnode(-1.732,-1  ){f}
+  \pscircle(0,0){1.05}\pscircle(0,0){2.05}\psline(a)(d)\psline(b)(e)\psline(c)(f)
+  \psset{fillstyle=solid,fillcolor=white,linewidth=.05}
+  \pscircle(a){.22}
+  \pscircle(b){.22}
+  \pscircle(c){.22}
+  \pscircle(d){.22}
+  \pscircle(e){.22}
+  \pscircle(f){.22}#1\end{pspicture}\end{center}}
+\newcommand{\chromaexba}{
+  \pscircle[fillcolor=blue ](a){.22}\rput(a){{\white\tiny1}}
+  \pscircle[fillcolor=green](b){.22}\rput(b){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](c){.22}\rput(c){{\white\tiny3}}
+  \pscircle[fillcolor=green](d){.22}\rput(d){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](e){.22}\rput(e){{\white\tiny3}}
+  \pscircle[fillcolor=blue ](f){.22}\rput(f){{\white\tiny1}}}
+\newcommand{\chromaexbb}{\rput(0,-3){A {\dg proper} colouring}}
+\newcommand{\chromaexbc}{
+  \pscircle[fillcolor=red  ](a){.22}\rput(a){{\white\tiny3}}
+  \pscircle[fillcolor=green](b){.22}\rput(b){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](c){.22}\rput(c){{\white\tiny3}}
+  \pscircle[fillcolor=green](d){.22}\rput(d){{\white\tiny2}}
+  \pscircle[fillcolor=red  ](e){.22}\rput(e){{\white\tiny3}}
+  \pscircle[fillcolor=blue ](f){.22}\rput(f){{\white\tiny1}}}
+\newcommand{\chromaexbd}{\rput(0,-3){{\red Not} a proper colouring}}
+
+%  \qdisk(a){.1}\qdisk(b){.1}\qdisk(c){.1}\qdisk(d){.1}\qdisk(e){.1}}
+%{\bl\small\uput[l](a){1}\uput[ul](b){2}\uput[d](2.8,2){3}\uput[ur](d){4}\uput[dr](e){5}}}
+%\newcommand{\convexpfbc}{\psset{linecolor=green,fillcolor=white}
+%  \pspolygon(c)(e)(a)\pscircle(a){.2}\pscircle(c){.2}\pscircle(e){.2
+
+\newcommand{\chromb}{Let $\bl c(J)$ be the number of connected components
+  in the subgraph of $\bl G$ with vertices $\bl V$ and edges $\bl J\msubseteq E$.}
+
+\newcommand{\chromca}{\\[3mm]\theorem {\gray (Birkhoff 1912)}}
+\newcommand{\chromcb}{\\[-.5mm]The number of proper $\bl r$-colourings of $\bl V(G)$ is
+  $\ds\bl P(G;r)\mdef \sum_{J\msubseteq E} (-1)^{|J|} r^{c(J)}$.}
+
+\newcommand{\chromd}{\\{\gray This is Birkhoff's {\green chromatic polynomial}
+ (see {\green Matching Theory: Lecture~8}).\vspace*{-5mm}}}
+
+\newcommand{\chromcapfa}{\\\proof}
+\newcommand{\chromcapfb}{\\Let $\bl C$ denote the set of all $\bl r$-colourings of $V$; then $\bl |C|\meq r^{|V|}$.}
+\newcommand{\chromcapfc}{\\For $\bl e\meq \{u,v\}\myin E$, let $\bl A_e$ be the colourings $\bl\chi\myin C$
+   with $\bl \chi(u)\meq \chi(v)$.}
+\newcommand{\chromcapfd}{\\For each $\bl J\msubseteq E$,
+  each colouring in $\bl E_J\mdef \bigcap_{e\myin J} A_e$ is monochromatic in each connected component of $\bl (V,E_J)$
+  and the component colours are independent of each other. }
+\newcommand{\chromcapfe}{Hence, $\bl\bigl|\bigcap_{e\myin J} A_e\bigr|\meq r^{c(J)}$.}
+\newcommand{\chromcapff}[3]{\\By {\dg The Inclusion-Exclusion Principle}, the number of proper colourings is\vspace*{1mm}
+  \begin{align*}\bl
+    \Bigl|C - \bigcup_{e\myin E} A_e\Bigr|
+         \;{#1{\meq r^{|V|} - \sum_{J\msubseteq E} (-1)^{|J|+1} \Bigl|\bigcap_{e\myin J} A_e\Bigr|}}
+        &\;{#2{\meq r^{|V|} + \hspace*{-3mm}\sum_{\emptyset\mneq J\msubseteq E} (-1)^{|J|} r^{c(J)}}}\\
+        &\;{#3{\meq \sum_{J\msubseteq E} (-1)^{|J|} r^{c(J)}\qquad\black\Box}}\\[-12mm]
+  \end{align*}}
+
+\newcommand{\chromcexa}{\\\example}
+\newcommand{\chromcexb}{\vspace*{-1mm}\[\bl P(K_n;r) \meq r(r-1)\cdots(r-n+1)\]}
+\newcommand{\chromcexc}{{\gray Recursive identities allow efficient calculations of $\lightblue P(G;r)$.}}
+
+
+\begin{document}
+\sf\coursetitle
+\np\courseoverview
+\np\courseoverviewEC
+\np\courseoverviewECii
+\np\lecturetitle
+\np\lecturetitlei
+\np\iepia
+\np\iepia\iepiaa
+\np\iepia\iepiaa\iepiab{}
+\np\iepiaiii\iepiab{\iepiaba}
+\np\iepib
+\np\iepib\iepiba
+\np\iepib\iepiba\iepibapfa
+\np\iepib\iepiba\iepibapfa\iepibapfb
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc\iepibapfd{\ph}{\ph}{\ph}{\ph}
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc\iepibapfd{}{\ph}{\ph}{\ph}
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc\iepibapfd{}{}{\ph}{\ph}
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc\iepibapfd{}{}{}{\ph}
+\np\iepib\iepiba\iepibapfa\iepibapfb\iepibapfc\iepibapfd{}{}{}{}
+\np\iepib\iepiba
+\np\iepib\iepiba\iepibaext
+\np\iepib\iepiba\iepibaext\iepibaextpfa
+\np\iepib\iepiba\iepibaext\iepibaextpfa\iepibaextpfb{\ph}
+\np\iepib\iepiba\iepibaext\iepibaextpfa\iepibaextpfb{}
+\np\iepib\iepiba\iepibaext
+\np\iepib\iepiba\iepibaext\iepibaextb
+\np\iepib\iepiba\iepibaext\iepibaextb\iepibaextba{\ph}
+\np\iepib\iepiba\iepibaext\iepibaextb\iepibaextba{}
+\np\iepib\iepiba\iepibaext\iepibaextb\iepibaextba{}\iepibe
+\np\iepib\iepiba\iepibe
+\np\iepib\iepiba\iepibe\iepibf
+\np\iepib\iepiba
+\np\iepib\iepiba\iepibb
+\np\iepib\iepiba\iepibb\iepibc
+\np\iepib\iepiba\iepibb\iepibc\iepibd
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfa
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfa\iepibdpfb{\ph}{\ph}{\ph}
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfa\iepibdpfb{}{\ph}{\ph}
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfa\iepibdpfb{}{}{\ph}
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfa\iepibdpfb{}{}{}
+\np\iepib\iepiba\iepibb\iepibc\iepibd\iepibdpfc
+\np\iepib\iepibpfia
+\np\iepib\iepibpfia\iepibpfib{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\iepib\iepibpfia\iepibpfib{}{\ph}{\ph}{\ph}{\ph}
+\np\iepib\iepibpfia\iepibpfib{}{}{\ph}{\ph}{\ph}
+\np\iepib\iepibpfia\iepibpfib{}{}{}{\ph}{\ph}
+\np\iepib\iepibpfia\iepibpfib{}{}{}{}{\ph}
+\np\iepib\iepibpfia\iepibpfib{}{}{}{}{}
+\np\iepib\iepibpfiia
+\np\iepib\iepibpfiia\iepibpfiib
+\np\iepib\iepibpfiia\iepibpfiib\iepibpfiic{\ph}{\ph}{\ph}{\ph}
+\np\iepib\iepibpfiia\iepibpfiib\iepibpfiic{}{\ph}{\ph}{\ph}
+\np\iepib\iepibpfiia\iepibpfiib\iepibpfiic{}{}{\ph}{\ph}
+\np\iepib\iepibpfiia\iepibpfiib\iepibpfiic{}{}{}{\ph}
+\np\iepib\iepibpfiia\iepibpfiib\iepibpfiic{}{}{}{}
+\np\vala
+\np\vala\valb
+\np\vala\valb\iepic
+\np\vala\valb\iepic\iepicpfa
+\np\vala\valb\iepic\iepicpfa\iepicpfb
+\np\vala\valb\iepic\iepicpfa\iepicpfb\iepicpfc{\ph}{\ph}{\ph}
+\np\vala\valb\iepic\iepicpfa\iepicpfb\iepicpfc{}{\ph}{\ph}
+\np\vala\valb\iepic\iepicpfa\iepicpfb\iepicpfc{}{}{\ph}
+\np\vala\valb\iepic\iepicpfa\iepicpfb\iepicpfc{}{}{}
+\np\vala\valb\iepic
+\np\vala\valb\iepic\iepid
+\np\vala\valb\iepic\iepid\iepidpfa
+\np\vala\valb\iepic\iepid\iepidpfa\iepidpfb
+\np\vala\valb\iepic\iepid
+\np\vala\valb\iepic\iepid\iepie\vspace*{-8mm}
+\np\vala\valb\iepic\iepie
+\np\vala\valb\iepic\iepie\iepiepfa
+\np\vala\valb\iepic\iepie\iepiepfa\iepiepfb{\ph}{\ph}
+\np\vala\valb\iepic\iepie\iepiepfa\iepiepfb{}{\ph}
+\np\vala\valb\iepic\iepie\iepiepfa\iepiepfb{}{}
+\np\vala\valb\iepic\iepie
+\np\vala\valb\iepic\iepie\iepifav
+\np\vala\valb\iepic\iepie\iepifav\iepifb
+\np\vala\valb\iepic\iepie\iepifav\iepifb\iepifbpfa
+\np\vala\valb\iepic\iepie\iepifav\iepifb\iepifbpfa\iepifbpfb{\ph}{\ph}
+\np\vala\valb\iepic\iepie\iepifav\iepifb\iepifbpfa\iepifbpfb{}{\ph}
+\np\vala\valb\iepic\iepie\iepifav\iepifb\iepifbpfa\iepifbpfb{}{}
+\np\vala\valb\iepic\iepie
+\np\vala\valb\iepic\iepie\iepiea
+\np\vala\valb\iepic
+\np\vala\valb\iepic\iepif
+\np\iepib
+\np\iepib\iepig
+\np\iepib\iepig\iepiga
+\np\iepib\iepig\iepiga\iepigb
+\np\iepigauxa
+\np\iepigauxa\iepigauxb
+\np\iepigauxa\iepigauxb\iepigauxapfa
+\np\iepigauxa\iepigauxb\iepigauxapfa\iepigauxapfb{\ph}{\ph}{\ph}
+\np\iepigauxa\iepigauxb\iepigauxapfa\iepigauxapfb{}{\ph}{\ph}
+\np\iepigauxa\iepigauxb\iepigauxapfa\iepigauxapfb{}{}{\ph}
+\np\iepigauxa\iepigauxb\iepigauxapfa\iepigauxapfb{}{}{}
+\np\iepigv\iepiga
+\np\iepigv\iepiga\iepigpfa
+\np\iepigv\iepiga\iepigpfa\iepigpfb
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{\ph}{\ph}{\ph}{\ph}
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{}{\ph}{\ph}{\ph}
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{}{}{\ph}{\ph}
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{}{}{}{\ph}
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{}{}{}{}
+\np\iepigv\iepiga\iepigpfa\iepigpfb\iepigpfc{}{}{}{}\iepigpfd
+\np\iepigv\iepiga\iepige
+\np\exaia
+\np\exaia\exaib
+\np\exaia\exaib\exaic
+\np\exaia\exaib\exaic\exaid
+\np\exaia\exaib\exaic\exaid\exaie
+\np\exaia\exaib\exaic\exaid\exaie\exaidpfa
+\np\exaia\exaib\exaic\exaid\exaie\exaidpfa\exaidpfb
+\np\exaia\exaib\exaic\exaid\exaie\exaidpfa\exaidpfb\exaidpfc
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{\ph}{\ph}{\ph}{\ph}
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{\ph}{\ph}{\ph}
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{}{\ph}{\ph}
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{}{}{\ph}
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{}{}{}
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{}{}{}\exaif
+\np\exaid\exaie\exaidpfa\exaidpfb\exaidpfc\exaidpfd{}{}{}{}\exaif\exaifa
+\np\exaid\exaie\exaifv\exaifa
+\np\exaid\exaie\exaifv\exaifa\exaifc
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaifcpfa
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaifcpfa\exaifcpfb{\ph}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaifcpfa\exaifcpfb{}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{\ph}{\ph}{\ph}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{}{\ph}{\ph}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{}{}{\ph}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{}{}{}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{}{}{}\exaigpfd{\ph}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaigpfa\exaigpfb\exaigpfc{}{}{}\exaigpfd{}
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaiha
+\np\exaid\exaie\exaifv\exaifa\exaifc\exaiga\exaigb\exaiha\exaihb
+\np\intsola
+\np\intsola\intsolb
+\np\intsola\intsolb\intsolapfa
+\np\intsola\intsolb\intsolapfa\intsolapfb
+\np\intsola\intsolb\intsolapfa\intsolapfb\intsolapfc
+\np\intsola\intsolb\intsolapfa\intsolapfb\intsolapfc\intsolapfd
+\np\intsola\intsolb\intsolapfa\intsolapfb\intsolapfc\intsolapfd\intsolexta
+\np\intsola\intsolb\intsolapfa\intsolapfb\intsolapfc\intsolapfd\intsolexta\intsolextb
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa\intsolextpfb
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa\intsolextpfb\intsolextpfc
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa\intsolextpfb\intsolextpfc\intsolextpfd
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa\intsolextpfb\intsolextpfc\intsolextpfd\intsolextpfe
+\np\intsola\intsolb\intsolexta\intsolextb\intsolextpfa\intsolextpfb\intsolextpfc\intsolextpfd\intsolextpfe\intsolextpff
+\np\intsolextav\intsolextb\intsolextpfav\intsolextpfg{\ph}{\ph}{\ph}
+\np\intsolextav\intsolextb\intsolextpfav\intsolextpfg{}{\ph}{\ph}
+\np\intsolextav\intsolextb\intsolextpfav\intsolextpfg{}{}{\ph}
+\np\intsolextav\intsolextb\intsolextpfav\intsolextpfg{}{}{}
+\np\totienta
+\np\totienta\totientb
+\np\totienta\totientb\totientc{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{}{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{}{}{\ph}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{}{}{}{\ph}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{}{}{}{}{\ph}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientda\totientdb{}{}{}{}{}{}{}{}
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientdpfa
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientdpfa\totientdpfb
+\np\totienta\totientb\totientc{}{}{}{}{}{}\totientd\totiente\totientdpfa\totientdpfb\totientdpfc
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc\totientdpfd{\ph}{\ph}{\ph}{\ph}
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc\totientdpfd{}{\ph}{\ph}{\ph}
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc\totientdpfd{}{}{\ph}{\ph}
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc\totientdpfd{}{}{}{\ph}
+\np\totienta\totientd\totiente\totientdpfa\totientdpfb\totientdpfc\totientdpfd{}{}{}{}
+\np\chromaa
+\np\chromaa\chromab
+\np\chromaa\chromab\chromaexa
+\np\chromaa\chromab\chromaexa\chromaexb{}
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexba}
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexba\chromaexbb}
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexbc\chromaexbd}
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexbc\chromaexbd}\chromb
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexbc\chromaexbd}\chromb\chromca
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexbc\chromaexbd}\chromb\chromca\chromcb
+\np\chromaa\chromab\chromaexa\chromaexb{\chromaexbc\chromaexbd}\chromb\chromca\chromcb\chromd
+\np\chromaa\chromb\chromca\chromcb
+\np\chromaa\chromb\chromca\chromcb\chromcapfa
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd\chromcapfe
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd\chromcapfe\chromcapff{\ph}{\ph}{\ph}
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd\chromcapfe\chromcapff{}{\ph}{\ph}
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd\chromcapfe\chromcapff{}{}{\ph}
+\np\chromaa\chromb\chromca\chromcb\chromcapfa\chromcapfb\chromcapfc\chromcapfd\chromcapfe\chromcapff{}{}{}
+\np\chromaa\chromb\chromca\chromcb
+\np\chromaa\chromb\chromca\chromcb\chromcexa
+\np\chromaa\chromb\chromca\chromcb\chromcexa\chromcexb
+\np\chromaa\chromb\chromca\chromcb\chromcexa\chromcexb\chromcexc
+
+%Kaplansky & Riordan (1946): number of nonattacking rooks on a board etc. - application of Incl.-Excl.
+%(See Stanley Combin. Vol. 1)
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

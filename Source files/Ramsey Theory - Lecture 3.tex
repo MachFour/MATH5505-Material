@@ -1,0 +1,513 @@
+%%  MATH5505 Ramsey Theory Lecture 3: Arithmetic Progressions
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+
+% OK Pigeonhole + Ramsey refresh
+% OK Van der Waerden's Theorem
+% OK Example
+% OK Proof
+%    Mention polynomial versions (Purely Combinatorial Proofs of Van Der Waerden-Type Theorems William Gasarch and Andy Parrish March 5, 2009)
+%    The Hales-Jewett Theorem (just mention)
+%    Mention Szemeredi's Theorem, primes/Tao
+
+\include{mydefinitionsramsey}
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 3: Arithmetic Progressions\end{center}}
+
+\newcommand{\aaia}{\vphantom{ }\vspace{15mm}\begin{center}
+  \begin{pspicture}(0,2.5)(10,2.5)
+    \rput( 0,2.5){\man}
+    \rput( 5,2.5){\woman}
+    \rput(10,2.5){\woman}
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\pigeonthma}{{\dg The Pigeonhole Principle}
+  \\[1mm]If $\bl k+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least two pigeons.}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\pigeonthmstrong}{{\dg The Pigeonhole Principle} {\gray (strong)}
+  \\[1mm]If $\bl (n_1-1) +\cdots+(n_k-1) + 1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some $\bl i$th pigeonhole contains at least $\bl n_i$ pigeons.}
+
+\newcommand{\pigeonthmexaa}{\\[8mm]\example}
+\newcommand{\pigeonthmexab}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}\psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+\newcommand{\pigeonthmexaba}{\rput(0  ,0){\pigeon}}
+\newcommand{\pigeonthmexabb}{\rput(3.5,0){\pigeon}}
+\newcommand{\pigeonthmexabc}{\rput(7  ,0){\pigeon}}
+\newcommand{\pigeonthmexabd}{\rput(3.4,-4){$\begin{array}{rcl}\bl k &\meq&\bl 3\\\bl m &\meq&\bl 2\end{array}$}}
+\newcommand{\pigeonthmexabaii}{\rput(-0.25,0){\pigeon}\rput( .25,0){\pigeon}}
+\newcommand{\pigeonthmexabbii}{\rput( 3.25,0){\pigeon}\rput(3.75,0){\pigeon}}
+\newcommand{\pigeonthmexabcii}{\rput( 6.75,0){\pigeon}\rput(7.25,0){\pigeon}}
+\newcommand{\pigeonthmexabciii}{\rput(6.7 ,0){\pigeon}\rput(7   ,0){\pigeon}\rput(7.3,0){\pigeon}}
+
+\newcommand{\pigeonthmexga}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexgb}{\\[1mm]$\bl n+1$ distinct numbers are chosen from the numbers $\bl 1,\ldots,2n$.
+  \\Show that at least two of the chosen numbers are coprime.}
+
+\newcommand{\pigeonthmexma}{\\[8mm]\example}
+\newcommand{\pigeonthmexmb}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}
+    \rput[t](0  ,-2.5){$\bl n_1\meq 1$}
+    \rput[t](3.5,-2.5){$\bl n_2\meq 3$}
+    \rput[t](7  ,-2.5){$\bl n_3\meq 2$}
+    \psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+
+%\newcommand{\ramseyaa}{{\dg Ramsey Theory} makes repeated use of the {\dg Pigeonhole Principle}
+%to show that order exists whenever (certain) random structures are sufficiently big.}
+
+\newcommand{\ramseyaa}{{\dg Ramsey Theory} makes repeated use of the {\dg Pigeonhole Principle}
+to show that order exists whenever (certain) random and seemingly unordered structures are sufficiently large.}
+
+\newcommand{\ramseyaaexaa}{\\[8mm]\exercise}
+\newcommand{\ramseyaaexab}{\\Colour each edge of the complete graph $\bl K_6$ either {\red red} or {\bl blue}.
+                           \\Show that there must be a red triangle $\red\triangle$ or a blue triangle $\bl\triangle$.}
+
+\newcommand{\ramseyaaexac}[1]{\vspace*{10mm}\begin{center}\myksix{#1}{}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseyaaexacalt}[2]{\vspace*{10mm}\begin{center}\myksix{#1}{#2}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseyaaexaca}{{\psset{linecolor=red}
+  \psline(a)(c)\psline(e)(f)\psline(a)(e)\psline(c)(f)
+  \psline(a)(d)\psline(b)(e)\psline(b)(d)}{\psset{linecolor=blue}
+  \psline(a)(b)\psline(b)(f)\psline(c)(e)\psline(d)(f)
+  \psline(d)(e)\psline(a)(f)\psline(b)(c)\psline(c)(d)}}
+\newcommand{\ramseyaaexacb}{{\psset{linecolor=blue,fillcolor=lightblue,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(a)(b)(f)}}
+\newcommand{\ramseyaaexacc}{{\psset{linecolor=blue,fillcolor=lightblue,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(c)(d)(e)}}
+\newcommand{\ramseyaaexacalta}{{\pscircle[linecolor=darkgreen,fillcolor=green](a){.2}}}
+\newcommand{\ramseyaaexacd}{
+  {\psset{linecolor=lightgray}\psline(b)(c)\psline(b)(d)\psline(b)(e)\psline(b)(f)
+                              \psline(c)(d)\psline(c)(e)\psline(c)(f)
+                              \psline(d)(e)\psline(d)(f)\psline(e)(f)}
+  {\psset{linecolor=red }\psline(a)(c)\psline(a)(e)\psline(a)(d)}
+  {\psset{linecolor=blue}\psline(a)(b)\psline(a)(f)}}
+\newcommand{\ramseyaaexace}{{\psset{linecolor=blue}\psline(c)(d)(e)(c)}}
+\newcommand{\ramseyaaexacf}{\ramseyaaexacc}
+\newcommand{\ramseyaaexacg}{{\psset{linecolor=blue}\psline(c)(e)(d)}{\psset{linecolor=red}\psline(a)(c)(d)}}
+\newcommand{\ramseyaaexach}{{\psset{linecolor=blue}\psline(c)(e)(d)}{\psset{linecolor=red,fillcolor=red,fillstyle=solid,linearc=0,opacity=.3}\pspolygon(a)(c)(d)}}
+
+\newcommand{\ramseyb}{{\dg Ramsey's Theorem} {\gray (1930)} {\halfgray (simple)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_n$ gives a complete subgraph $\bl K_m$
+   with monochromatic edges.}
+\newcommand{\ramseyba}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R(m;k)$.}}
+
+\newcommand{\ramseybexaa}{\\[6mm]\example}
+\newcommand{\ramseybexab}[1]{\\Colour each edge of $\bl K_n\meq K_6$ either {\red red} or {\bl blue} ($\bl k\meq 2$).
+                          \\There must be a red triangle $\red K_3 \black = \red \triangle$ or a blue triangle $\bl K_3\meq \triangle$.
+                          \vspace*{4mm}\begin{center}\myksix{\ramseyaaexaca#1}{}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseybexaba}{\rput[l](4,-1.4){\begin{tabular}{l}\exercise\\Show that $\bl R(3;2) \meq 6$.\end{tabular}}}
+
+\newcommand{\ramseybexaav}{\\[6mm]\example}
+\newcommand{\ramseybexabv}[1]{\\Colour each edge ($\bl r\meq 2$) of $\bl K_n\meq K_6$ either {\red red} or {\bl blue}.
+                          \\There must be a red triangle $\red K_3 \black = \red \triangle$ or a blue triangle $\bl K_3\meq \triangle$.
+                          \vspace*{4mm}\begin{center}\myksix{\ramseyaaexaca#1}{}\hspace*{15mm}\ph{b}\end{center}}
+\newcommand{\ramseybexabav}{\rput[l](5,0){$\bl R(3,3) \meq 6$}}
+
+
+\newcommand{\ramseyc}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of the edges of $\bl K_n$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a subgraph $\bl K_{n_i}$ with all edges coloured $\bl c_i$ for some $\bl i$.}
+\newcommand{\ramseyca}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R(n_1,\ldots,n_k)$.}}
+\newcommand{\ramseycb}{\\{\gray Note that $\lightblue R(k;m) = R(\underbrace{m,\ldots,m}_k)$.}}
+
+\newcommand{\ramseybexcaa}{\\[6mm]\example}
+\newcommand{\ramseybexcab}{\\$\bl R(3,3) \meq R(2;3) \meq 6$}
+
+\newcommand{\ramseycpfia}{\\[6mm]{\dg Proof 1 }}
+\newcommand{\ramseycpfib}{\\[.5mm]This is the same proof as before, except now use
+  the strong version of the {\dg Pigeonhole Principle}.}
+
+\newcommand{\ramseybexcba}{\\[6mm]\exercise}
+\newcommand{\ramseybexcbb}{\\Fill in the details of this proof!}
+
+\newcommand{\ramseybexda}{\\[6mm]\lemma {\gray (Erd\H{o}s \&\ Szekeres 1935)}}
+\newcommand{\ramseybexdav}{\lemma}
+\newcommand{\ramseybexdb}{\\[.5mm]$\bl R(k,\ell)\mleq R(k-1,\ell) + R(k,\ell-1)$}
+
+\newcommand{\ramseybexdaexaa}{\\[6mm]\example}
+\newcommand{\ramseybexdaexab}{\\[.5mm]For any $\bl k\geq 2$, we note that $\bl R(k,2) \meq R(2,k)\meq k$. {\gray (Why?)}}
+\newcommand{\ramseybexdaexac}{\\The above bound is therefore tight for $\bl R(3,3)$:
+   \[\bl R(3,3) \meq 6 \mleq 3 + 3 \meq R(2,3) + R(3,2)\,\black.\vspace*{-6mm}\]}
+
+
+\newcommand{\ramseybexea}{\\[6mm]\lemma}
+\newcommand{\ramseybexeav}{\lemma}
+\newcommand{\ramseybexeb}{\\$\bl R(n_1,\ldots,n_k)\mleq R\bigl(n_1,\ldots,n_{k-2},R(n_{k-1},n_k)\bigr)$}
+
+
+\newcommand{\ramseynotaa}{\\[6mm]Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+\newcommand{\ramseynotaav}{Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+
+\newcommand{\ramseynotaaexa}{\\[6mm]\example}
+\newcommand{\ramseynotaaexb}{\vspace*{-3mm}\[\bl [3] \meq \{1,2,3\} \qquad \binom{[3]}{2} \meq \bigl\{\{1,2\},\{1,3\},\{2,3\}\bigr\}\]}
+
+\newcommand{\ramseyd}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{2}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{2}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseydv}{{\dg Ramsey's Theorem} {\gray (1930)} {\lightgray (reduced)}\\
+   If $\bl n_1,\ldots,n_k\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{\red2\bl}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{\red2\bl}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseye}{{\dg Ramsey's Theorem} {\gray (1930)}\\
+   If $\bl n_1,\ldots,n_k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{r}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{r}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseyea}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R_r(n_1,\ldots,n_k)$.}}
+
+%\newcommand{\arithma}{An {\dg arithmetic progression} is a sequence of numbers of the form
+%  \[\bl\hspace*{-27mm}{\lightblue a+[0,k)d \gray\,\;=}\;\;\,
+%    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+%    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+%    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\]}
+%\newcommand{\arithmav}{An {\dg arithmetic progression} is a sequence of numbers of the form
+%  \[\bl\hspace*{-27mm}{\lightblue a+[0,k)d \gray\;\,=}\;\;\,
+%    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+%    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+%    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\vspace*{6mm}\]}
+\newcommand{\arithma}{An {\dg arithmetic progression} is a sequence of numbers of the form
+  \[\bl\hspace*{-27mm}{\white a+[0,k)d \white\,\;=}\;\;\,
+    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\]}
+\newcommand{\arithmav}{An {\dg arithmetic progression} is a sequence of numbers of the form
+  \[\bl\hspace*{-27mm}{\white a+[0,k)d \white\;\,=}\;\;\,
+    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\vspace*{6mm}\]}
+
+\newcommand{\arithmaexa}{\example}
+\newcommand{\arithmaexb}[2]{\[\bl
+  1,2,3,4,5
+  \qquad\qquad {#1{10,13,16,19}}
+  \qquad\qquad {#2{\red 3,5,7,11\psset{linecolor=red}\psline*(0.3,0)(-3,.44)\psline*(0.3,0.44)(-3,0)}}
+  \vspace*{6mm}\]}
+
+\newcommand{\vanderwa}{{\dg Van der Waerden's Theorem} {\gray (1927)}\\
+   If $\bl k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl r$-colouring of $\bl [n]$ gives a monochromatic arithmetic progression of length~$\bl k$.}
+
+\newcommand{\vanderwaa}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue W(k,r)$.}}
+
+\newcommand{\vanderwaexaa}{\\[8mm]\example}
+\newcommand{\vanderwaexab}[1]{\\{\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)#1\endpspicture}}
+\newcommand{\vanderwaexaba}{\rput(0,0){1}\rput(1,0){2}\rput(2,0){3}\rput(3,0){4}\rput(4,0){5}
+   \rput(5,0){6}\rput(6,0){7}\rput(7,0){8}\rput(8,0){9}}
+\newcommand{\vanderwaexabb}{{\darkred\footnotesize\rput(1,0){2}\rput(2,0){3}\rput(4,0){5}\rput(7,0){8}
+                             \darkgreen\normalsize\rput(0,0){1}\rput(3,0){4}\rput(5,0){6}\rput(6,0){7}\rput(8,0){9}}}
+\newcommand{\vanderwaexabc}{
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(-.5,-.5)(.5,.5)\psframe(2.5,-.5)(3.5,.5)\psframe(5.5,-.5)(6.5,.5)}
+\newcommand{\vanderwaexabd}{
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(.5,-.5)(1.5,.5)\psframe(3.5,-.5)(4.5,.5)\psframe(6.5,-.5)(7.5,.5)}
+
+\newcommand{\vanderwaexba}{\\[8mm]\exercise}
+\newcommand{\vanderwaexbb}{\\Explain why $\bl W(2,r)\meq r+1$.}
+
+\newcommand{\vanderwaexca}{\\[4mm]\example}
+\newcommand{\vanderwaexcb}{\\Let us prove the theorem for $\bl k\meq 3$, $\bl r\meq 2$ by showing that $\bl W(3,2)\mleq 325$.}
+\newcommand{\vanderwaexcc}[1]{\begin{center}\begin{pspicture}(8.6,-.6)(8.6,6.6)
+    \psframe(-.5, 5.6 )(4.5, 6.4 )\rput(0,6){1}\rput(2,6){$\cdots$}\rput(4,6){ 5}\rput(-1.5,6){$\bl B_1$}
+    \psframe(-.5, 4.6 )(4.5, 5.4 )\rput(0,5){6}\rput(2,5){$\cdots$}\rput(4,5){10}\rput(-1.5,5){$\bl B_2$}
+    \multips(2  , 3.25)(0  ,  .25){3}{\pscircle[linecolor=gray,fillcolor=lightgray,fillstyle=solid,shadow=false](0,0){.1}}
+    \psframe(-.5, 1.6 )(4.5, 2.4 )\rput(0,2){\footnotesize161}\rput(2,2){$\cdots$}\rput(4,2){\footnotesize165}\rput(-1.5,2){$\bl B_{33}$}
+    \multips(2  ,  .25)(0  ,  .25){3}{\pscircle[linecolor=gray,fillcolor=lightgray,fillstyle=solid,shadow=false](0,0){.1}}
+    \psframe(-.5,-1.4 )(4.5, -.6 )\rput(0,-1){\footnotesize321}\rput(2,-1){$\cdots$}\rput(4,-1){\footnotesize325}\rput(-1.5,-1){$\bl B_{65}$}#1
+  \end{pspicture}\end{center}}
+\newcommand{\vanderwaexcca}{
+   \rput[l](6,6){By the {\dg Pigeonhole Principle}, the first $\bl 33\mgt 2^5$ $\bl B_\ell$s}
+   \rput[l](6,5){contain $\bl B_i$ and $\bl B_{i+d}$ with same $\bl 2$-colouring, say:}
+   \psframe(9.5,2.6)(14.5,3.4)\rput(8.5,3){$\bl B_i$}{\psset{linecolor=darkred,fillcolor=red,fillstyle=solid,shadow=false}
+     \pscircle(10,3){.2}\pscircle(12,3){.2}\pscircle(14,3){.2}
+     \psset{linecolor=darkgreen,fillstyle=none}
+     \pscircle(11,3){.2}\pscircle(13,3){.2}}
+   \psframe(9.5,0.6)(14.5,1.4)\rput(8.5,1){$\bl B_{i+d}$}{\psset{linecolor=darkred,fillcolor=red,fillstyle=solid,shadow=false}
+     \pscircle(10,1){.2}\pscircle(12,1){.2}\pscircle(14,1){.2}
+     \psset{linecolor=darkgreen,fillstyle=none}
+     \pscircle(11,1){.2}\pscircle(13,1){.2}}}
+\newcommand{\vanderwaexccav}{
+   \rput[l](6,6){By the {\dg Pigeonhole Principle}, the first $\bl 33\mgt 2^5$ $\bl B_\ell$s}
+   \rput[l](6,5){contain $\bl B_i$ and $\bl B_{i+d}$ with same $\bl 2$-colouring, say:}
+   \psframe(9.5,2.6)(14.5,3.4)\rput(8.5,3){$\bl B_i$}{\psset{linecolor=darkred,fillcolor=red,fillstyle=solid,shadow=false}
+     \pscircle(10,3){.2}\pscircle(12,3){.2}
+     \psset{linecolor=darkgreen,fillstyle=none}
+     \pscircle(11,3){.2}\pscircle(13,3){.2}\pscircle(14,3){.2}}
+   \psframe(9.5,0.6)(14.5,1.4)\rput(8.5,1){$\bl B_{i+d}$}{\psset{linecolor=darkred,fillcolor=red,fillstyle=solid,shadow=false}
+     \pscircle(10,1){.2}\pscircle(12,1){.2}
+     \psset{linecolor=darkgreen,fillstyle=none}
+     \pscircle(11,1){.2}\pscircle(13,1){.2}\pscircle(14,1){.2}}}
+\newcommand{\vanderwaexccb}{\psframe[shadow=false,linecolor=darkgreen](9.7,2.7)(12.3,3.3)
+     \psframe[shadow=false,linecolor=darkgreen](9.7,0.7)(12.3,1.3)
+   \rput[l](6,-1){By the {\dg Pigeonhole Principle}, $\!\bl 2$ colors are the same.}}
+\newcommand{\vanderwaexcd}{\psframe(9.5,-1.4)(14.5,-.6)\rput(8.5,-1){$\bl B_{i+2d}$}}
+\newcommand{\vanderwaexcda}{\rput(14,-1){?}}
+\newcommand{\vanderwaexcdb}{{\psset{linecolor=darkgreen,fillstyle=none,shadow=false}
+   \pscircle(14,-1){.2}\psline(14,2.8)(14,1.2)\psline(14,0.8)(14,-.8)}}
+\newcommand{\vanderwaexcdc}{{\psset{linecolor=darkred,fillcolor=red,fillstyle=solid,shadow=false}
+   \psline(10,3)(14,-1)\pscircle(10,3){.2}\pscircle(12,1){.2}\pscircle(14,-1){.2}}}
+
+\newcommand{\vanderwab}{\\[6mm]Proofs of the theorem use this type of ``Cantor diagonalisation'',
+  \\applied to blocks of blocks of blocks.}
+
+%\newcommand{\vanderwac}{\\[6mm]Let $\bl [a,b] \meq \{a,a+1,\ldots,b\}$.}
+\newcommand{\vanderwac}{\\[6mm]The {\dg$\bl i$th $\bl k$-equivalence class} of $\bl[0,k ]^m\meq \{0,1,\ldots,k \}^m$ is the set of
+   vectors
+  \[\bl (x_1,\ldots,x_{m-i},\underbrace{k,\ldots,k}_i)\qquad\mytext{where}\qquad \bl x_1,\ldots,x_{m-i}\mneq k \,.\]}
+\newcommand{\vanderwacv}{The {\dg$\bl i$th $\bl k $-equivalence class} of $\bl[0,k ]^m\meq \{0,1,\ldots,k \}^m$ is the set of
+   vectors
+  \[\bl (x_1,\ldots,x_{m-i},\underbrace{k,\ldots,k}_i)\qquad\mytext{where}\qquad \bl x_1,\ldots,x_{m-i}\mneq k \,.\]}
+
+\newcommand{\vanderwacexaa}{\example}
+\newcommand{\vanderwacexab}{\\The three $\bl3$-equivalence classes of $\bl[0,3]^2$:
+  \begin{pspicture}(-2.5,1.9)(-2.5,1.9)\psset{fillstyle=solid,fillcolor=offwhite,linecolor=lightgray,shadow=false,framearc=0}
+    \psframe(-.25, -.25)(2.25,2.25)
+    \psframe(-.25, 2.75)(2.25,3.25)
+    \psframe(2.75, 2.75)(3.25,3.25)\scriptsize
+    \rput(-.75,0){0}
+    \rput(-.75,1){1}
+    \rput(-.75,2){2}
+    \rput(-.75,3){3}
+    \rput(0,-.75){0}
+    \rput(1,-.75){1}
+    \rput(2,-.75){2}
+    \rput(3,-.75){3}
+    \multips(0,0)(1,0){4}{\multips(0,0)(0,1){4}{\pscircle[linecolor=gray,fillcolor=halfgray,fillstyle=solid,shadow=false](0,0){.1}}}
+  \end{pspicture}}
+
+\newcommand{\vanderwad}{\\[12mm]Let \,{\dg S($\bl k,m$)}\, be the statement that\vspace*{-2mm}
+\begin{center}{\small
+  \begin{tabular}{l}for each $\bl r\myin\mathbb{N}$, there is some $\bl N\black:=\bl N(k,m,r)$ so that
+    \\for each $\bl r$-colouring $\bl\chi:[N]\mto[r]$ there are $\bl a,d_1,\ldots,d_m\myin\mathbb{N}$ so that
+    \\$\bl \chi(a+\sum x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k ]^m$.
+  \end{tabular}}
+\end{center}}
+
+\newcommand{\vanderwadv}{\begin{pspicture}(.5,-.6)(10,1.7)\psset{linecolor=offwhite,fillcolor=nearlywhite,shadow=false,framearc=0}
+    \psframe(-.25,-0.6)(22.25,2.35)\psline(-.25,1.15)(2.4,1.15)(2.4,2.35)
+    \rput[l](0    ,1.7 ){{\dg S($\bl k,m$)}}
+    \rput[l](7.333,1.7 ){\small for each $\bl r\myin\mathbb{N}$, there is some $\bl N\black:=\bl N(k,m,r)$ so that}
+    \rput[l](3.322,0.85){\small for each $\bl r$-colouring $\bl\chi:[N]\mto[r]$ there are $\bl a,d_1,\ldots,d_m\myin\mathbb{N}$ so that}
+    \rput[l](0  ,0  ){\small$\bl \chi(a+\sum x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k ]^m$.}
+  \end{pspicture}}
+
+\newcommand{\vanderwae}{\\[2mm]\lemma}
+\newcommand{\vanderwaev}{\lemma}
+\newcommand{\vanderwaea}{\quad If \,{\dg S($\bl k,m$)}\, for some $\bl m\mgeq 1$, then \,{\dg S($\bl k,m+1$)}\,.}
+\newcommand{\vanderwaeav}{\\If \,{\dg S($\bl k,m$)}\, for some $\bl m\mgeq 1$, then \,{\dg S($\bl k,m+1$)}\,.}
+
+
+
+\newcommand{\vanderwaepfa}{\\[2mm]\proof}
+\newcommand{\vanderwaepfav}{\\[2mm]\proof {\gray(continued)}}
+\newcommand{\vanderwaepfb}{\\Suppose that \,{\dg S($\bl k,m$)}\, for some $\bl m\mgeq 1$
+  and note that this implies \,{\dg S($\bl k,1$)}\,.}
+\newcommand{\vanderwaepfc}{\\We wish to show that \,{\dg S($\bl k,m+1$)}\,.}
+\newcommand{\vanderwaepfd}{\\Letting $\bl r\myin\mathbb{N}$,
+  we can find
+      $\bl M \mdef N(k,m,r)$
+  and $\bl M'\mdef N(k,1,r^M)$.}
+\newcommand{\vanderwaepfe}{\\Set $\bl N\meq MM'$ and let $\bl \chi:[N]\mto[r]$ be given.}
+\newcommand{\vanderwaepff}{\\There are at most distinct $\bl r^M$ vectors $\bl\bigl(\chi((\ell-1)M+1),\ldots,\chi(\ell M)\bigr)$
+  where $\bl \ell\myin[M']$,
+  so number these vectors, inducing a colouring $\bl\chi':[M']\mto[r^M]$.}
+\newcommand{\vanderwaepfg}{\\Since $\bl M'\meq N(k,1,r^M)$, we can find $\bl a',d'$
+  so that $\bl\chi'(a'+x_1d')$
+  is well-defined and constant for all $\bl x_1\myin[0,k-1]$.}
+\newcommand{\vanderwaepfh}{\\Set $\bl d_1\mdef d'M$;
+  then $\bl\bigl(\chi((a'-1)M+x_1d_1+1),\ldots,\chi(a'M+x_1d_1)\bigr)$
+  is well-defined and constant for all $\bl x_1\myin[0,k-1]$.}
+\newcommand{\vanderwaepfj}{\\Fix $\bl x_1$ and define $\bl\chi'':[M]\mto[r]$ by
+  $\bl\chi''(s)\mdef\chi((a'-1)M+x_1d_1+s)$.}
+\newcommand{\vanderwaepfk}{\\Since $\bl M\meq N(k,m,r)$,
+  there are $\bl a'',d_2,\ldots,d_{m+1}$
+  so that $\bl\chi''(a''+\sum_{i=2}^{m+1}x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k]^m$.}
+\newcommand{\vanderwaepfm}{\\Setting $\bl a\mdef a''+(a'-1)M$,
+  we see that $\bl\chi(a+\sum_{i=1}^{m+1}x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k]^{m+1}$.}
+\newcommand{\vanderwaepfn}{\\Hence, $\bl N\meq MM'\geq N(k,m,r)$, and so \,{\dg S($\bl k,m+1$)}\,.\qed}
+
+\newcommand{\vanderwaf}{\\[2mm]\lemma}
+\newcommand{\vanderwafa}{\\If \,{\dg S($\bl k,m$)}\, for all $\bl m\mgeq 1$, then \,{\dg S($\bl k+1,1$)}\,.}
+\newcommand{\vanderwafav}{\quad If \,{\dg S($\bl k,m$)}\, for all $\bl m\mgeq 1$, then \,{\dg S($\bl k+1,1$)}\,.}
+
+\newcommand{\vanderwafpfa}{\\[2mm]\proof}
+\newcommand{\vanderwafpfb}{\\[-1mm]Suppose that \,{\dg S($\bl k,m$)}\, for all $\bl m\mgeq 1$. }
+\newcommand{\vanderwafpfc}{We wish to show that \,{\dg S($\bl k+1,1$)}\,.}
+\newcommand{\vanderwafpfd}{\\Therefore, let $\bl r\myin\mathbb{N}$ and $\bl\chi:[N(k,r,r)]\mto [r]$.}
+\newcommand{\vanderwafpfe}{\\Then there are $\bl a',d_1,\ldots,d_r\myin\mathbb{N}$ so that $\bl\chi(a'+\sum x_id_i)$
+is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k]^r$.}
+\newcommand{\vanderwafpfev}{\\Then there are $\bl a',d_1,\ldots,d_r\myin\mathbb{N}$ so that
+  \rput(0,0){\psframe[fillstyle=solid,fillcolor=offwhite,linecolor=lightgray,shadow=false,framearc=0](-.12,-.3)(4.45,.65)}%
+  $\bl\chi(a'+\sum x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k]^r$.}
+\newcommand{\vanderwafpff}{\\There are at most $\bl r$ function values of $\bl\chi$,
+  so by the {\dg Pigeonhole Principle},
+  at least two of the $\bl r+1$ values $\bl\chi(a'),\chi(a'+k d_r),\ldots,\chi(a'+\sum_{i=1}^rk d_i)$
+  must be the same,}
+\newcommand{\vanderwafpfg}{ say
+  $\bl\chi(a'+\sum_{i=u}^rk d_i) \meq \chi(a'+\sum_{i=v}^rk d_i)$ for $\bl u\mlt v$.}
+\newcommand{\vanderwafpfh}{\\Set $\bl a\mdef a'+\sum_{i=v}^r k d_i$ and $\bl d\mdef \sum_{i=u}^{v-1} d_i$.}
+\newcommand{\vanderwafpfj}{\\We have seen that $\bl\chi(a+xd)
+  \meq \chi(a'+ \sum_{i=1}^{u-1} 0d_i+ \sum_{i=u}^{v-1} xd_i + \sum_{i=v}^r k d_i)$
+  is constant for $\bl x\myin[0,k-1]$. }
+\newcommand{\vanderwafpfjv}{\\We have seen that
+  $\bl\chi(a+xd)\meq
+  \rput(0,0){\psframe[fillstyle=solid,fillcolor=offwhite,linecolor=lightgray,shadow=false,framearc=0](-.12,-.3)(11.87,.65)}%
+  \chi(a'+ \sum_{i=1}^{u-1} 0d_i+ \sum_{i=u}^{v-1} xd_i + \sum_{i=v}^r k d_i)$
+  is constant for $\bl x\myin[0,k-1]$. }
+\newcommand{\vanderwafpfk}[3]{It also assumes this constant value in $\bl x\meq k$:\vspace*{-2.5mm}
+  \begin{center}$\bl{#1{\bl\chi(a+k d) \meq \chi(a'+\sum_{i=u}^rk d_i)}}\;
+   {#2{\meq \chi(a'+\sum_{i=v}^rk d_i)}}\;
+   {#3{\meq \chi(a+0d)}}\,.$\vspace*{-2.5mm}\end{center}}
+\newcommand{\vanderwafpfm}[1]{Hence, $\bl\chi(a+xd)$ is constant for $\bl x\myin[0,k]$.
+   {#1{Therefore, \,{\dg S($\bl k+1,1$)}\,.\qed}}\vspace*{-8mm}}
+
+\newcommand{\vanderwag}{\\[2mm]\theorem}
+\newcommand{\vanderwaga}{\\\,{\dg S($\bl k,m$)}\, for all $\bl k,m\mgeq 1$.}
+
+\newcommand{\vanderwagpfa}{\\[2mm]\proof}
+\newcommand{\vanderwagpfb}{\\The $\bl 1$-equivalence classes of $\bl[0,1]^1$ are $\bl\{0\}$, $\bl\{1\}$,
+  so \;{\dg S($\bl 1,\!1$)}\; is trivially~true.}
+\newcommand{\vanderwagpfc}{\\The theorem now follows by induction from the lemmas.\qed}
+
+\newcommand{\vanderwapfa}{\\[6mm]{\dg Proof} of {\dg Van der Waerden's Theorem} }
+\newcommand{\vanderwapfb}{\\{\dg S($\bl k,1$)}.\qed}
+
+
+\newcommand{\vanderwgena}{\\[4mm]{\dg Polynomial Van der Waerden's Theorem} {\gray (Bergelson \&\ Leibman 1996)}\\
+   If $\bl k,r\myin\mathbb{N}$, $\bl p_1,\ldots,p_k\myin\mathbb{Z}[x]$ with $\bl p_i(0)\meq 0$
+   and $\bl n$ sufficiently~large,
+   then any $\bl r$-colouring of $\bl [n]$ gives monochromatic $\bl a,a\!+\!p_1(d),\ldots,a\!+\!p_k(d)$.}
+
+\newcommand{\halesjewett}{\\[4mm]{\dg The Hales-Jewett Theorem} {\gray(1963)}
+ \\If $\bl k,m,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl r$-colouring of any {\dg cube} $\bl C\meq \{a + \sum_{i=1}^n x_i d_i \::\: 0\mleq x_i\mleq k\}$ of dimension $\bl n$ and length $\bl k$
+   gives a monochromatic subcube $\bl C'\subseteq C$ of dimension $\bl m$ and length $\bl k$.}
+
+\newcommand{\szemeredi}{\\[4mm]{\dg Szemer\'{e}di's Theorem} {\gray(1975)}
+  \\[-2mm]If $\bl k\in\mathbb{N}$ and $\bl S\subseteq\mathbb{N}$ has positive upper density
+  ($\bl\ds \limsup_{n\to\infty} \frac{|S\cap [n]|}{n} \mgt 0$),
+  \\[-1mm]then $\bl A$ contains infinitely many arithmetic progressions of length $\bl k$.}
+
+\newcommand{\greentao}{\\[4mm]{\dg The Green-Tao Theorem} {\gray(2004)}
+  \\The set of prime numbers contains arbitrarily long arithmetic progressions.\vspace*{-12mm}}
+
+
+
+\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+\np\pigeonthmplusa
+\np\pigeonthmplusa\\[6mm]\ramseyaa
+\np\pigeonthmplusa\\[6mm]\ramseyaa\\[6mm]\ramseye\ramseyea
+\np\ramseye\ramseyea\ramseybexaav\ramseybexabv{\ramseybexabav}
+\np\arithma
+\np\arithma\arithmaexa
+\np\arithma\arithmaexa\arithmaexb{\ph}{\ph}
+\np\arithma\arithmaexa\arithmaexb{}{\ph}
+\np\arithma\arithmaexa\arithmaexb{}{}
+\np\arithma\arithmaexa\arithmaexb{}{}\vanderwa
+\np\arithma\arithmaexa\arithmaexb{}{}\vanderwa\vanderwaa
+\np\arithmav\vanderwa\vanderwaa\vanderwaexaa
+\np\arithmav\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexaba}
+\np\arithmav\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabb}
+\np\arithmav\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabc\vanderwaexabb}
+\np\arithmav\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabd\vanderwaexabb}
+\np\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabd\vanderwaexabb}
+\np\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabd\vanderwaexabb}\vanderwaexba
+\np\vanderwa\vanderwaa\vanderwaexaa\vanderwaexab{\vanderwaexabd\vanderwaexabb}\vanderwaexba\vanderwaexbb
+\np\vanderwa\vanderwaa\vanderwaexca
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexcca}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexcca\vanderwaexccb}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexccav\vanderwaexccb}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexccav\vanderwaexcd\vanderwaexcda}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexccav\vanderwaexcd\vanderwaexcdb}
+\np\vanderwa\vanderwaa\vanderwaexca\vanderwaexcb\vanderwaexcc{\vanderwaexccav\vanderwaexcd\vanderwaexcdc}
+\np\vanderwa\vanderwaa\vanderwab
+\np\vanderwa\vanderwab\vanderwac
+\np\vanderwa\vanderwab\vanderwac\vanderwacexaa
+\np\vanderwa\vanderwab\vanderwac\vanderwacexaa\vanderwacexab
+\np\vanderwacv\vanderwacexaa\vanderwacexab
+\np\vanderwacv\vanderwacexaa\vanderwacexab\vanderwad
+\np\vanderwadv
+\np\vanderwadv\vanderwae
+\np\vanderwadv\vanderwae\vanderwaea
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd\vanderwaepfe
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd\vanderwaepfe\vanderwaepff
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd\vanderwaepfe\vanderwaepff\vanderwaepfg
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd\vanderwaepfe\vanderwaepff\vanderwaepfg\vanderwaepfh
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfa\vanderwaepfb\vanderwaepfc\vanderwaepfd\vanderwaepfe\vanderwaepff\vanderwaepfg\vanderwaepfh\vanderwaepfj
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfav\vanderwaepfd\vanderwaepfe\\{[...]}\vanderwaepfh\vanderwaepfj
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfav\vanderwaepfd\vanderwaepfe\\{[...]}\vanderwaepfh\vanderwaepfj\vanderwaepfk
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfav\vanderwaepfd\vanderwaepfe\\{[...]}\vanderwaepfh\vanderwaepfj\vanderwaepfk\vanderwaepfm
+\np\vanderwadv\vanderwae\vanderwaea\vanderwaepfav\vanderwaepfd\vanderwaepfe\\{[...]}\vanderwaepfh\vanderwaepfj\vanderwaepfk\vanderwaepfm\vanderwaepfn
+\np\vanderwadv\vanderwaf
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfe
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfe\vanderwafpff
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfe\vanderwafpff\vanderwafpfg
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfe\vanderwafpff\vanderwafpfg\vanderwafpfh
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{\ph}{\ph}{\ph}
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{}{\ph}{\ph}
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{}{}{\ph}
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{}{}{}
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{}{}{}\vanderwafpfm{\ph}
+\np\vanderwadv\vanderwaf\vanderwafav\vanderwafpfa\vanderwafpfb\vanderwafpfc\vanderwafpfd\vanderwafpfev\vanderwafpff\vanderwafpfg\vanderwafpfh\vanderwafpfjv\vanderwafpfk{}{}{}\vanderwafpfm{}
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga\vanderwagpfa
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga\vanderwagpfa\vanderwagpfb
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga\vanderwagpfa\vanderwagpfb\vanderwagpfc
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga\vanderwagpfa\vanderwagpfb\vanderwagpfc\vanderwapfa
+\np\vanderwadv\vanderwae\vanderwaeav\vanderwaf\vanderwafa\vanderwag\vanderwaga\vanderwagpfa\vanderwagpfb\vanderwagpfc\vanderwapfa\vanderwapfb
+\np\begin{picture}(0,0)(0,0)\end{picture}\\[-8mm]\vanderwa
+\np\begin{picture}(0,0)(0,0)\end{picture}\\[-8mm]\vanderwa\vanderwgena
+\np\begin{picture}(0,0)(0,0)\end{picture}\\[-8mm]\vanderwa\vanderwgena\halesjewett
+\np\begin{picture}(0,0)(0,0)\end{picture}\\[-8mm]\vanderwa\vanderwgena\halesjewett\szemeredi
+\np\begin{picture}(0,0)(0,0)\end{picture}\\[-8mm]\vanderwa\vanderwgena\halesjewett\szemeredi\greentao
+
+
+
+\end{document}
+
+

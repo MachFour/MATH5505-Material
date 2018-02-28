@@ -1,0 +1,384 @@
+%%  MATH5505 Ramsey Theory Lecture 4: Equations
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+% Equations: Schur's Theorem, Rado's Theorem, Folkman's Theorem, Hindman's Theorem
+
+%   Refresh
+%   Schur's Theorem   (prove)
+%   Corollary         (prove)
+%   Rado's Theorem    (just mention)
+%   Folkman's Theorem (prove if there's room)
+%   Hindman's Theorem etc. (mention)
+%
+
+
+\include{mydefinitionsramsey}
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 4: Equations\end{center}}
+
+\newcommand{\pigeonthma}{{\dg The Pigeonhole Principle}
+  \\[1mm]If $\bl k+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least two pigeons.}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\pigeonthmstrong}{{\dg The Pigeonhole Principle} {\gray (strong)}
+  \\[1mm]If $\bl (n_1-1) +\cdots+(n_k-1) + 1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some $\bl i$th pigeonhole contains at least $\bl n_i$ pigeons.}
+
+\newcommand{\ramseyaa}{{\dg Ramsey Theory} makes repeated use of the {\dg Pigeonhole Principle}
+to show that order exists whenever (certain) random and seemingly unordered structures are sufficiently large.}
+
+\newcommand{\ramseyb}{{\dg Ramsey's Theorem} {\gray (1930)} {\halfgray (simple)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_n$ gives a complete subgraph $\bl K_m$
+   with monochromatic edges.}
+\newcommand{\ramseyba}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R(m;k)$.}}
+
+\newcommand{\ramseynotaa}{\\[6mm]Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+\newcommand{\ramseynotaav}{Define $\bl [n] \black :\meq \{1,\ldots,n\}$
+                                 \; and \; $\bl\binom{S}{k} \black :\meq \{X\subseteq S\;:\; |X| \meq k\}$.}
+
+\newcommand{\ramseye}{{\dg Ramsey's Theorem} {\gray (1930)}\\
+   If $\bl n_1,\ldots,n_k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{r}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{r}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\ramseyea}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue R_r(n_1,\ldots,n_k)$.}}
+
+\newcommand{\arithma}{An {\dg arithmetic progression} is a sequence of numbers of the form
+  \[\bl\hspace*{-27mm}{\white a+[0,k)d \white\,\;=}\;\;\,
+    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\]}
+\newcommand{\arithmav}{An {\dg arithmetic progression} is a sequence of numbers of the form
+  \[\bl\hspace*{-27mm}{\white a+[0,k)d \white\;\,=}\;\;\,
+    a\,,\; a+d\,,\; a+2d\,, \;\ldots\,, \;a+kd\,.
+    \begin{pspicture}(-4,0)(-4,0)\psset{linecolor=darkgreen,framearc=0,fillstyle=solid,fillcolor=darkgreen}
+    \psframe(0,0)(.5,1)\psframe(1,0)(1.5,1.3)\psframe(2,0)(2.5,1.6)\end{pspicture}\vspace*{6mm}\]}
+
+\newcommand{\vanderwa}{{\dg Van der Waerden's Theorem} {\gray (1927)}\\
+   If $\bl k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl r$-colouring of $\bl [n]$ gives a monochromatic arithmetic progression of length~$\bl k$.}
+
+\newcommand{\vanderwaa}{\\[2mm]{\gray The least such $\lightblue n$ is denoted $\lightblue W(k,r)$.}}
+
+\newcommand{\vanderwad}{\\[12mm]Let \,{\dg S($\bl k,m$)}\, be the statement that\vspace*{-2mm}
+\begin{center}{\small
+  \begin{tabular}{l}for each $\bl r\myin\mathbb{N}$, there is some $\bl N\black:=\bl N(k,m,r)$ so that
+    \\for each $\bl r$-colouring $\bl\chi:[N]\mto[r]$ there are $\bl a,d_1,\ldots,d_m\myin\mathbb{N}$ so that
+    \\$\bl \chi(a+\sum x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k ]^m$.
+  \end{tabular}}
+\end{center}}
+
+\newcommand{\vanderwadv}{\begin{pspicture}(.5,-.6)(10,1.7)\psset{linecolor=offwhite,fillcolor=nearlywhite,shadow=false,framearc=0}
+    \psframe(-.25,-0.6)(22.25,2.35)\psline(-.25,1.15)(2.4,1.15)(2.4,2.35)
+    \rput[l](0    ,1.7 ){{\dg S($\bl k,m$)}}
+    \rput[l](7.333,1.7 ){\small for each $\bl r\myin\mathbb{N}$, there is some $\bl N\black:=\bl N(k,m,r)$ so that}
+    \rput[l](3.322,0.85){\small for each $\bl r$-colouring $\bl\chi:[N]\mto[r]$ there are $\bl a,d_1,\ldots,d_m\myin\mathbb{N}$ so that}
+    \rput[l](0  ,0  ){\small$\bl \chi(a+\sum x_id_i)$ is well-defined and constant on each $\bl k$-equivalence class of $\bl[0,k ]^m$.}
+  \end{pspicture}}
+
+\newcommand{\schura}{{\dg Schur's Theorem} {\gray (1916)}
+  \\If $\bl\mathbb{N}$ is finitely coloured,
+    then $\bl a + b \meq c$ for some same-coloured $\bl a,b,c\myin\mathbb{N}$.\hspace*{-5mm}}
+
+\newcommand{\schurava}{\\[4mm]From the proof, we also get the following finite version.}
+\newcommand{\schuravb}{\\[4mm]{\dg Schur's Theorem (finite)} {\gray (1916)}
+  \\If $\bl[n]$ is finitely coloured for sufficiently large $\bl n$,\\
+    then $\bl a + b \meq c$ for some same-coloured $\bl a,b,c\myin[n]$.}
+\newcommand{\schuravbv}{{\dg Schur's Theorem (finite)} {\gray (1916)}
+  \\If $\bl[n]$ is finitely coloured for sufficiently large $\bl n$,\\
+    then $\bl a + b \meq c$ for some same-coloured $\bl a,b,c\myin[n]$.}
+\newcommand{\schuravc}{\\[4mm]{\gray All infinite Ramsey theory theorems have finite versions,
+  by the \\{\em\gdg Compactness Principle},
+  a diagonal argument using the {\gdg Axiom of Choice}.}}
+
+\newcommand{\schuraexaa}{\\[8mm]\example}
+\newcommand{\schuraexab}[1]{\\{\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)#1\endpspicture}}
+\newcommand{\schuraexaba}{\rput(0,0){1}\rput(1,0){2}\rput(2,0){3}\rput(3,0){4}\rput(4,0){5}
+   \rput(5,0){6}\rput(6,0){7}\rput(7,0){8}\rput(8,0){9}}
+\newcommand{\schuraexabb}{{\darkred\footnotesize\rput(1,0){2}\rput(2,0){3}\rput(4,0){5}\rput(7,0){8}
+                             \darkgreen\normalsize\rput(0,0){1}\rput(3,0){4}\rput(5,0){6}\rput(6,0){7}\rput(8,0){9}}}
+\newcommand{\schuraexabc}{
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(-.5,-.5)(.5,.5)\psframe(4.5,-.5)(5.5,.5)\psframe(5.5,-.5)(6.5,.5)}
+\newcommand{\schuraexabd}{
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(.5,-.5)(1.5,.5)\psframe(1.5,-.5)(2.5,.5)\psframe(3.5,-.5)(4.5,.5)}
+\newcommand{\schuraexabe}{
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(1.5,-.5)(2.5,.5)\psframe(3.5,-.5)(4.5,.5)\psframe(6.5,-.5)(7.5,.5)}
+
+\newcommand{\schurapfa}{\\[4mm]\proof}
+\newcommand{\schurapfb}{\\Suppose that $\bl\chi:\mathbb{N}\mto [r]$ is an $\bl r$-colouring of $\bl\mathbb{N}$.}
+\newcommand{\schurapfc}{\\By {\dg Ramsey's Theorem}, we may define $\bl N\mdef R(3;r)$.}
+\newcommand{\schurapfd}{\\Define an edge $\bl r$-colouring $\bl\chi'$ of $\bl K_N$ by $\bl\chi'(\{i,j\})\mdef \chi(|j-i|)$.}
+\newcommand{\schurapfe}{\\By definition of $\bl N$,
+  there is a $\bl\chi'$-monochromatic triangle in $\bl K_N$, \\with vertices $\bl i\mlt j\mlt k$:
+  \, $\bl\chi'(\{j,k\}) \meq \chi'(\{i,j\})\meq \chi'(\{i,k\})$.}
+\newcommand{\schurapff}{\\Define $\bl a\mdef k-j$, $\bl b\mdef j-i$ and $\bl c\mdef k-i$.}
+\newcommand{\schurapfg}{\\Then $\bl a+b\meq c$ }
+\newcommand{\schurapfh}{and $\bl\chi(a)\meq \chi(b)\meq \chi(c)$.\qed}
+
+\newcommand{\schurb}{\\[4mm]\theorem {\gray (Schur 1916)}
+  \\For each $\bl m\myin\mathbb{N}$ and sufficiently big prime $\bl p$,
+    there are solutions $\bl x,y,z\myin\mathbb{N}^+$\hspace*{-3mm}\\to
+    \[\bl x^m + y^m \mequiv z^m\pmod{p}\black\,.\]}
+\newcommand{\schurbv}{\theorem {\gray (Schur 1916)}
+  \\For each $\bl m\myin\mathbb{N}$ and sufficiently big prime $\bl p$,
+    there are solutions $\bl x,y,z\myin\mathbb{N}^+$\hspace*{-3mm}\\to
+    \[\bl x^m + y^m \mequiv z^m\pmod{p}\black\,.\]}
+
+\newcommand{\schurbpfa}{\proof}
+\newcommand{\schurbpfb}{\\By {\dg Schur's Theorem (finite)}, there is a sufficiently large prime $\bl p$
+  so that if $\bl[p-1]$ is $\bl m$-coloured, then same-coloured $\bl a,b,c\myin[p]$ exist with $\bl a+b\meq c$.}
+\newcommand{\schurbpfc}{\\Consider $\bl\mathbb{Z}^*_p$, the multiplicative group of units in $\bl\mathbb{Z}_p$.}
+\newcommand{\schurbpfd}{\\Define $\bl H\mdef\{x^m : x\myin\mathbb{Z}^*_p\}$. }
+\newcommand{\schurbpfe}{\\This is a subgroup of $\bl\mathbb{Z}^*_p$ of index
+   $\bl r\mdef |\mathbb{Z}^*_p:H|\meq \gcd(p-1,m)\mleq m$.}
+\newcommand{\schurbpff}{\\The $\bl r$ cosets $\bl gH$ partition $\bl\mathbb{Z}^*_p$,
+  defining an $\bl r$-colouring $\bl\chi$ of $\bl\mathbb{Z}^*_p$:\\
+  $\bl\chi(a)\meq \chi(b)$ if and only if $\bl a,b\myin gH$ for some $\bl g$;
+  i.e., when $\bl ab^{-1}\myin H$.}
+\newcommand{\schurbpfg}{\\Since $\bl r\mleq m$,
+  $\bl\chi$ as an $\bl m$-colouring of $\bl\mathbb{Z}^*_p$ (or, equivalently, $\bl[p-1]$).}
+\newcommand{\schurbpfh}{\\There are same-coloured $\bl a,b,c\myin\mathbb{Z}^*_p$ with $\bl a+b\meq c$, or $\bl ac^{-1} + bc^{-1}\meq 1$.}
+\newcommand{\schurbpfj}{\\Thus, $\bl ac^{-1}, bc^{-1}\myin H$,
+  so $\bl ac^{-1}\meq x^m$, $\bl bc^{-1}\meq y^m$, $\bl 1\meq z^m$ for $\bl x,y,z\myin\mathbb{Z}^*_p$.}
+\newcommand{\schurbpfk}{\\Then $\bl x^m+y^m\meq z^m$ in $\bl\mathbb{Z}_p$.\qed}
+
+\newcommand{\schurca}{\theorem}
+\newcommand{\schurcb}{\\For each $\bl k,r,s\mgeq 1$, there is $\bl n\mdef n(k,r,s)$ so that
+   if $\bl [n]$ is $\bl r$-coloured, then for some $\bl a,d\mgt 0$,
+   the following set is in $\bl [n]$ and is monochromatic:\vspace*{-2mm}
+   \[\bl
+     \{a, a+d, \ldots, a+kd\}\cup\{sd\}\,\black.%\vspace*{-2mm}
+   \]}
+\newcommand{\schurcc}{{\gray This result generalises {\gdg Van der Waerden's Theorem} and {\gdg Schur's Theorem}.}}
+\newcommand{\schurcpfa}{\proof}
+\newcommand{\schurcpfb}{\\Use induction on $\bl r$.}
+\newcommand{\schurcpfc}{ Certainly, $\bl n(k,1,s)$ exists {\gray and equals $\lightblue\max\{k+1,s\}$}.}
+\newcommand{\schurcpfd}{\\Assume that the theorem is true for $\bl r-1$ and set $\bl N\mdef n(k,r-1,s)$.}
+\newcommand{\schurcpfe}{\\By {\dg Van der Waerden's Theorem},
+  we may set $\bl W\mdef W(kN,r)$ \&\ $\bl n\mdef sW$.}
+\newcommand{\schurcpff}{\\Let $\bl\chi$ be an $\bl r$-colouring of $\bl[n]$.}
+\newcommand{\schurcpfg}{ Then $\bl[W]$ contains an arithmetic progression
+  $\bl\{a,a+d',\ldots,a+(kN)d'\}$ of constant colour $\bl c$.}
+\newcommand{\schurcpfh}{\\If $\bl\chi(sjd')\meq c$ for some $\bl j \myin[N]$,
+  then set $\bl d\mdef jd'$, and we are done:
+  \\$\bl\{a,a+d,\ldots,a+kd\}\cup\{sd\}$ has constant colour $\bl c$.}
+\newcommand{\schurcpfj}{\\Suppose that $\bl\chi(sjd')\mneq c$ for all $\bl j \myin[N]$.}
+\newcommand{\schurcpfk}{\\Define a colouring $\bl\chi'$ on $\bl[N]$ by $\bl\chi'(j)\mdef \chi(sjd')$.}
+\newcommand{\schurcpfm}{ Since $\bl N\meq n(k,r-1,s)$,
+there is a $\bl\chi'$-monochromatic set $\bl\{a',a'+d'',\ldots,a'+kd''\}\cup\{sd''\}$ in $\bl[N]$.}
+\newcommand{\schurcpfn}{\\Set $\bl a\mdef sa'd'$ and $\bl d\mdef sd''d'$.}
+\newcommand{\schurcpfp}{\\Then $\bl\{a,a+d,\ldots,a+kd\}\cup\{sd\}$ in $\bl[sNd']\msubseteq[n]$ is monochromatic.\qed\vspace*{-10mm}}
+
+\newcommand{\schurda}{\corollary}
+\newcommand{\schurdb}{\\For each $\bl k,r,s\mgeq 1$, there is $\bl n\mdef n(k,r,s)$ so that
+   if $\bl [n]$ is $\bl r$-coloured, then for some $\bl a,d\mgt 0$,
+   the following set is in $\bl [n]$ and is monochromatic:\vspace*{-2mm}
+   \[\bl
+     \{a + \lambda d: |\lambda|\mleq k\}\cup\{sd\}\,\black.
+   \]}
+\newcommand{\schurdc}{{\gray This illustrates how to shift the arithmetic progression with respect to $\lightblue sd$.}}
+\newcommand{\schurdpfa}{\\[4mm]\proof}
+\newcommand{\schurdpfb}{\\Applying $\bl k'\meq 2k$ to the theorem above gives $\bl a',d\mgt 0$ \\
+  for which $\bl\{a'+\lambda d : \lambda \meq 0,1,\ldots,2k\}\cup\{sd\}$ in $\bl[n]$ is monochromatic.}
+\newcommand{\schurdpfc}{\\Now re-label: $\bl a\mdef a'+kd$.\qed}
+
+\newcommand{\schurdd}{These results are special cases of {\dg Rado's Theorem}.}
+
+\newcommand{\radoa}{\\[2mm]{\dg Rado's Theorem {\gray(simple) (1933)}}}
+\newcommand{\radoav}{{\dg Rado's Theorem {\gray(simple) (1933)}}}
+\newcommand{\radob}{\\Let $\bl c_1,\ldots,c_n\myin\mathbb{Z}$.
+    Then for any finite colouring of $\bl\mathbb{N}$,\vspace*{-2mm}
+  \[\bl
+    c_1 x_1 + \cdots + c_n x_n \meq 0\vspace*{-2mm}
+  \]
+  has a monochromatic solution $\bl x_1,\ldots,x_n\myin\mathbb{N}$ if and only if\\
+  $\ds\bl\sum_{i\in I} c_i\meq 0$ for some nonempty subset $\bl I\msubseteq [n]$.\vspace*{-2mm}}
+
+\newcommand{\radoc}{\\[4mm]{\dg Rado's Theorem} extends this to homogenous systems of linear equations.}
+\newcommand{\radocv}{{\dg Rado's Theorem} extends this to homogenous systems of linear equations.}
+
+\newcommand{\radoexaa}{\\[4mm]\example}
+\newcommand{\radoexab}{\\The numbers $\bl a,a+d,\ldots,a+kd,sd$ form a solution $\bl x_0,\ldots,x_{k+1}$
+  \\to the homogenous system of linear equations
+  \[\bl
+    \begin{array}{rl}
+     x_1 - x_0         & \!\meq x_2 - x_1    \\
+      \vdots           &                     \\\bl
+     x_{k-1} - x_{k-2} & \!\meq x_k - x_{k-1}\\\bl
+     x_{k+1}           & \!\meq s(x_1-x_0)
+    \end{array}
+    \quad\text{\black; that is,}\quad
+    \begin{array}{rl}
+     - x_0 + 2x_1 - x_2         & \!\meq 0\\
+      \vdots      &                       \\\bl
+     - x_{k-2} + 2x_{k-1} - x_k & \!\meq 0\\\bl
+      sx_0 - sx_1 + x_{k+1}     & \!\meq 0\,\black.
+    \end{array}
+  \]}
+
+\newcommand{\sumseta}[1]{For any set $\bl S\subseteq \mathbb{N}$,
+      \\{\dg     sum set} $\bl\Sigma(S)$ is the set of all finite     sums of elements of~$\bl S${#1{;}}
+  \\{#1{{\dg product set} $\bl\Pi(S)$    is the set of all finite products of elements of~$\bl S$.}}}
+\newcommand{\sumsetexaa}{\\[2mm]\example\vspace*{-5mm}}
+\newcommand{\sumsetexab}[1]{\begin{align*}\bl
+   \Sigma(\{1,2,4\})   &    \meq \{1,2,3,4,5,6,7\}\\\bl
+  {#1{\Pi(\{1,2,4\})}} &{#1{\meq \{1,2,4,8\}}}
+  \end{align*}}
+
+\newcommand{\folkmana}{{\dg Folkman's Theorem} {\gray(Rado 1970, Sanders 1968)}}
+\newcommand{\folkmanb}{\\For $\bl c,k\myin\mathbb{N}$,
+there is some sufficiently large $\bl M\myin\mathbb{N}$
+  so that for any $\bl c$-colouring of $\bl\mathbb{N}$,
+  there is a $\bl k$-subset $\bl S\subseteq[M]$ with monochromatic $\bl\Sigma(S)$.}
+\newcommand{\folkmanc}{\\[2mm]{\gray This theorem follows as a special case from {\gdg Rado's Theorem}.}}
+
+\newcommand{\productthma}{\\[2mm]\theorem}
+\newcommand{\productthmb}{\\For $\bl c,k\myin\mathbb{N}$,
+  there is some sufficiently large $\bl M\myin\mathbb{N}$
+  so that for any $\bl c$-colouring of $\bl\mathbb{N}$,
+  there is a $\bl k$-subset $\bl S\subseteq\mathbb[M]$ with monochromatic $\bl\Pi(S)$.}
+
+\newcommand{\productthmpfa}{\\[2mm]\proof}
+\newcommand{\productthmpfb}{\\This result follows from {\dg Folkman's Theorem}
+  since any sum set in $\bl [N]$ will induce a product set in $\bl\{2^n \,:\, n\myin[N]\}$.\qed\vspace*{-4mm}}
+
+\newcommand{\finiteunionthema}{\\[3mm]{\dg The Finite Union Theorem}}
+\newcommand{\finiteunionthemb}{\\If the finite subsets of $\bl\mathbb{N}$ are finitely coloured,
+  \\then there are arbitrarily large families of disjoint subsets $\bl\mathcal{D}\meq\{D_i\}_I$
+  \\whose union sets $\ds\bl\{ \bigcup_{i\in J} D_i\,:\,J\msubseteq I\,, 0\mlt|J|\mlt\infty\}$
+  are monochromatic.}
+\newcommand{\finiteunionthemc}{\\[2mm]{\gray It is not hard to show that the finite version of this theorem
+  is equivalent to {\gdg Folkman's Theorem}, via the correspondence between sets $\lightblue S$
+  and binary (characteristic) vectors $\lightblue\mathbf{1}_S$ and thus numbers $\lightblue\sum_{i\in S} 2^{i-1}$.}}
+
+
+\newcommand{\hindmana}{\\[4mm]{\dg Hindman's Theorem} {\gray (1974)}}
+\newcommand{\hindmanb}{\\For any finite colouring of $\bl\mathbb{N}$,
+  there is an infinite subset $\bl S\subseteq\mathbb{N}$ whose sum set $\bl\Sigma(S)$ is monochromatic.}
+\newcommand{\hindmanc}{\\[2mm]{\gray This is much harder to prove than {\gdg Folkman's Theorem}.}}
+
+\newcommand{\sumproductsetsa}{\\[4mm]It is an open question whether arbitrarily large finite sets $\bl S\msubseteq\mathbb{N}$
+  can be exist with monochromatic $\bl\Sigma(S)\cup\Pi(S)$ when $\bl\mathbb{N}$ is finitely coloured.}
+\newcommand{\sumproductsetsb}{\\Infinitely large such sets do not always exist: Hindman has shown this.}
+\newcommand{\sumproductsetsc}{\\This question is open for even the smallest sets $\bl S\meq \{a,b\}$
+  and their sets $\bl\Sigma(S)\cup\Pi(S)\meq\{a,b,a+b,ab\}$.}
+
+
+
+\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+\np\schura
+\np\schura\schuraexaa
+\np\schura\schuraexaa\schuraexab{\schuraexaba}
+\np\schura\schuraexaa\schuraexab{\schuraexabb}
+\np\schura\schuraexaa\schuraexab{\schuraexabc\schuraexabb}
+\np\schura\schuraexaa\schuraexab{\schuraexabd\schuraexabb}
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc\schurapfd
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc\schurapfd\schurapfe
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc\schurapfd\schurapfe\schurapff
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc\schurapfd\schurapfe\schurapff\schurapfg
+\np\schura\schuraexaa\schuraexab{\schuraexabe\schuraexabb}\schurapfa\schurapfb\schurapfc\schurapfd\schurapfe\schurapff\schurapfg\schurapfh
+\np\schura
+\np\schura\schurava
+\np\schura\schurava\schuravb
+\np\schura\schurava\schuravb\schuravc
+\np\schura\schurava\schuravb\schuravc\schurb
+\np\schuravbv\schurb\schurbpfa
+\np\schuravbv\schurb\schurbpfa\schurbpfb
+\np\schuravbv\schurb\schurbpfa\schurbpfb\schurbpfc
+\np\schuravbv\schurb\schurbpfa\schurbpfb\schurbpfc\schurbpfd
+\np\schuravbv\schurb\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe
+\np\schuravbv\schurb\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff
+\np\schuravbv\schurb\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff\schurbpfg
+\np\schurbv\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff\schurbpfg
+\np\schurbv\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff\schurbpfg\schurbpfh
+\np\schurbv\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff\schurbpfg\schurbpfh\schurbpfj
+\np\schurbv\schurbpfa\schurbpfb\schurbpfc\schurbpfd\schurbpfe\schurbpff\schurbpfg\schurbpfh\schurbpfj\schurbpfk
+\np\schurca
+\np\schurca\schurcb
+\np\schurca\schurcb\schurcc
+\np\schurca\schurcb\schurcpfa
+\np\schurca\schurcb\schurcpfa\schurcpfb
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh\schurcpfj
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh\schurcpfj\schurcpfk
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh\schurcpfj\schurcpfk\schurcpfm
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh\schurcpfj\schurcpfk\schurcpfm\schurcpfn
+\np\schurca\schurcb\schurcpfa\schurcpfb\schurcpfc\schurcpfd\schurcpfe\schurcpff\schurcpfg\schurcpfh\schurcpfj\schurcpfk\schurcpfm\schurcpfn\schurcpfp
+\np\schurca\schurcb
+\np\schurca\schurcb\schurda
+\np\schurca\schurcb\schurda\schurdb
+\np\schurca\schurcb\schurda\schurdb\schurdc
+\np\schurca\schurcb\schurda\schurdb\schurdc\schurdpfa
+\np\schurca\schurcb\schurda\schurdb\schurdc\schurdpfa\schurdpfb
+\np\schurca\schurcb\schurda\schurdb\schurdc\schurdpfa\schurdpfb\schurdpfc
+\np\schurca\schurcb\schurda\schurdb
+\np\schurca\schurcb\schurda\schurdb\schurdd
+\np\schurca\schurcb\schurda\schurdb\schurdd\radoa\radob
+\np\schurca\schurcb\schurda\schurdb\schurdd\radoa\radob\radoc
+\np\schurca\schurcb\radocv
+\np\schurca\schurcb\radocv\radoexaa
+\np\schurca\schurcb\radocv\radoexaa\radoexab
+\np\sumseta{\ph}
+\np\sumseta{\ph}\sumsetexaa
+\np\sumseta{\ph}\sumsetexaa\sumsetexab{\ph}
+\np\sumseta{\ph}\sumsetexaa\sumsetexab{\ph}\folkmana
+\np\sumseta{\ph}\sumsetexaa\sumsetexab{\ph}\folkmana\folkmanb
+\np\sumseta{\ph}\sumsetexaa\sumsetexab{\ph}\folkmana\folkmanb\folkmanc
+\np\sumseta{}\sumsetexaa\sumsetexab{\ph}\folkmana\folkmanb\folkmanc
+\np\sumseta{}\sumsetexaa\sumsetexab{}\folkmana\folkmanb\folkmanc
+\np\sumseta{}\sumsetexaa\sumsetexab{}\folkmana\folkmanb\folkmanc\productthma
+\np\sumseta{}\sumsetexaa\sumsetexab{}\folkmana\folkmanb\folkmanc\productthma\productthmb
+\np\sumseta{}\sumsetexaa\sumsetexab{}\folkmana\folkmanb\productthma\productthmb\productthmpfa
+\np\sumseta{}\sumsetexaa\sumsetexab{}\folkmana\folkmanb\productthma\productthmb\productthmpfa\productthmpfb
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema\finiteunionthemb
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema\finiteunionthemb\finiteunionthemc
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema\finiteunionthemb\hindmana
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema\finiteunionthemb\hindmana\hindmanb
+\np\folkmana\folkmanb\productthma\productthmb\finiteunionthema\finiteunionthemb\hindmana\hindmanb\hindmanc
+\np\folkmana\folkmanb\hindmana\hindmanb\hindmanc
+\np\folkmana\folkmanb\hindmana\hindmanb\hindmanc\sumproductsetsa
+\np\folkmana\folkmanb\hindmana\hindmanb\hindmanc\sumproductsetsa\sumproductsetsb
+\np\folkmana\folkmanb\hindmana\hindmanb\hindmanc\sumproductsetsa\sumproductsetsb\sumproductsetsc
+
+%1. Prove this?\\
+%2. Mention Hindman's Theorem.\\
+%3. Mention Finite Union Theorem. (Prove equivalance with Folkman, or just the one direction, or not at all?)\\
+%4. Mention product version.
+
+
+\end{document}
+
+

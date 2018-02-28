@@ -1,0 +1,488 @@
+\documentclass[12pt,a4paper,landscape]{article}
+\special{landscape}
+
+\usepackage{latexsym,amsfonts,amsmath,amssymb} %,calc,fancybox,epsfig,amscd,tabularx}
+\usepackage{pst-node,pst-plot,pstricks,pst-tree,multido,epic,ifthen}
+
+\mag=\magstep4
+
+\DeclareSymbolFont{extraup}{U}{txsyc}{m}{n}
+\DeclareMathSymbol{\vardiamondsuit}{\mathalpha}{extraup}{113}
+\DeclareMathSymbol{\varheartsuit}{\mathalpha}{extraup}{114}
+
+\definecolor{Red}{rgb}{1,0,0}
+\definecolor{Blue}{rgb}{0,0,1}
+\definecolor{Green}{rgb}{0,1,0}
+\definecolor{DarkGreen}{rgb}{0,0.4,0}
+\definecolor{EmColour}{rgb}{0,0,1}
+\definecolor{NC}{rgb}{0.7,0,0}
+\definecolor{TheEndColour}{rgb}{0,0,0}
+
+\def\np{\newpage}
+\def\bl{\blue}
+\def\bk{\black}
+\def\wh{\white}
+\def\rd{\red}
+\def\lg{\lightgray}
+\def\gr{\green}
+\def\dr{\darkred}
+\def\dg{\darkgreen}
+\def\gdg{\graydarkgreen}
+\def\dgy{\darkgray}
+\def\ec{\dg}
+
+\newrgbcolor{green}{0.2 0.6 0.2}
+\newrgbcolor{darkgreen}{0 0.4 0}
+\newrgbcolor{lightgreen}{0 0.75 0}
+\newrgbcolor{darkblue}{0 0 0.6}
+\newrgbcolor{darkred}{0.6 0 0}
+\newrgbcolor{halfred}{.8 0 0}
+\newrgbcolor{white}{1 1 1}
+\newrgbcolor{nearlywhite}{0.95 0.95 0.95}
+\newrgbcolor{offwhite}{0.9 0.9 0.9}
+\newrgbcolor{lightgray}{0.85 0.85 0.85}
+\newrgbcolor{halfgray}{0.8 0.8 0.8}
+\newrgbcolor{halfdarkgray}{0.4 0.4 0.4}
+\newrgbcolor{darkyellow}{1 0.94 0.15}
+\newrgbcolor{halflightyellow}{1 1 0.4}
+\newrgbcolor{lightyellow}{1 1 0.7}
+\newrgbcolor{gold}{0.96 0.96 0.1}
+\newrgbcolor{lightblue}{0.5 0.5 1}
+\newrgbcolor{amber}{1 0.75 0}
+\newrgbcolor{hotpink}{1 0.41 0.71}
+
+\setlength{\textheight}{18.0truecm}
+\setlength{\textwidth}{26.0truecm}
+\setlength{\hoffset}{-12.0truecm}
+\setlength{\voffset}{-5.2truecm}
+
+%\setlength{\oddsidemargin}{8mm}
+%\setlength{\evensidemargin}{8mm}
+%\setlength{\topmargin}{4mm}
+%\setlength{\headheight}{4mm}
+%\setlength{\headsep}{0mm}
+%\setlength{\footskip}{0mm}
+
+%\parindent 0in
+%\addtolength{\textwidth}{1in}
+%\addtolength{\oddsidemargin}{-0.5in}
+%\addtolength{\evensidemargin}{-0.5in}
+%\addtolength{\topmargin}{-0.5in}
+%\addtolength{\textheight}{1in}
+
+\renewcommand{\arraystretch}{1.2}
+
+\setlength{\bigskipamount}{5ex plus1.5ex minus 2ex}
+\setlength{\parindent}{0cm}
+%\setlength{\parskip}{0.2cm}
+
+\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=green,
+ linecolor=blue,framearc=.3,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+ shadowangle=-45,dash=7pt 5pt}
+%\psset{unit=.4,linecolor=gray,fillcolor=offwhite,shadowsize=.2,framearc=.3}
+
+\def\I{\mathcal{I}}
+\def\B{\mathcal{B}}
+\def\Ci{\mathcal{C}}
+\def\F{\mathbb{F}}
+\def\N{\mathbb{N}}
+\def\Z{\mathbb{Z}}
+\def\Q{\mathbb{Q}}
+\def\R{\mathbb{R}}
+\def\C{\mathbb{C}}
+\def\bl{\blue}
+\def\bk{\black}
+\def\wh{\white}
+\def\re{\red}
+\def\ec{\color{EmColour}}
+
+\newcommand{\llb}{\\[1mm]}
+\newcommand{\lb}{\\[3mm]}
+\newcommand{\blb}{\\[5mm]}
+\newcommand{\hlb}{\\[48mm]}
+
+\newcommand{\mynewpage}{\newpage\vphantom{ }\vspace{-13.5mm}}
+\newcommand{\mynewpagel}{\newpage\vphantom{ }\vspace{-12mm}}
+
+\newcommand{\qnom}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}}
+
+\newcommand{\dl}{\psset{linestyle=dashed,linecolor=lightblue,shadow=false}}
+%\newcommand{\dl}{\psset{linestyle=dashed,linecolor=blue}}
+
+\newcommand{\myframe}[1]{\pspicture(0,0)(0,0)\psset{unit=1cm,
+ shadowcolor=offwhite,shadow=true,shadowangle=-45,linewidth=.03,linecolor=gray,
+ fillcolor=lightgray,shadowsize=.15,framearc=.3}\psframe#1\endpspicture}
+
+\newcommand{\myframev}[1]{\pspicture(0,0)(0,0)\psset{unit=8mm,
+ shadowcolor=offwhite,shadow=true,shadowangle=-45,linewidth=.03,linecolor=gray,
+ fillcolor=lightgray,shadowsize=.15,framearc=.3}\psframe#1\endpspicture}
+
+\newcommand{\myonecode}[5]{\pspicture(0,0)(5,1)\psframe(0,0)(5,1)\rput(.5, .5){#1}\rput(1.5, .5){#2}\rput(2.5, .5){#3}\rput(3.5, .5){#4}\rput(4.5, .5){#5}\endpspicture}
+\newcommand{\mytwocode}[6]{\pspicture(0,0)(5,2)\psframe(0,0)(5,2)\rput(.5,1.5){#1}\rput(1.5,1.5){#2}\rput(2.5,1.5){#3}\rput(3.5,1.5){#4}\rput(4.5,1.5){#5}#6\endpspicture}
+\newcommand{\mtca}[5]{\rput(.5, .5){#1}\rput(1.5, .5){#2}\rput(2.5, .5){#3}\rput(3.5, .5){#4}\rput(4.5, .5){#5}}
+
+\newcommand{\mypicture}[1]{\pspicture(0,0)(0,0)\psset{unit=1cm,
+ shadowcolor=offwhite,shadow=true,shadowangle=-45,linewidth=.03,linecolor=gray,
+ fillcolor=lightgray,shadowsize=.15,framearc=.3}#1\endpspicture}
+
+\newcommand{\mymatrix}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(6,4)
+  \psframe(0,0)(7,5)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(7,5)\endpspicture}
+\newcommand{\mymatrixa}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(5,3)
+  \psframe(0,0)(5,3)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(5,3)\endpspicture}
+\newcommand{\mymatrixb}[6]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(2.2,1.8)
+  \psframe(0,0)(2.2,1.8){\darkgray\small\rput(.45,1.3){#1}\rput(1.1,1.3){#2}\rput(1.75,1.3){#3}
+                                        \rput(.45, .5){#4}\rput(1.1, .5){#5}\rput(1.75, .5){#6}}
+  \psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(2.2,1.8)\endpspicture}
+\newcommand{\mysqmatrixiv}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(4,4)
+  \psframe(0,0)(4,4)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(4,4)\endpspicture}
+\newcommand{\mysqmatrixv}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(5,5)
+  \psframe(0,0)(5,5)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(5,5)\endpspicture}
+\newcommand{\mysqmatrixvi}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(6,6)
+  \psframe(0,0)(6,6)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(6,6)\endpspicture}
+
+\newcommand{\acset}{\psset{fillstyle=none,linecolor=red}}
+\newcommand{\drr}{\psset{linecolor=darkred,fillcolor=red,linewidth=.034}}
+\newcommand{\dbb}{\psset{linecolor=darkblue,fillcolor=blue,linewidth=.034}}
+\newcommand{\bbl}{\psset{linecolor=blue,fillcolor=lightblue}}
+\newcommand{\dbhg}{\psset{linecolor=darkblue,fillcolor=halfgray}}
+\newcommand{\bhg}{\psset{linecolor=blue,fillcolor=halfgray}}
+\newcommand{\rhg}{\psset{linecolor=red,fillcolor=halfgray}}
+\newcommand{\ghg}{\psset{linecolor=green,fillcolor=halfgray}}
+\newcommand{\dgg}{\psset{linecolor=darkgreen,fillcolor=green,linewidth=.034}}
+
+
+\newcommand{\mychain}{\pspicture(0,0)(0,0)\dbb
+  \psset{shadowsize=.2,shadow=true,shadowcolor=offwhite,shadowangle=-45,shadowsize=.15}
+  \pscircle(0,0){.09}\pscircle(0,1){.09}\pscircle(0,2){.09}\pscircle(0,3){.09}
+  \psline(0,.125)(0,.875)\psline(0,1.125)(0,1.875)\psline(0,2.125)(0,2.875)\endpspicture}
+
+\newcommand{\myantichain}{\pspicture(0,0)(0,0)\drr
+  \psset{shadowsize=.2,shadow=true,shadowcolor=offwhite,shadowangle=-45,shadowsize=.15}
+  \pscircle(0,0){.09}\pscircle(1,0){.09}\pscircle(2,0){.09}\pscircle(3,0){.09}\endpspicture}
+
+\newcommand{\mybullet}{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=black,linecolor=black,framearc=.3,shadow=true}
+  \pspicture(-.3,0)(.8,.4)\qdisk(.25,.2){.1}\pscircle*[linecolor=gray](.25,.2){.07}\endpspicture}
+
+\newcommand{\mystar}{\pspicture(0,0)(0,0)\psset{unit=1cm}\gold\large$\star$\endpspicture
+  \pspicture(0,0)(0,0)\psset{unit=1cm}\rput(-.23,.193){\small\white$\star$}\endpspicture}
+
+\newcommand{\mystep}{\psset{unit=6mm,dotscale=1.5,linewidth=.06,linecolor=darkgreen,fillstyle=solid,
+  fillcolor=lightgreen,shadow=false}\pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.15}\endpspicture}
+
+\newcommand{\myspace}{\psset{unit=6mm,dotscale=1.5,linewidth=.06}\pspicture(-.3,0)(.8,.4)\endpspicture}
+
+\newcommand{\mydot}{\pscircle(0,0){.1}}
+
+\newcommand{\lss}{$\spadesuit$}
+\newcommand{\lhs}{\Large$\darkred\varheartsuit$}
+\newcommand{\lds}{\Large$\darkred\vardiamondsuit$}
+\newcommand{\lcs}{$\clubsuit$}
+
+\newcommand{\manv}{{
+ \psset{dotscale=1.5,dotsize=0.09,linewidth=.03,fillcolor=black,linecolor=black,shadow=false}
+ \psline(0,0)(0.25,0)\psline(1.75,0)(2,0)\psline(0.25,0)(1,1.2)
+ \psline(1.75,0)(1,1.2)\psline(1,1.2)(1,2.5)\psline(0.25,1.75)(1,2)
+ \psline(1.75,1.75)(1,2)\pscircle(1,3){0.5}\psarc(1,3){.25}{-140}{-40}
+ \psdots(.85,3.15)(1.15,3.15)\psset{fillstyle=solid}\psframe(.5,3.35)(1.5,3.45)
+ \psframe(.7,3.35)(1.3,4.1)}}
+
+\newcommand{\sadmanv}{{
+ \psset{dotscale=1.5,dotsize=0.09,linewidth=.03,fillcolor=black,linecolor=black,shadow=false}
+ \psline(0,0)(0.25,0)\psline(1.75,0)(2,0)\psline(0.25,0)(1,1.2)
+ \psline(1.75,0)(1,1.2)\psline(1,1.2)(1,2.5)\psline(0.25,1.75)(1,2)
+ \psline(1.75,1.75)(1,2)\pscircle(1,3){0.5}\psarc(1,2.65){.25}{40}{140}
+ \psdots(.87,3.15)(1.13,3.15)\psset{fillstyle=solid}\psframe(.5,3.35)(1.5,3.45)
+ \psframe(.7,3.35)(1.3,4.1)}}
+
+\newcommand{\womanv}{{
+ \psset{dotscale=1.5,dotsize=0.09,linewidth=.03,fillcolor=black,linecolor=black,shadow=false}
+ \psline(0.5,0)(0.75,0)\psline(1.5,0)(1.25,0)\psline(0.75,0)(0.75,0.5)
+ \psline(1.25,0)(1.25,0.5)\psline(1,2)(1,2.35)\psline(0.25,1.75)(1,2)
+ \psline(1.75,1.75)(1,2)\pscircle(1,2.85){0.5}
+ \psarc(1,2.85){.25}{-140}{-40}\psdots(.85,2.95)(1.15,2.95)
+ \psset{linecolor=brown,linewidth=.1}
+ \psarc(1,2.85){.5}{0}{180}\psarc(1.75,2.85){.25}{180}{270}
+ \psarc(0.25,2.85){.25}{-90}{0}
+ \pstriangle[linecolor=red,fillstyle=solid,fillcolor=red](1,.5)(1.2,1.75)}}
+
+\newcommand{\man}{\psset{unit=4mm}\manv}
+\newcommand{\sadman}{\psset{unit=4mm}\sadmanv}
+\newcommand{\woman}{\psset{unit=4mm}\womanv}
+
+\newcommand{\ring}{{\psset{linecolor=halflightyellow,fillcolor=gold,linewidth=0.2}
+  \pscircle(0,0){1}\psset{linecolor=darkyellow,fillcolor=darkyellow,linewidth=0.05}
+  \psarc(0,0){.833}{55}{215}\psarc(0,0){.975}{240}{30}
+  \psset{linecolor=lightyellow,fillcolor=lightyellow}
+  \psarc(0,0){.975}{65}{205}\psarc(0,0){.833}{230}{40}}}
+
+\newcommand{\poseta}{\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}
+  \pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)\psline(1,1.13)(1,1.87)
+  \pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}
+  \pscircle(2,2){.09}\psline(1.09,1.09)(1.91,1.91)}
+\newcommand{\posetava}{\pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)
+ {\dbb\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}
+  \psline(1,1.13)(1,1.87)\pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+  \pscircle(2,2){.09}\psline(1.09,1.09)(1.91,1.91)}
+\newcommand{\posetavb}{\pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)
+  \pscircle(1,3){.09}\psline(1,2.13)(1,2.87){\dbb\pscircle(1,2){.09}
+  \psline(1,1.13)(1,1.87)\pscircle(1,1){.09}\psline(1,.13)(1,.87)
+  \pscircle(1,0){.09}}\pscircle(2,2){.09}\psline(1.09,1.09)(1.91,1.91)}
+\newcommand{\posetavc}{\pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)
+  \pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}
+  \psline(1,1.13)(1,1.87){\dbb\pscircle(1,1){.09}\psline(1,.13)(1,.87)
+  \pscircle(1,0){.09}\pscircle(2,2){.09}\psline(1.09,1.09)(1.91,1.91)}}
+\newcommand{\posetavd}{\pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)
+  \pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}\psline(1,1.13)(1,1.87)
+  \pscircle(1,1){.09}\psline(1,.13)(1,.87)\psline(1.09,1.09)(1.91,1.91)
+  \psline(1.09,1.09)(1.91,1.91){\dbb\pscircle(1,0){.09}\pscircle(2,2){.09}
+  \psline[linestyle=dashed](1.065,0.113)(1.935,1.887)}}
+\newcommand{\posetave}{\psline(.09,1.09)(.91,1.91)\pscircle(1,3){.09}
+  \psline(1,2.13)(1,2.87)\pscircle(1,2){.09}\psline(1,1.13)(1,1.87)
+  \psline(1.09,1.09)(1.91,1.91)\psline(1.09,1.09)(1.91,1.91)\pscircle(2,2){.09}
+  {\drr\pscircle(0,1){.09}\pscircle(1,1){.09}}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+\newcommand{\posetavf}{{\drr\pscircle(0,1){.09}\pscircle(2,2){.09}}
+  \psline(.09,1.09)(.91,1.91)\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)
+  \pscircle(1,2){.09}\psline(1,1.13)(1,1.87)\psline(1.09,1.09)(1.91,1.91)
+  \pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+\newcommand{\posetavg}{{\psset{linecolor=red,fillcolor=blue}
+  \pscircle(2,2){.09}}\pscircle(0,1){.09}\psline(.09,1.09)(.91,1.91)
+  \pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}\psline(1,1.13)(1,1.87)
+  \psline(1.09,1.09)(1.91,1.91)\pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+\newcommand{\posetavh}{{\dbb\pscircle(2,2){.09}\pscircle(0,1){.09}
+  \psline(.09,1.09)(.91,1.91)\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)\pscircle(1,2){.09}
+ {\psset{linecolor=gray}\psline(1,1.13)(1,1.87)}\psline(1.09,1.09)(1.91,1.91)
+  \pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}}
+\newcommand{\posetavi}{\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)
+ {\drr\pscircle(1,2){.09}\pscircle(2,2){.09}}\psline(.09,1.09)(.91,1.91)
+  \psline(1,1.13)(1,1.87)\psline(1.09,1.09)(1.91,1.91){\drr\pscircle(0,1){.09}
+  \pscircle(1,1){.09}}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+\newcommand{\posetavj}{\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)
+ {\drr\pscircle(1,2){.09}\pscircle(2,2){.09}}\psline(.09,1.09)(.91,1.91)
+  \psline(1,1.13)(1,1.87)\psline(1.09,1.09)(1.91,1.91)
+ {\drr\pscircle(0,1){.09}\pscircle(1,1){.09}}\psline(1,.13)(1,.87){\drr\pscircle(1,0){.09}}}
+\newcommand{\posetavk}{{\drr\pscircle(1,3){.09}}\psline(1,2.13)(1,2.87)
+ {\drr\pscircle(1,2){.09}\pscircle(2,2){.09}}\psline(.09,1.09)(.91,1.91)
+  \psline(1,1.13)(1,1.87)\psline(1.09,1.09)(1.91,1.91)
+ {\drr\pscircle(0,1){.09}\pscircle(1,1){.09}}\psline(1,.13)(1,.87){\drr\pscircle(1,0){.09}}}
+\newcommand{\posetavm}{{\dbb\pscircle(2,2){.09}\pscircle(0,1){.09}
+  \psline(.09,1.09)(.91,1.91)\pscircle(1,3){.09}\psline(1,2.13)(1,2.87)
+  \pscircle(1,2){.09}}\psline(1,1.13)(1,1.87){\dbb\psline(1.09,1.09)(1.91,1.91)
+  \pscircle(1,1){.09}\psline(1,.13)(1,.87)\pscircle(1,0){.09}}
+  {\psset{linecolor=red,fillcolor=blue}\pscircle(0,1){.09}\pscircle(1,1){.09}}}
+\newcommand{\posetavn}{\psset{shadow=false,fillstyle=solid,framearc=1}\drr
+  \pscircle(1,3){.09}\pscircle(2,2){.09}\rput{-45}(.784,3){{\acset\psframe(0,0)(1.715,.3)}}}
+\newcommand{\posetavo}{\psset{shadow=false,fillstyle=solid,framearc=1}\drr
+  \pscircle(1,3){.09}\pscircle(2,2){.09}\pscircle(1,2){.09}{{\acset
+  \rput{-45}(.784,3){\psframe(0,0)(1.715,.3)}\pscircle(1,2){.15}}}}
+\newcommand{\posetavp}{\psset{shadow=false,fillstyle=solid,framearc=1}\drr
+  \pscircle(1,3){.09}\pscircle(2,2){.09}\pscircle(1,2){.09}\pscircle(0,1){.09}\pscircle(1,1){.09}
+  {\acset\rput{-45}(.784,3){\psframe(0,0)(1.715,.3)}\pscircle(1,2){.15}\rput(-.15,.85){\psframe(0,0)(1.3,.3)}}}
+\newcommand{\posetavq}{\psset{shadow=false,fillstyle=solid,framearc=1}\drr
+  \pscircle(1,3){.09}\pscircle(2,2){.09}\pscircle(1,2){.09}\pscircle(0,1){.09}
+  \pscircle(1,1){.09}\pscircle(1,0){.09}{\acset\rput{-45}(.784,3){\psframe(0,0)(1.715,.3)}
+  \pscircle(1,2){.15}\pscircle(1,0){.15}\rput(-.15,.85){\psframe(0,0)(1.3,.3)}}}
+\newcommand{\posetavqa}{\rput[l](2.8,1.9){$\red m$}\rput[l](3.3,1.9){$=$\:\,\red4}
+  \rput[l](2.8,1.1){$\blue M$}\rput[l](3.3,1.1){$=$\:\,\blue4}}
+
+\newcommand{\posetb}{\rput(5.5,1.85){\pspicture(0,0)(3,4)\rput(0,0.2){\blue chain}
+  \psset{unit=.66,shadowsize=.2}\dbb\pscircle(0,1){.09}\pscircle(0,2){.09}\pscircle(0,3){.09}
+  \pscircle(0,4){.09}\psline(0,1.125)(0,1.875)\psline(0,2.125)(0,2.875)
+  \psline(0,3.125)(0,3.875)\endpspicture}\rput(7.75,1.85){\pspicture(0,0)(3,4)
+  \rput(0,0.2){\red antichain}\psset{unit=.66,shadowsize=.2}\drr\pscircle(-1.5,2){.09}
+  \pscircle(-.5,2){.09}\pscircle(.5,2){.09}\pscircle(1.5,2){.09}\endpspicture}}
+
+\newcommand{\posetaa}{\rput(-.28,1){3}\rput(.72,0){2}
+  \rput(.67,1){10}\rput(1.33,2){30}\rput(1.33,3){60}\rput(2.33,2){40}}
+\newcommand{\posetab}{\rput(-.3,1){$\square$}\rput(.72,0){$\vartriangle$}
+  \rput(.62,1){$\vartriangle\!\!\circledcirc$}
+  \rput(1.48,2){$\square\!\!\vartriangle\!\!\circledcirc$}
+  \rput(1.58,3){$\square\!\!\vartriangle\!\!\circledcirc\lozenge$}
+  \rput(2.45,2){$\vartriangle\!\!\circledcirc\circledast$}}
+\newcommand{\posetac}{\rput(.67,3.9){$\blue m$}\rput[l](.89,3.9){$=$\:\:\blue2}}
+\newcommand{\posetad}{\rput(.67,3.5){$\red  M$}\rput[l](.89,3.5){$=$\:\:\red2}}
+
+\newcommand{\mytext}[1]{\text{\black#1\blue}}
+
+
+\newcommand{\coursetitle}{\vphantom{ }\vspace{7mm}\begin{center}
+    {\large\darkgreen MATH5505 \:\: Combinatorics}\\[2.5mm]
+    UNSW 2018S1
+    \end{center}}
+
+\newcommand{\example}{{\sffamily\darkgreen Example }}
+\newcommand{\exercise}{{\sffamily\darkgreen Exercise }}
+\newcommand{\proof}{{\sffamily\darkgreen Proof }}
+\newcommand{\notes}{{\sffamily\darkgreen Notes }}
+\newcommand{\note}{{\sffamily\darkgreen Note }}
+\newcommand{\theorem}{{\sffamily\darkgreen Theorem }}
+\newcommand{\proposition}{{\sffamily\darkgreen Proposition }}
+\newcommand{\corollary}{{\sffamily\darkgreen Corollary }}
+\newcommand{\lemma}{{\sffamily\darkgreen Lemma }}
+\newcommand{\definition}{{\sffamily\darkgreen Definition}}
+\newcommand{\problem}{{\sffamily\darkgreen Problem}}
+\newcommand{\remark}{{\sffamily\darkgreen Remark}}
+
+
+\newcounter{gra}
+
+\DeclareMathAlphabet{\mathscr}{OT1}{pzc}%
+                                 {m}{it}
+
+\newcommand{\ph}{\phantom}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\meq}{\black=\blue}
+\newcommand{\mequiv}{\black\equiv\blue}
+\newcommand{\mapprox}{\black\approx\blue}
+\newcommand{\mneq}{\red\neq\blue}
+\newcommand{\msubset}{\black\subset\blue}
+\newcommand{\msubseteq}{\black\subseteq\blue}
+\newcommand{\msupseteq}{\black\supseteq\blue}
+\newcommand{\mnsubseteq}{\red\not\subseteq\blue}
+\newcommand{\mleq}{\black\leq\blue}
+\newcommand{\mgeq}{\black\geq\blue}
+\newcommand{\mprec}{\black\prec\blue}
+\newcommand{\mpreceq}{\black\preceq\blue}
+\newcommand{\mgt}{\black>\blue}
+\newcommand{\mlt}{\black<\blue}
+\newcommand{\myin}{\black\in\blue}
+\newcommand{\mdef}{\black:=\blue}
+\newcommand{\mypl}{\black+\blue}
+\newcommand{\mynotin}{\red\notin\blue}
+\newcommand{\mnotin}{\red\notin\blue}
+\newcommand{\mywhere}{\quad\textrm{\black where\blue}\quad}
+\newcommand{\myand}{\quad\textrm{\black and\blue}\quad}
+\newcommand{\mask}[1]{}
+\newcommand{\ns}{\negthickspace\negthickspace}
+\newcommand{\nns}{\negthickspace\negthickspace\negthickspace\negthickspace}
+\newcommand{\ri}{\,i\,}% \,\mathrm{i}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Arg}{\mathrm{Arg}}
+\renewcommand{\Re}{\mathrm{Re}}
+\renewcommand{\Im}{\mathrm{Im}}
+\newcommand{\bbN}{\blue\mathbb{N}}
+\newcommand{\bbZ}{\blue\mathbb{Z}}
+\newcommand{\bbQ}{\blue\mathbb{Q}}
+\newcommand{\bbR}{\blue\mathbb{R}}
+\newcommand{\bbC}{\blue\mathbb{C}}
+\newcommand{\bbF}{\blue\mathbb{F}}
+\newcommand{\bbP}{\blue\mathbb{P}}
+\newcommand{\calR}{\blue\mathcal{R}}
+\newcommand{\calC}{\blue\mathcal{C}}
+\renewcommand{\vec}[1]{\mathbf{\blue #1}}
+\newcommand{\pv}[1]{{\blue\begin{pmatrix}#1\end{pmatrix}}}
+\newcommand{\pvn}[1]{{\begin{pmatrix}#1\end{pmatrix}}}
+\newcommand{\spv}[1]{{\blue\left(\begin{smallmatrix}#1\end{smallmatrix}\right)}}
+\newcommand{\augm}[1]{{\blue\left(\begin{array}{cc|c}#1\end{array}\right)}}
+\newcommand{\taugm}[1]{{\blue\left(\begin{array}{ccc|c}#1\end{array}\right)}}
+\newcommand{\qaugm}[1]{{\blue\left(\begin{array}{cccc|c}#1\end{array}\right)}}
+\newcommand{\qtaugm}[1]{{\blue\left(\begin{array}{cccc|ccc}#1\end{array}\right)}}
+\newcommand{\mydet}[1]{{\blue\left|\begin{matrix}#1\end{matrix}\right|}}
+\newcommand{\arr}[1]{\overrightarrow{#1}}
+\newcommand{\lcm}{\mathrm{lcm}}
+\renewcommand{\mod}{\;\mathrm{mod}\;}
+\newcommand{\proj}{\mathrm{proj}}
+\newcommand{\id}{\blue\mathrm{id}}
+\newcommand{\im}{\blue\mathrm{im}}
+\newcommand{\col}{\blue\mathrm{col}}
+\newcommand{\nullity}{\blue\mathrm{nullity}}
+\newcommand{\rank}{\blue\mathrm{rank}}
+\newcommand{\spn}[1]{\blue\mathrm{span}\left\{#1\right\}}
+\newcommand{\spnv}{\blue\mathrm{span}\,}
+\newcommand{\diag}[1]{\blue\mathrm{diag}\left(#1\right)\,}
+\newcommand{\satop}[2]{\stackrel{\scriptstyle{#1}}{\scriptstyle{#2}}}
+\newcommand{\llnot}{\sim\!}
+\newcommand{\qed}{\hfill$\Box$}
+\newcommand{\rbullet}{\includegraphics[width=4mm]{red-bullet-on-white.ps}}
+\newcommand{\gbullet}{\includegraphics[width=3mm]{green-bullet-on-white.ps}}
+\newcommand{\ybullet}{\includegraphics[width=3mm]{yellow-bullet-on-white.ps}}
+\newcommand{\vsp}{\psset{unit=4.2mm}\begin{pspicture}(0,1)(0,0)\end{pspicture}}
+\renewcommand{\emptyset}{\varnothing}
+\renewcommand{\emph}[1]{{\blue\textsl{#1}}}
+
+\newcommand{\shat}{\begin{pspicture}(0,0)(0,0)\psset{linecolor=black,linewidth=.075}\psarc*(.67,3.18){.25}{45}{225}\psline(.35,2.85)(1,3.5)\end{pspicture}}
+\newcommand{\rhat}{\begin{pspicture}(0,0)(0,0)\psset{linecolor=red,linewidth=.05}\psarc*(.675,3.175){.25}{45}{225}\psline(.35,2.85)(1,3.5)\end{pspicture}}
+\newcommand{\bhat}{\begin{pspicture}(0,0)(0,0)\psset{linecolor=blue,linewidth=.05}\psarc*(.675,3.175){.25}{45}{225}\psline(.35,2.85)(1,3.5)\end{pspicture}}
+\newcommand{\sdress}{\begin{pspicture}(0,0)(0,0)\pstriangle*[linecolor=black,linewidth=.05](1,.5)(1.2,1.75)\end{pspicture}}
+\newcommand{\rdress}{\begin{pspicture}(0,0)(0,0)\pstriangle*[linecolor=red,linewidth=.05](1,.5)(1.2,1.75)\end{pspicture}}
+\newcommand{\bdress}{\begin{pspicture}(0,0)(0,0)\pstriangle*[linecolor=brown,linewidth=.05](1,.5)(1.2,1.75)\end{pspicture}}
+\newcommand{\ydress}{\begin{pspicture}(0,0)(0,0)\pstriangle*[linecolor=amber,linewidth=.05](1,.5)(1.2,1.75)\end{pspicture}}
+\newcommand{\gdress}{\begin{pspicture}(0,0)(0,0)\pstriangle*[linecolor=green,linewidth=.05](1,.5)(1.2,1.75)\end{pspicture}}
+\newcommand{\sshoes}{\begin{pspicture}(0,0)(0,0)\psset{linecolor=black,linewidth=.05}
+ \psline(.6,0)(.85,0.125)\psline(0.85,0)(0.85,0.5)\psline(1.15,0)(1.15,0.5)\psline(1.4,0)(1.15,0.125)\end{pspicture}}
+\newcommand{\rshoes}{\begin{pspicture}(0,0)(0,0)\psset{linecolor=black,linewidth=.05}
+  \psline(0.85,0)(0.85,0.5)\pscircle*[linecolor=red](.65,.05){.05}\psframe*[linecolor=red](.65,0)(.90,.1)
+  \psline(1.15,0)(1.15,0.5)\psframe*[linecolor=red](1.1,0)(1.35,0.1)\pscircle*[linecolor=red](1.35,.05){.05}\end{pspicture}}
+
+%\newcommand{\woman}[1]{\begin{pspicture}(0.25,0)(1.75,3.4)
+% \psset{unit=4mm,dotsize=0.09,linewidth=.03,fillcolor=black,linecolor=black,shadow=false}
+% \psline(1,2)(1,2.35)\psline(0.25,1.75)(1,2)\psline(1.75,1.75)(1,2)\pscircle(1,2.85){0.5}
+% \psarc(1,2.85){.25}{-140}{-40}\psdots(.85,2.95)(1.15,2.95)
+% \psset{linecolor=brown,linewidth=.1}
+% \psarc(1,2.85){.5}{0}{180}\psarc(1.75,2.85){.25}{180}{270}\psarc(.25,2.85){.25}{-90}{0}
+% \psset{linewidth=.06}#1
+% \end{pspicture}}
+
+\newcommand{\myi}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg1}\endpspicture}}
+\newcommand{\myii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg2}\endpspicture}}
+\newcommand{\myiii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg3}\endpspicture}}
+\newcommand{\myiv}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg4}\endpspicture}}
+\newcommand{\myv}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg5}\endpspicture}}
+\newcommand{\myvi}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg6}\endpspicture}}
+\newcommand{\myvii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg7}\endpspicture}}
+\newcommand{\myviii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg8}\endpspicture}}
+\newcommand{\myix}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg9}\endpspicture}}
+
+\newcommand{\mywo}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillcolor=white,fillstyle=solid,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg0}\endpspicture}}
+\newcommand{\mywi}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillcolor=white,fillstyle=solid,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg1}\endpspicture}}
+\newcommand{\mywii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,linecolor=darkgreen,fillcolor=white,fillstyle=solid,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny\dg2}\endpspicture}}
+
+\newcommand{\myO}{{\psset{unit=6mm,dotscale=1.5,linewidth=.06,linecolor=darkgreen,fillstyle=none,
+  shadow=false}\pspicture(0,0)(0,0)\pscircle(-.2,.225){.4}\endpspicture}}
+
+\newcommand{\dicei}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.5,0.5){0.1\psunit}\end{psframe}\end{pspicture}}}
+\newcommand{\diceii}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.2,0.2){0.1\psunit}\qdisk(0.8,0.8){0.1\psunit}\end{psframe}\end{pspicture}}}
+\newcommand{\diceiii}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.2,0.2){0.1\psunit}\qdisk(0.5,0.5){0.1\psunit}\qdisk(0.8,0.8){0.1\psunit}\end{psframe}\end{pspicture}}}
+\newcommand{\diceiv}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.2,0.2){0.1\psunit}\qdisk(0.2,0.8){0.1\psunit}\qdisk(0.8,0.8){0.1\psunit}\qdisk(0.8,0.2){0.1\psunit}\end{psframe}\end{pspicture}}}
+\newcommand{\dicev}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.2,0.2){0.1\psunit}\qdisk(0.2,0.8){0.1\psunit}\qdisk(0.5,0.5){0.1\psunit}\qdisk(0.8,0.8){0.1\psunit}\qdisk(0.8,0.2){0.1\psunit}\end{psframe}\end{pspicture}}}
+\newcommand{\dicevi}{{\psset{shadow=false,linewidth=.05}\begin{pspicture}(0,0.3)(1,1.3)\begin{psframe}(0,0)(1,1)\qdisk(0.2,0.2){0.1\psunit}\qdisk(0.2,0.5){0.1\psunit}\qdisk(0.2,0.8){0.1\psunit}\qdisk(0.8,0.8){0.1\psunit}\qdisk(0.8,0.5){0.1\psunit}\qdisk(0.8,0.2){0.1\psunit}\end{psframe}\end{pspicture}}}
+
+\newcommand{\dicegrid}[5]{\[\begin{pspicture}(-1,-1.2)(20,8)\psset{shadow=false,linecolor=darkgray}
+    \rput(0  ,0  ){\dicevi} \rput(0  ,1.2){\dicev} \rput(0  ,2.4){\diceiv}\rput(0  ,3.6){\diceiii}
+    \rput(0  ,4.8){\diceii} \rput(0  ,6  ){\dicei} \rput(1.5,7.55){\dicei} \rput(2.7,7.55){\diceii}
+    \rput(3.9,7.55){\diceiii}\rput(5.1,7.55){\diceiv}\rput(6.3,7.55){\dicev} \rput(7.5,7.55){\dicevi}
+    \psset{linecolor=gray}\psline( .75,-1)( .75,8)\psline(-.75, 6.5)(8.25,6.5)\psline(-.75,-1)(-.75,8)
+    \psline(-.75,8)(8.25,8)\psline(-.75,-1)(8.25,-1)\psline(8.25,-1)(8.25,8)\psline(-.75, 8)(.75,6.5)
+    \put(-.55,6.6){1}\put(.25,7.25){2}
+    \psset{linecolor=blue}#1\psset{linecolor=red}#2\put(9.5,4.3){{#3}}\put(9.5,3.1){{#4}}\put(9.5,1.9){{#5}}
+  \end{pspicture}\]}
+
+\newcommand{\bnaa}{\pscircle*(1.5,5.7){3pt}}\newcommand{\bnab}{\pscircle*(2.7,5.7){3pt}}\newcommand{\bnac}{\pscircle*(3.9,5.7){3pt}}\newcommand{\bnad}{\pscircle*(5.1,5.7){3pt}}\newcommand{\bnae}{\pscircle*(6.3,5.7){3pt}}\newcommand{\bnaf}{\pscircle*(7.5,5.7){3pt}}
+\newcommand{\bnba}{\pscircle*(1.5,4.5){3pt}}\newcommand{\bnbb}{\pscircle*(2.7,4.5){3pt}}\newcommand{\bnbc}{\pscircle*(3.9,4.5){3pt}}\newcommand{\bnbd}{\pscircle*(5.1,4.5){3pt}}\newcommand{\bnbe}{\pscircle*(6.3,4.5){3pt}}\newcommand{\bnbf}{\pscircle*(7.5,4.5){3pt}}
+\newcommand{\bnca}{\pscircle*(1.5,3.3){3pt}}\newcommand{\bncb}{\pscircle*(2.7,3.3){3pt}}\newcommand{\bncc}{\pscircle*(3.9,3.3){3pt}}\newcommand{\bncd}{\pscircle*(5.1,3.3){3pt}}\newcommand{\bnce}{\pscircle*(6.3,3.3){3pt}}\newcommand{\bncf}{\pscircle*(7.5,3.3){3pt}}
+\newcommand{\bnda}{\pscircle*(1.5,2.1){3pt}}\newcommand{\bndb}{\pscircle*(2.7,2.1){3pt}}\newcommand{\bndc}{\pscircle*(3.9,2.1){3pt}}\newcommand{\bndd}{\pscircle*(5.1,2.1){3pt}}\newcommand{\bnde}{\pscircle*(6.3,2.1){3pt}}\newcommand{\bndf}{\pscircle*(7.5,2.1){3pt}}
+\newcommand{\bnea}{\pscircle*(1.5, .9){3pt}}\newcommand{\bneb}{\pscircle*(2.7, .9){3pt}}\newcommand{\bnec}{\pscircle*(3.9, .9){3pt}}\newcommand{\bned}{\pscircle*(5.1, .9){3pt}}\newcommand{\bnee}{\pscircle*(6.3, .9){3pt}}\newcommand{\bnef}{\pscircle*(7.5, .9){3pt}}
+\newcommand{\bnfa}{\pscircle*(1.5,-.3){3pt}}\newcommand{\bnfb}{\pscircle*(2.7,-.3){3pt}}\newcommand{\bnfc}{\pscircle*(3.9,-.3){3pt}}\newcommand{\bnfd}{\pscircle*(5.1,-.3){3pt}}\newcommand{\bnfe}{\pscircle*(6.3,-.3){3pt}}\newcommand{\bnff}{\pscircle*(7.5,-.3){3pt}}
+
+\newcommand{\cnaa}{\pscircle(1.5,5.7){4.5pt}}\newcommand{\cnab}{\pscircle(2.7,5.7){4.5pt}}\newcommand{\cnac}{\pscircle(3.9,5.7){4.5pt}}\newcommand{\cnad}{\pscircle(5.1,5.7){4.5pt}}\newcommand{\cnae}{\pscircle(6.3,5.7){4.5pt}}\newcommand{\cnaf}{\pscircle(7.5,5.7){4.5pt}}
+\newcommand{\cnba}{\pscircle(1.5,4.5){4.5pt}}\newcommand{\cnbb}{\pscircle(2.7,4.5){4.5pt}}\newcommand{\cnbc}{\pscircle(3.9,4.5){4.5pt}}\newcommand{\cnbd}{\pscircle(5.1,4.5){4.5pt}}\newcommand{\cnbe}{\pscircle(6.3,4.5){4.5pt}}\newcommand{\cnbf}{\pscircle(7.5,4.5){4.5pt}}
+\newcommand{\cnca}{\pscircle(1.5,3.3){4.5pt}}\newcommand{\cncb}{\pscircle(2.7,3.3){4.5pt}}\newcommand{\cncc}{\pscircle(3.9,3.3){4.5pt}}\newcommand{\cncd}{\pscircle(5.1,3.3){4.5pt}}\newcommand{\cnce}{\pscircle(6.3,3.3){4.5pt}}\newcommand{\cncf}{\pscircle(7.5,3.3){4.5pt}}
+\newcommand{\cnda}{\pscircle(1.5,2.1){4.5pt}}\newcommand{\cndb}{\pscircle(2.7,2.1){4.5pt}}\newcommand{\cndc}{\pscircle(3.9,2.1){4.5pt}}\newcommand{\cndd}{\pscircle(5.1,2.1){4.5pt}}\newcommand{\cnde}{\pscircle(6.3,2.1){4.5pt}}\newcommand{\cndf}{\pscircle(7.5,2.1){4.5pt}}
+\newcommand{\cnea}{\pscircle(1.5, .9){4.5pt}}\newcommand{\cneb}{\pscircle(2.7, .9){4.5pt}}\newcommand{\cnec}{\pscircle(3.9, .9){4.5pt}}\newcommand{\cned}{\pscircle(5.1, .9){4.5pt}}\newcommand{\cnee}{\pscircle(6.3, .9){4.5pt}}\newcommand{\cnef}{\pscircle(7.5, .9){4.5pt}}
+\newcommand{\cnfa}{\pscircle(1.5,-.3){4.5pt}}\newcommand{\cnfb}{\pscircle(2.7,-.3){4.5pt}}\newcommand{\cnfc}{\pscircle(3.9,-.3){4.5pt}}\newcommand{\cnfd}{\pscircle(5.1,-.3){4.5pt}}\newcommand{\cnfe}{\pscircle(6.3,-.3){4.5pt}}\newcommand{\cnff}{\pscircle(7.5,-.3){4.5pt}}
+
+\newcommand{\clearemptydoublepage}
+  {\newpage{\pagestyle{empty}{\cleardoublepage}}}
+
+\pagestyle{empty}

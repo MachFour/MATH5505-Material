@@ -1,0 +1,576 @@
+%  Lecture 1: Extremal Set Theory
+%
+
+\include{mydefinitionsEST}
+%\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipdfm]{graphicx}
+%\usepackage{bmpsize}
+
+\newcommand{\courseoverview}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace Extremal Set Theory}}
+
+\newcommand{\courseoverviewXC}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace           Extremal Set Theory}}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Extremal Set Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Extremal Set Theory}\\[3mm]
+  \darkgreen Lecture 1: Classical Theorems\end{center}}
+
+\newcommand{\Af}{\mathcal{A}}
+
+
+\newcommand{\estaa}{Let $\bl\mathcal{A}$ be a family of subsets of $\bl [n]$.}
+\newcommand{\estab}{\\[3mm]\problem}
+\newcommand{\estac}{\\Given imposed constraints,
+  how big can $\bl\mathcal{A}$ be? How large must it be?
+  What does do maximal such families look like?
+  \\These are some of the questions that {\dg Extremal Set Theory} addresses.}
+
+\newcommand{\estba}{\\[3mm]\theorem}
+\newcommand{\estbb}{\\If $\bl A\cap B\mneq \emptyset$ for all $\bl A,B\myin \mathcal{A}$,
+  then $\bl|\mathcal{A}|\mleq 2^{n-1}$.}
+\newcommand{\estbc}{\\There is equality if and only if $\bl\Af$ contains $\bl A$ or $\bl A^c$ for each $\bl A\msubseteq [n]$.}
+
+\newcommand{\estbd}{\\[2mm]\example}
+\newcommand{\estbe}{\\A {\dg star} is a family whose elements are the sets containing a fixed $\bl i\myin [n]$.
+  Each such family achieves the bound in the theorem above.}
+\newcommand{\estbf}{\\These are not the only families to achieve the bound however,
+  as the following example shows:
+  \[\bl
+    n\meq 3\qquad\Af\meq \bigl\{\{1,2\},\{1,3\},\{2,3\},[3]\bigr\}\meq \binom{[3]}{2}\cup \{[3]\}\]}
+
+\newcommand{\estbva}{\\[3mm]\theorem {\gray(Seymour 1973, many others)}}
+\newcommand{\estbvb}{\\If $\bl A\cap B\mneq \emptyset$ and $\bl A\cup B\mneq [n]$ for all $\bl A,B\myin \mathcal{A}$,
+  then $\bl|\mathcal{A}|\mleq 2^{n-2}$.}
+
+
+\newcommand{\estbapfa}{\\[2mm]\proof}
+\newcommand{\estbapfav}{\\[2mm]\proof {\gray (continued)}}
+\newcommand{\estbapfb}{\\If $\bl A\myin \Af$ for some $\bl A\subseteq [n]$, then $\bl A^c\mnotin \Af$.}
+\newcommand{\estbapfc}{\\Hence, $\bl|\Af|\mleq \frac{1}{2}|\mathcal{P}([n])| \meq \frac{1}{2}\, 2^n \meq 2^{n-1}$.\qed}
+\newcommand{\estbapfd}{\\If $\bl|\Af|\mlt 2^{n-1}$, then $\bl A\mnotin\Af$ and $\bl A^c\mnotin\Af$ for some subset~$\bl A$.}
+\newcommand{\estbapfe}{\\If $\bl A\cap B\mneq \emptyset$ for all $\bl B\myin\bl\Af$, then add $\bl A$ to $\bl\Af$.}
+\newcommand{\estbapff}{\\If $\bl A\cap B\meq  \emptyset$ for some $\bl B\myin\bl\Af$, then $\bl B\subset A^c$. }
+\newcommand{\estbapfg}{\\Then $\bl C\cap A^c\msupseteq C\cap B\mneq\emptyset$ for all $\bl C\myin \Af$:
+  add $\bl A^c$ to~$\bl\Af$.\hspace*{-2mm}}
+\newcommand{\estbapfh}{\\  Keep adding sets or their complement in this way until $\bl\Af$ is a family that contains $\bl 2^{n-1}$ sets,
+  namely one of the sets $\bl A$ and $\bl A^c$ for each $\bl A\msubseteq [n]$.\qed\vspace*{-12mm}}
+
+\newcommand{\estca}{\\[3mm]{\dg Sperner's Theorem} {\gray(1928)}
+  \\If $\bl A\mnsubset B$ for all $\bl A,B\myin\mathcal{A}$,
+  then $\bl|\mathcal{A}|\mleq\binom{n}{\lceil\frac{n}{2}\rceil}$.}
+\newcommand{\estcb}{\\There is equality if and only if $\bl\Af\meq\binom{[n]}{\lceil\frac{n}{2}\rceil}$.}
+\newcommand{\estcc}{\\[2mm]{\gray We saw and half-proved this theorem in {\green Matching Theory: Lecture 3}.}}
+\newcommand{\estcapfa}{\\[3mm]\proof{\dg II}}
+\newcommand{\estcapfb}{\\Let $\bl\mathcal{C}$ be the set of
+  maximal chains $\bl\emptyset \msubseteq \{a\}\msubseteq \cdots\msubseteq [n]$
+  in $\bl\mathcal{B}_n$.}
+\newcommand{\estcapfc}{\\Note that $\bl|\mathcal{C}|\meq n!$ and $\bl |\Af\cap C|\mleq 1$ for each $\bl C\myin\mathcal{C}$.}
+\newcommand{\estcapfd}{\\Also, each set $\bl A\subseteq [n]$ is an element of $\bl |A|!(n-|A|)!$ maximal chains.}
+\newcommand{\estcapfe}[7]{\\Then\vspace*{-3mm}
+  \begin{align*}\bl
+    1 \;{  {\meq  \frac{|\mathcal{C}|}{n!}}}
+     &\;{#1{\meq  \sum_{C\in \mathcal{C}}\frac{1}{n!}}}
+      \;{#2{\mgeq \sum_{C\in \mathcal{C}}\sum_{A\in\Af\cap C}\frac{1}{n!}}}
+      \;{#3{\meq  \sum_{A\in\Af}\sum_{A\in C\in \mathcal{C}} \frac{1}{n!}}}\\
+     &\;{#4{\meq  \sum_{A\in\Af}\frac{|A|!(n-|A|)!}{n!}}}
+      \;{#5{\meq  \sum_{A\in\Af}\frac{1}{\binom{n}{|A|}}}}
+      \;{#6{\mgeq \sum_{A\in\Af}\frac{1}{\binom{n}{\lceil\frac{n}{2}\rceil}}}}
+      \;{#7{\meq  \frac{|\Af|}{\binom{n}{\lceil\frac{n}{2}\rceil}}\quad\black\Box}}\\[-10mm]
+  \end{align*}}
+
+\newcommand{\estda}{\\[3mm]{\dg The Erd\H{o}s-Ko-Rado Theorem} {\gray(1961)}
+ \\If $\bl|A|\meq k\mleq \frac{n}{2}$
+   and $\bl A\cap B\mneq \emptyset$ for all $\bl A,B\myin \mathcal{A}$,
+   then $\bl|\mathcal{A}|\mleq \binom{n-1}{k-1}$.\hspace*{-5mm}}
+\newcommand{\estdb}{\\For $\bl k\mlt\frac{n}{2}$,
+  there is equality exactly when $\bl\Af$ is a {\dg star} intersected with~$\bl\binom{[n]}{k}$.}
+
+\newcommand{\estdpfa}{\\[2mm]\proof}
+\newcommand{\estdpfb}{\\Write the numbers $\bl1,\ldots,n$ on a circle and define $\bl \mathcal{F}\mdef \{F_1,\ldots,F_n\}$
+  \\where $\bl F_i$ is the $\bl k$-sized interval $\bl\{i,\ldots,i+k-1\} \pmod{n}$.}
+\newcommand{\estdpfc}{\\Each set $\bl F_i$ overlaps $\bl 2(k-1)$ other sets,
+  namely the pair of sets $\bl F_{i-k+j},F_{i+j}$.}
+\newcommand{\estdpfd}{\\These two sets are disjoint,
+  so at most one of these two can belong to $\bl \Af$.}
+\newcommand{\estdpfe}{\\Hence, $\bl|\mathcal{F}\cap \Af|\mleq 1+(k-1)\meq k$.}
+\newcommand{\estdpff}{\\This is also true for permuted circle numbers, giving a new family~$\bl\mathcal{F}^\pi$.}
+\newcommand{\estdpfg}{\\For $\bl A\myin\mathcal{A}, F\myin\mathcal{F}$, we have $\bl A\meq \pi(F)$ for $\bl k!(n-k)!$ permutations $\bl\pi\myin\Sigma_n$.\hspace*{-3mm}}
+\newcommand{\estdpfh}[6]{\\Hence\vspace*{-2mm}
+  \begin{align*}\bl
+                  |\Af|
+     &\;{  {\meq  \sum_{A\in\Af}\sum_{F\in\mathcal{F}} \frac{1}{n}}}
+      \;{#1{\meq  \sum_{A\in\Af}\sum_{F\in\mathcal{F}}\hspace*{-1.5mm}\sum_{\substack{\pi\in\Sigma_n:\\A=\pi(F)}} \hspace*{-2mm}\frac{1}{n\,k!(n-k)!}}}
+      \;{#2{\meq  \sum_{\pi\in\Sigma_n}\sum_{A\in\Af}\hspace*{-2mm}\sum_{\substack{F\in\mathcal{F}:\\A=\pi(F)}} \hspace*{-2mm}\frac{1}{n\,k!(n-k)!}}}\\[-2mm]
+     &\;{#3{\meq  \sum_{\pi\in\Sigma_n}\frac{|\Af\cap \mathcal{F}^\pi|}{n\,k!(n-k)!}}}
+      \;{#4{\mleq \sum_{\pi\in\Sigma_n}\frac{k}{n\,k!(n-k)!}}}
+      \;{#5{\meq  \frac{n!k}{n\,k!(n-k)!}}}
+      \;{#6{\meq  \binom{n-1}{k-1}\;\black\Box}}\\[-15mm]
+  \end{align*}}
+
+\newcommand{\estdpfba}[2]{\rput(-7,-7.33){\begin{pspicture}(-2,-3.5)(2,1.75)
+  \psset{shadow=false,fillstyle=none,framearc=0,linecolor=darkgray,linewidth=.066,fillcolor=gray}
+  \pnode(-1.732,-1){a}\pnode(0,-2){b}\pnode(1.732,-1){c}
+  \pnode(-1.732, 1){f}\pnode(0, 2){e}\pnode(1.732, 1){d}
+  \pscircle[linecolor=lightgray](0,0){2.05}
+  \psset{fillstyle=solid,linewidth=.05,nodesep=2mm,boxsize=.33,linearc=.33,arcangle=60,opacity=0.5}#1
+  \psset{opacity=1}
+  \pscircle(a){.22}\rput{-60}(a){{\white\tiny1}}
+  \pscircle(b){.22}\rput{  0}(b){{\white\tiny2}}
+  \pscircle(c){.22}\rput{ 60}(c){{\white\tiny3}}
+  \pscircle(d){.22}\rput{120}(d){{\white\tiny4}}
+  \pscircle(e){.22}\rput{180}(e){{\white\tiny5}}
+  \pscircle(f){.22}\rput{240}(f){{\white\tiny6}}#2
+\end{pspicture}}}
+\newcommand{\estdpfbaa}{\ncarcbox{<->}{a}{c}\rput{  0}(b){\rput(0,-.75){$\bl F_1$}}}
+\newcommand{\estdpfbab}{\ncarcbox{<->}{b}{d}\rput{ 60}(c){\rput(0,-.75){$\bl F_2$}}}
+\newcommand{\estdpfbac}{\ncarcbox{<->}{c}{e}\rput{120}(d){\rput(0,-.75){$\bl F_3$}}}
+\newcommand{\estdpfbad}{\ncarcbox{<->}{d}{f}\rput{180}(e){\rput(0,-.75){$\bl F_4$}}}
+\newcommand{\estdpfbae}{\ncarcbox{<->}{e}{a}\rput{240}(f){\rput(0,-.75){$\bl F_5$}}}
+\newcommand{\estdpfbaf}{\ncarcbox{<->}{f}{b}\rput{-60}(a){\rput(0,-.75){$\bl F_6$}}}
+\newcommand{\estdpfbaav}{\ncarcbox[fillcolor=offwhite]{<->}{a}{c}\rput{  0}(b){\rput(0,-.75){$\bl F_1$}}}
+\newcommand{\estdpfbabv}{\ncarcbox[fillcolor=offwhite]{<->}{b}{d}\rput{ 60}(c){\rput(0,-.75){$\bl F_2$}}}
+\newcommand{\estdpfbacv}{\ncarcbox[fillcolor=offwhite]{<->}{c}{e}\rput{120}(d){\rput(0,-.75){$\bl F_3$}}}
+\newcommand{\estdpfbadv}{\ncarcbox[fillcolor=offwhite]{<->}{d}{f}\rput{180}(e){\rput(0,-.75){$\bl F_4$}}}
+\newcommand{\estdpfbaev}{\ncarcbox[fillcolor=offwhite]{<->}{e}{a}\rput{240}(f){\rput(0,-.75){$\bl F_5$}}}
+\newcommand{\estdpfbafv}{\ncarcbox[fillcolor=offwhite]{<->}{f}{b}\rput{-60}(a){\rput(0,-.75){$\bl F_6$}}}
+\newcommand{\estdpfbag}{
+  \pscircle(a){.22}\rput{-60}(a){{\white\tiny4}}
+  \pscircle(b){.22}\rput{  0}(b){{\white\tiny1}}
+  \pscircle(c){.22}\rput{ 60}(c){{\white\tiny2}}
+  \pscircle(d){.22}\rput{120}(d){{\white\tiny6}}
+  \pscircle(e){.22}\rput{180}(e){{\white\tiny5}}
+  \pscircle(f){.22}\rput{240}(f){{\white\tiny3}}}
+
+\newcommand{\estea}{\\[3mm]\theorem {\gray(Sch\"onheim 1971, Kleitman \&\ Spencer 1973)}
+ \\If $\bl |A|\!\mleq\! k\!\mleq\! \frac{n}{2}$, $\bl A\!\mnsubset\! B$
+ and $\bl A\!\cap\! B\!\mneq\!\emptyset$ for all $\bl A,B\!\myin\!\Af$,
+   then $\bl|\mathcal{A}|\mleq\binom{n-1}{k-1}$.}
+
+\newcommand{\estepfa}{\\[2mm]\proof}
+\newcommand{\estepfb}{\\If $\bl|A|\meq k$ for all $\bl A\myin\Af$, then apply the {\dg Erd\H{o}s-Ko-Rado Theorem}.}
+\newcommand{\estepfc}{\\Otherwise, consider the sets $\bl A_1,\ldots,A_s$ of smallest size $\bl \ell\mdef|A_i|\mleq k-1$.}
+\newcommand{\estepfd}{\\Define $\bl\mathcal{B}\mdef\{ \mathbf{B}_1,\ldots,\mathbf{B}_s\}$\\
+  where $\bl\mathbf{B}_i\mdef \{B\myin\binom{[n]}{\ell+1} : A_i\msubset B\}
+                \meq \{A_i\cup\{x\} : x\myin [n]-A_i\}$.}
+\newcommand{\estepfe}{\\Note that $\bl|\mathbf{B}_i|\meq n-\ell \geq 2k-\ell \geq \ell+2$
+  and that $\bl|\{i : A_i\msubset B\}|\mleq \ell+1$.}
+\newcommand{\estepff}[4]{\\For each $\bl J\msubseteq [s]$,\vspace*{-2.5mm}
+  \[\bl
+               |\mathcal{B}(J)|
+          \meq  \hspace*{-3mm}\sum_{B\in\mathcal{B}(J)} \hspace*{-1.5mm}\frac{\ell+1}{\ell+1}
+    \;{#1{\mgeq \hspace*{-3mm}\sum_{B\in\mathcal{B}(J)} \hspace*{-1mm}\sum_{\substack{j\in J:\\A_j\subset B}} \hspace*{-1.5mm}\frac{1}{\ell+1}}}
+    \;{#2{\meq \sum_{j\in J}\hspace*{-1mm}\sum_{B\in\mathbf{B}_j} \hspace*{-.5mm}\frac{1}{\ell+1}}}
+    \;{#3{\mgeq\sum_{j\in J}\hspace*{-.5mm}\frac{\ell+2}{\ell+1}}}
+    \;{#4{\mgt |J|}}\vspace*{-3.5mm}
+  \]}
+\newcommand{\estepfg}{By {\dg Hall's Theorem}, there are distinct $\bl B_i$ with $\bl A_i\msubset B_i\myin \mathbf{B}_i$ for all $\bl i\in[s]$.}
+\newcommand{\estepfh}{\\Replace each $\bl A_i$ by $\bl B_i$ and use induction,
+to find a new family $\bl\Af'$ with $\bl|\Af'|\meq|\Af|$ and $\bl|A|\meq k$ for all $\bl A\myin \Af'$ as before.\qed\vspace*{-25mm}}
+
+\newcommand{\estfa}{\\[3mm]{\dg Fischer's Inequality} {\gray(1940, Majumdar 1953)}
+ \\If, for some fixed $\bl k\mneq0$, $\bl |A\cap B|\meq k$ for all $\bl A,B\myin \Af$,
+   then $\bl|\mathcal{A}|\mleq n$.}
+
+\newcommand{\estfpfa}{\\[2mm]\proof}
+\newcommand{\estfpfav}{\\[2mm]\proof {\gray(continued)}}
+\newcommand{\estfpfb}{\\If $\bl|A|\meq k$ for some $\bl A\myin\Af$,
+  then $\bl A\msubseteq B$ for all $\bl B\myin\Af$}
+\newcommand{\estfpfc}{,\\and all remainders $\bl B-A\msubseteq [n]-A$ are disjoint}
+\newcommand{\estfpfd}{\\so $\bl|\Af|-1\leq n-k$, and $\bl|\Af|\mleq n+1-k\mleq n$.}
+\newcommand{\estfpfe}{\\Suppose then that $\bl|A|\mgeq k+1$ for all $\bl A\myin\Af$.}
+\newcommand{\estfpff}{\\[-3.5mm]For each $\bl A\myin \Af$, define the {\dg incidence vector} $\bl\mathbf{v}_A$
+  by $\bl (\mathbf{v}_A)_i\mdef \begin{cases} 1 &\mytext{if } i\myin A\\
+                                              0 &\mytext{otherwise.}\end{cases}$}
+\newcommand{\estfpfg}{\\[-4mm]Then $\bl\mathbf{v}_A\cdot \mathbf{v}_B\meq |A\cap B|
+  \meq \begin{cases} |A|\mgeq k+1 &\mytext{if } A\meq B\\
+                      k           &\mytext{if } A\neq B\,.\end{cases}$}
+\newcommand{\estfpfh}{\\Suppose that $\bl\sum_A \lambda_A\mathbf{v}_A\meq \mathbf{0}$. }
+% where not all $\bl\lambda$ equal $\bl 0$.}
+%\newcommand{\estfpfj}{\\Set $\bl S\mdef \sum_A \lambda_A$.}
+\newcommand{\estfpfj}[4]{Then\vspace*{-2mm}
+  \begin{align*}\bl
+             0
+  &     \meq \Bigl(\sum_{A\in\Af} \hspace*{-1mm}\lambda_A\mathbf{v}_A\Bigr)
+        \cdot\Bigl(\sum_{A\in\Af} \hspace*{-1mm}\lambda_A\mathbf{v}_A\Bigr)
+%    \meq \sum_{A\in\Af} \lambda_A^2 \mathbf{v}_A\cdot\mathbf{v}_A
+%        +\sum_{A,B\in\Af:A\neq B} \lambda_A\lambda_B\mathbf{v}_A\cdot\mathbf{v}_B
+   \;{#1{\meq \sum_{A\in\Af} \lambda_A^2 |A|
+        +\hspace*{-5mm}\sum_{A,B\in\Af: A\neq B}\hspace*{-5mm} \lambda_A\lambda_B k}}\\[-1mm]
+  &\;{#2{\mgeq\sum_{A\in\Af} \lambda_A^2 (k+1)
+        +\hspace*{-5mm}\sum_{A,B\in\Af: A\neq B}\hspace*{-5mm} \lambda_A\lambda_B k}}
+   \;{#3{\meq k\Bigl(\sum_{A\in\Af} \lambda_A\Bigr)^2 \hspace*{-1mm}+ \sum_{A\in\Af} \lambda_A^2}}
+   \;{#4{\mgeq\hspace*{-1mm} \sum_{A\in\Af} \lambda_A^2
+         \mgeq 0}}\\[-8mm]
+  \end{align*}}
+\newcommand{\estfpfk}{Hence, $\bl \lambda_A\meq 0$ for all $\bl A\myin\Af$,
+  so vectors $\bl\mathbf{v}_A\myin\mathbb{R}^n$ are linearly independent.}
+\newcommand{\estfpfm}{\\Hence, $\bl|\Af|\mleq n$.\qed\vspace*{-10mm}}
+
+\newcommand{\estga}{\\[3mm]\theorem {\gray(Bollob\'as 1986)}
+ \\If, for some fixed $\bl k\mneq\frac{n+1}{2}$, $\bl |A\triangle B|\meq k$ for all $\bl A,B\myin \Af$,
+   then $\bl|\mathcal{A}|\mleq n$.}
+
+\newcommand{\estgpfa}{\\[2mm]\proof}
+\newcommand{\estgpfb}{\\Similar to that of {\dg Fischer's Inequality} but use a $\bl\pm1$ incidence vector.\qed}
+
+\newcommand{\estha}{\\A subfamily $\bl\mathcal{F}\msubseteq\Af$ is a {\dg sunflower} with $\bl p$ {\dg petals} if
+  $\bl|\mathcal{F}|\meq p$ and\\$\bl F\cap G\meq Y$ and {\dg petal} $\bl F-Y$ is non-empty,
+  for all $\bl F\myin\mathcal{F}$ and fixed set~$\bl Y$.}
+\newcommand{\esthaa}{\rput(-11,-2.5){\sunflower}}
+
+\newcommand{\esthb}{\\[3mm]{\dg The Sunflower Lemma} {\gray(Erd\H{o}s \&\ Rado 1960)}
+ \\If $\bl |A|\meq k$ for all $\bl A\myin \Af$ and $\bl|\Af|\mgt k!(p-1)^k$,
+ \\then $\bl\Af$ contains a sunflower with $\bl p$ petals.}
+\newcommand{\esthba}{\rput(5,1.05){\sunflower}}
+
+\newcommand{\esthpfa}{\\[2mm]\proof}
+\newcommand{\esthpfb}{\\The theorem is clearly true if $\bl k\meq 0,1$.}
+\newcommand{\esthpfc}{\\Assume that the theorem is true for $\bl k-1$.}
+\newcommand{\esthpfd}{\\Consider a maximal subfamily $\bl\mathcal{F}\msubseteq\Af$ of pairwise disjoint sets.}
+\newcommand{\esthpfe}{\\If $\bl|\mathcal{F}|\mgeq p$, then $\bl\mathcal{F}$ contains a sunflower with $\bl p$ petals.}
+\newcommand{\esthpff}{\\Suppose that $\bl|\mathcal{F}|\mleq p-1$ and set $\bl B\mdef \cup_{A\in\mathcal{F}} A$.}
+\newcommand{\esthpfg}{\\By the maximality of $\bl\mathcal{F}$, $\bl B$ intersects each set $\bl A\myin\mathcal{A}$.}
+\newcommand{\esthpfh}[3]{\\By the {\dg Pigeonhole Principle}, some (pigeonhole) $\bl x\myin B$ belongs to at least\vspace*{-2mm}
+  \[\bl
+         \frac{|\Af|}{|B|}
+    \;{#1{\!\mgeq\! \frac{|\Af|}{k(p-1)}}}
+    \;{#2{\!\mgt \! \frac{k!(p-1)^k}{k(p-1)}}}
+    \;{#3{\!\meq \! (k-1)!(p-1)^{k-1}}}
+    \;\mytext{of the sets (pigeons) of $\bl\Af$.}\vspace*{-2mm}
+  \]}
+\newcommand{\esthpfj}{By assumption, $\bl\Af'\mdef \{A\!-\!\{x\}: x\!\myin \!A\!\myin\!\Af\}$
+  has a sunflower $\bl\mathcal{G}$ with $\bl p$~petals.\hspace*{-7mm}}
+\newcommand{\esthpfk}{\\Then $\bl\Af$ has the sunflower $\bl\mathcal{F}\mdef\{A\cup\{x\}:A\myin\mathcal{G}\}$
+  with $\bl p$ petals.\qed\vspace*{-5mm}}
+
+\newcommand{\estja}{\\[3mm]{\dg Bondy's Theorem} {\gray(1972)}
+ \\If $\bl |\mathcal{A}|\mleq n$, then the sets $\bl A-\{x\}$ ($\bl A\myin \Af$) are distinct for some element~$\bl x$.}
+
+\newcommand{\estjpfa}{\\[2mm]\proof}
+\newcommand{\estjpfb}{\\Assume that the theorem is not true; then $\bl|\Af|\mgeq 2$.}
+\newcommand{\estjpfc}{\\Set $\bl\mathcal{A}_D\mdef \{ D\cap A : A \myin\Af\}$
+   and $\bl\mathcal{D}\mdef \{D\subseteq [n] : |\mathcal{A}_D|\mgeq |D|+1\}$.}
+\newcommand{\estjpfd}{\\Choose $\bl d\myin A\triangle B$ for some distinct $\bl A,B\myin\Af$.}
+\newcommand{\estjpfe}{\\Then $\bl|\mathcal{A}_{\{d\}}| \meq |\{\emptyset,\{d\}\}|\meq 2\meq |\{d\}|+1$}
+\newcommand{\estjpff}{, so $\bl\{d\}\myin \mathcal{D}$, and $\bl\mathcal{D}\mneq \emptyset$.}
+\newcommand{\estjpfg}{\\Choose a maximal set $\bl D\myin\mathcal{D}$ and note that $\bl D\neq [n]$.}
+\newcommand{\estjpfh}{\\Then by assumption, $\bl |\Af_D|\mleq |\Af|-1$.}
+\newcommand{\estjpfj}{\\By the {\dg Pigeonhole Principle}, $\bl D\cap A\meq D\cap B$ for some distinct $\bl A,B\myin\Af$.}
+\newcommand{\estjpfk}{\\Choose $\bl e\myin A\triangle B$ and define $\bl E\mdef D\cup \{e\}$. }
+\newcommand{\estjpfm}{\\Then $\bl|\mathcal{A}_{E}| \mgeq |\mathcal{A}_{D}|+1 \mgeq (|D|+1)+1\meq |E|+1$.}
+\newcommand{\estjpfn}{\\Hence, $\bl E\myin \mathcal{D}$, contradicting the maximality of $\bl\mathcal{D}$.\qed}
+
+\newcommand{\estka}{The {\dg complete $\bl k$-partite graph} $\bl K_{n_1,\ldots,n_k}\meq (V,E)$ has\vspace*{-5mm}
+  \[\bl
+    \mytext{vertices} \;\; V\meq \bigcup_{i\in[k]} V_i\;\mytext{with}\;\; \bl|V_i|\meq n_i\;\;
+    \mytext{and edges}\;\; E\meq \binom{V}{2}-\bigcup_{i\in[k]}\binom{V_i}{2}\,.\vspace*{-4mm}
+  \]}
+\newcommand{\estkaa}[1]{\begin{center}\begin{pspicture}(-2,-3)(2,2)
+  \psset{shadow=false,fillstyle=none,framearc=0,linecolor=gray,linewidth=.066,fillcolor=gray}
+  \pnode(-1.176, 1.618){a}\pnode(-1.902,  .618){b}                        %\pnode( 0    , 2    ){a} % not used
+  \pnode(-1.176,-1.618){c}\pnode( 0    ,-2    ){d}\pnode( 1.176,-1.618){e}%\pnode(-1.902, -.618){d} % not used
+  \pnode( 1.902,  .618){f}\pnode( 1.176, 1.618){g}                        %\pnode( 1.902, -.618){h} % not used
+  \psline(a)(c)\psline(b)(c)\psline(f)(c)\psline(g)(c)\psline(a)(f)\psline(b)(f)
+  \psline(a)(d)\psline(b)(d)\psline(f)(d)\psline(g)(d)\psline(a)(g)\psline(b)(g)
+  \psline(a)(e)\psline(b)(e)\psline(f)(e)\psline(g)(e)
+  \psset{fillstyle=solid,fillcolor=nearlywhite,linewidth=.05,nodesep=2mm,boxsize=.33,linearc=.33,arcangle=18,opacity=0.5}
+  \ncarcbox{<->}{a}{b}
+  \ncarcbox[arcangle=36]{<->}{c}{e}
+  \ncarcbox{<->}{f}{g}
+  \rput(0,-3){$\bl K_{2,2,3}$}
+  \psset{opacity=1,fillcolor=lightgray}
+  \pscircle(a){.22}\pscircle(b){.22}\pscircle(c){.22}\pscircle(d){.22}
+  \pscircle(e){.22}\pscircle(f){.22}\pscircle(g){.22}\rput[l](3.5,0){{#1{Contains {\red no} $\bl K_4$}}}
+  \end{pspicture}
+  \end{center}}
+\newcommand{\estkab}[2]{Note that if $\bl n_1\meq \cdots\meq n_k$ and $\bl |V|\meq n$, then \vspace*{-2.5mm}
+  \[\bl
+         |E|
+    \meq \binom{n}{2} - k\binom{\frac{n}{k}}{2}
+    \;{#1{\meq \frac{1}{2}n(n-1) - \frac{1}{2}k\,\frac{n}{k}\Bigl(\frac{n}{k}-1\Bigr)}}
+    \;{#2{\meq \Bigl(1 - \frac{1}{k}\Bigr)\frac{n^2}{2}\,.}}\vspace*{-1mm}
+  \]}
+
+\newcommand{\estkb}{{\dg Tur\'an's Theorem} {\gray (1941)}
+  \\[-2mm]Each simple graph $\bl G\meq(V,E)$ with $\bl\ds|E|\mgt \Bigl(1 - \frac{1}{p-1}\Bigr)\frac{n^2}{2}$
+    contains~$\bl K_p$\,.\vspace*{-1mm}}
+
+\newcommand{\mantelav}{\\[3mm]{\dg Mantel's Theorem} {\gray (1907)} {\lightgray (Ramsey Theory: Lecture 6)}\\[-2mm]
+If $\bl G\meq (V,E)$ is a simple graph on $\bl n$ vertices with $\bl |E|\mgt\dfrac{n^2}{4}$ edges,
+\\[-1mm]then $\bl G$ has at least one triangle.}
+
+\newcommand{\mantelexa}{\\[8mm]\example}
+\newcommand{\mantelexb}[3]{\vspace*{5mm}\begin{center}\hspace*{-35mm}\myhexagon{#1}{\uput[l](7,0){$\bl|E|\meq #3$}#2}\hspace*{35mm}\end{center}}
+\newcommand{\mantelexba}{\psline(a)(d)}
+\newcommand{\mantelexbb}{\psline(b)(e)}
+\newcommand{\mantelexbc}{\psline(c)(f)}
+\newcommand{\mantelexbd}{\psline(a)(c)}
+\newcommand{\mantelexbe}{\psset{linecolor=green,linewidth=0.075,fillcolor=white}\pspolygon[fillstyle=none](a)(c)(d)\pscircle(a){.2}\pscircle(c){.2}\pscircle(d){.2}}
+
+\newcommand{\estkbpfa}{\\[2mm]\proof}
+\newcommand{\estkbpfb}{\\[-2mm]We prove the contrapositive:
+  if $\bl G$ is $\bl K_p$-free, then $\bl\ds|E|\mleq \Bigl(1 - \frac{1}{p-1}\Bigr)\frac{n^2}{2}$.}
+\newcommand{\estkbpfc}{\\[-2mm]We use induction on $\bl n$. }
+\newcommand{\estkbpfcv}{\\[-2mm]We use induction on $\bl n$.\\}
+\newcommand{\estkbpfd}[2]{If $\bl n\mlt p$, then \vspace*{-2mm}
+  \[\bl
+          |E|
+    \mleq \binom{n}{2}
+    \;{#1{\meq \Bigl(1-\frac{1}{n}  \Bigr)\frac{n^2}{2}}}
+    \;{#2{\mgeq\Bigl(1-\frac{1}{p-1}\Bigr)\frac{n^2}{2}\,.}}\vspace*{-1mm}\]}
+\newcommand{\estkbpfe}{Suppose that $\bl G$ is a simple graph on $\bl n$ vertices with no $\bl K_p$ subgraph.}
+\newcommand{\estkbpff}{\\Add edges to $\bl G$ until none can be added without creating a $\bl K_p$ subgraph.}
+\newcommand{\estkbpfg}{\\Then $\bl G$ must contain a $\bl K_{p-1}$ subgraph, say with vertices $\bl A$.}
+\newcommand{\estkbpfh}{\\Set $\bl B\!\mdef\! V\!-\!A$. }
+\newcommand{\estkbpfj}{Each vertex of $\bl B$ has at most $\bl p\!-\!2$ edges to vertices in~$\bl A$.\hspace*{-2mm}}
+\newcommand{\estkbpfk}{\\By induction, there are at most
+  $\bl (1-\frac{1}{p-1})(n-(p-1))^2/2$ edges between the vertices $\bl B$. }
+\newcommand{\estkbpfm}{Also, there are $\bl\binom{p-1}{2}$ edges between the vertices of $\bl A$. }
+\newcommand{\estkbpfn}[1]{Thus,\vspace*{-4mm}
+  \begin{align*}\bl
+    |E|&\;{  {\mleq (n-(p-1))(p-2)
+          +   \Bigl(1-\frac{1}{p-1}\Bigr)\frac{(n-(p-1))^2}{2}
+          +   \binom{p-1}{2}}}\\[-2mm]
+       &\;{#1{\meq\cdots\meq\Bigl(1-\frac{1}{p-1}\Bigr)\frac{n^2}{2}\,.\quad\black\Box}}\\[-15mm]
+  \end{align*}}
+
+
+\begin{document}
+\sf\coursetitle
+\np\courseoverview
+\np\courseoverviewXC
+\np\lecturetitle
+\np\lecturetitlei
+\np\estaa
+\np\estaa\estab
+\np\estaa\estab\estac
+\np\estaa\estab\estac\estba
+\np\estaa\estab\estac\estba\estbb
+\np\estaa\estab\estac\estba\estbb\estbapfa
+\np\estaa\estab\estac\estba\estbb\estbapfa\estbapfb
+\np\estaa\estab\estac\estba\estbb\estbapfa\estbapfb\estbapfc
+\np\estaa\estab\estac\estba\estbb
+\np\estaa\estab\estac\estba\estbb\estbc
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav\estbapfd
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav\estbapfd\estbapfe
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav\estbapfd\estbapfe\estbapff
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav\estbapfd\estbapfe\estbapff\estbapfg
+\np\estaa\estab\estac\estba\estbb\estbc\estbapfav\estbapfd\estbapfe\estbapff\estbapfg\estbapfh
+\np\estaa\estba\estbb\estbc
+\np\estaa\estba\estbb\estbc\estbd
+\np\estaa\estba\estbb\estbc\estbd\estbe
+\np\estaa\estba\estbb\estbc\estbd\estbe\estbf
+\np\estaa\estba\estbb\estbc
+\np\estaa\estba\estbb\estbc\estbva
+\np\estaa\estba\estbb\estbc\estbva\estbvb
+\np\estaa\estba\estbb\estbc\estbva\estbvb\estca\estcc
+\np\estaa\estca\estcapfa
+\np\estaa\estca\estcapfa\estcapfb
+\np\estaa\estca\estcapfa\estcapfb\estcapfc
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{}{}{\ph}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{}{}{}{\ph}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{}{}{}{}{\ph}
+\np\estaa\estca\estcapfa\estcapfb\estcapfc\estcapfd\estcapfe{}{}{}{}{}{}{}
+\np\estaa\estca
+\np\estaa\estca\estcb
+\np\estaa\estca\estcb\estda
+\np\estaa\estca\estcb\estda\estdb
+\np\estaa\estda
+\np\estaa\estda\estdpfa
+\np\estaa\estda\estdpfa\estdpfb
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbab}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbac}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbad}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbae}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaf}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa}{}
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa}{}\estdpfc
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbabv\estdpfbaev}{}\estdpfc
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbacv\estdpfbafv}{}\estdpfc
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbacv\estdpfbafv}{}\estdpfc\estdpfd
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbacv\estdpfbafv}{}\estdpfc\estdpfd\estdpfe
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbacv\estdpfbafv}{}\estdpfc\estdpfd\estdpfe\estdpff
+\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbacv\estdpfbafv}{\estdpfbag}\estdpfc\estdpfd\estdpfe\estdpff
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{}{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{}{}{\ph}{\ph}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{}{}{}{\ph}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{}{}{}{}{\ph}
+\np\estaa\estda\estdpfa\estdpfb\estdpfc\estdpfd\estdpfe\estdpff\estdpfg\estdpfh{}{}{}{}{}{}%\np\estaa\estda\estdpfa\estdpfb\estdpfba{\estdpfbaa\estdpfbac\estdpfbae}\estdpfc\estdpfd
+\np\estaa\estda
+\np\estaa\estda\estea
+\np\estaa\estea\estepfa
+\np\estaa\estea\estepfa\estepfb
+\np\estaa\estea\estepfa\estepfb\estepfc
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{\ph}{\ph}{\ph}
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{}{\ph}{\ph}
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{}{}{\ph}
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{}{}{}
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{}{}{}\estepfg
+\np\estaa\estea\estepfa\estepfb\estepfc\estepfd\estepfe\estepff{}{}{}{}\estepfg\estepfh
+\np\estaa\estea
+\np\estaa\estea\estfa
+\np\estaa\estfa\estfpfa
+\np\estaa\estfa\estfpfa\estfpfb
+\np\estaa\estfa\estfpfa\estfpfb\estfpfc
+\np\estaa\estfa\estfpfa\estfpfb\estfpfc\estfpfd
+\np\estaa\estfa\estfpfa\estfpfb\estfpfc\estfpfd\estfpfe
+\np\estaa\estfa\estfpfav\estfpfe
+\np\estaa\estfa\estfpfav\estfpfe\estfpff
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{\ph}{\ph}{\ph}{\ph}
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{\ph}{\ph}{\ph}
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{}{\ph}{\ph}
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{}{}{\ph}
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{}{}{}
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{}{}{}\estfpfk
+\np\estaa\estfa\estfpfav\estfpfe\estfpff\estfpfg\estfpfh\estfpfj{}{}{}{}\estfpfk\estfpfm
+\np\estaa\estfa
+\np\estaa\estfa\estga
+\np\estaa\estfa\estga\estgpfa
+\np\estaa\estfa\estga\estgpfa\estgpfb
+\np\estaa
+\np\estaa\estha\esthaa
+\np\estaa\estha\esthb\esthba
+\np\estaa\estha\esthb\esthba\esthpfa
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb\esthpfc
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb\esthpfc\esthpfd
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb\esthpfc\esthpfd\esthpfe
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb\esthpfc\esthpfd\esthpfe\esthpff
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfb\esthpfc\esthpfd\esthpfe\esthpff\esthpfg
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{\ph}{\ph}{\ph}
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{}{\ph}{\ph}
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{}{}{\ph}
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{}{}{}
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{}{}{}\esthpfj
+\np\estaa\estha\esthb\esthba\esthpfa\esthpfc\esthpfd\esthpff\esthpfg\esthpfh{}{}{}\esthpfj\esthpfk
+\np\estaa
+\np\estaa\estja
+\np\estaa\estja\estjpfa
+\np\estaa\estja\estjpfa\estjpfb
+\np\estaa\estja\estjpfa\estjpfb\estjpfc
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg\estjpfh
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg\estjpfh\estjpfj
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg\estjpfh\estjpfj\estjpfk
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg\estjpfh\estjpfj\estjpfk\estjpfm
+\np\estaa\estja\estjpfa\estjpfb\estjpfc\estjpfd\estjpfe\estjpff\estjpfg\estjpfh\estjpfj\estjpfk\estjpfm\estjpfn
+\np\estka
+\np\estka\estkaa{\ph}
+\np\estka\estkaa{}
+\np\estka\estkaa{}\estkab{\ph}{\ph}
+\np\estka\estkaa{}\estkab{}{\ph}
+\np\estka\estkaa{}\estkab{}{}
+\np\estka\estkaa{}\estkab{}{}\estkb
+\np\estkb
+\np\estkb\mantelav
+\np\estkb\mantelav\mantelexa
+\np\estkb\mantelav\mantelexa\mantelexb{}{}{6}
+\np\estkb\mantelav\mantelexa\mantelexb{\mantelexba}{}{7}
+\np\estkb\mantelav\mantelexa\mantelexb{\mantelexba\mantelexbb}{}{8}
+\np\estkb\mantelav\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc}{}{9}
+\np\estkb\mantelav\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc\mantelexbd}{}{10}
+\np\estkb\mantelav\mantelexa\mantelexb{\mantelexba\mantelexbb\mantelexbc\mantelexbd}{\mantelexbe}{10}
+\np\estkb
+\np\estkb\estkbpfa
+\np\estkb\estkbpfa\estkbpfb
+\np\estkb\estkbpfa\estkbpfb\estkbpfc
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{\ph}{\ph}
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{\ph}
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff\estkbpfg
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff\estkbpfg\estkbpfh
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff\estkbpfg\estkbpfh\estkbpfj
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff\estkbpfg\estkbpfh\estkbpfj\estkbpfk
+\np\estkb\estkbpfa\estkbpfb\estkbpfc\estkbpfd{}{}\estkbpfe\estkbpff\estkbpfg\estkbpfh\estkbpfj\estkbpfk\estkbpfm
+\np\estkb\estkbpfa\estkbpfb\estkbpfcv\estkbpfe\estkbpff\estkbpfg\estkbpfh\estkbpfj\estkbpfk\estkbpfm\estkbpfn{\ph}
+\np\estkb\estkbpfa\estkbpfb\estkbpfcv\estkbpfe\estkbpff\estkbpfg\estkbpfh\estkbpfj\estkbpfk\estkbpfm\estkbpfn{}
+
+
+
+\end{document}
+
+
+
+\\[3mm]{\dg Bondy's Theorem} {\gray(1972)}
+ \\If $\bl |\Af|\mleq n$, then the sets $\bl A-\{x\}$ ($\bl A\myin \Af$) are distinct for some element~$\bl x$.}
+
+
+%\newcommand{\estka}{{\dg Kleitman's Theorem} {\gray(1970)}
+% \\If $\bl\mathbf{v}_1,\ldots,\mathbf{v}_n\myin \mathbb{R}^n$
+% with $\bl|\mathbf{v}_i|\mgeq 1$ for each $\bl i$,
+% \\then the number of sums $\bl\sum_{i=1}^n\lambda_i\mathbf{v}_i$ lying in a unit ball is at most $\bl \binom{n}{\lceil\frac{n}{2}\rceil}$.}
+%
+%\newcommand{\estkpfa}{\\[2mm]\proof}
+%\newcommand{\estkpfb}{\\.}
+%
+%\np\estka
+%\np\estka\estkpfa
+%\np\estka\estkpfa\estkpfb
+
+
+
+Extremal Set Theory
+-------------------
+Lecture 1: Classical Theorems
+
+OK Easy theorem
+OK Sperner's Theorem
+OK Erd\H{o}s-Ko-Rado (proved using Katona's cycle method)
+OK (Add an example)
+OK Expanded EKR
+OK Fischer's Inequality
+OK Bollobas Theorem
+OK Sunflower Lemma
+OK Bondy's Theorem
+OK Turan's Theorem
+   (Graham & Kleitman: increasing paths in edge ordered graphs)
+   (Some of Katona's many pretty theorems?)
+   (Bollobas' Theorem (one pair disjoint, bijection between pairs)
+
+
+Greene's Theorem - proved? Fomin's result(s)
+
+(Lecture 2: Generalisations (including q-nomial versions)
+
+Lecture 3: Applications (or More Sperner)
+
+
+Kleitman's Theorem
+The Dictactor Paradox (Cameron's 1994 proof)
+Sperner's two results:
+  Brouwer's Fixed Point Theorem
+  Monsky's Theorem (triangulation of the square)

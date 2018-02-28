@@ -1,0 +1,592 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{pstricks,pst-node,pst-plot}
+%\usepackage[english]{babel}
+%\usepackage{enumerate }
+%\usepackage{mathrsfs}
+%\usepackage{graphicx}
+
+\newrgbcolor{white}{1 1 1}
+\newrgbcolor{nearlywhite}{0.95 0.95 0.95}
+\newrgbcolor{offwhite}{0.9 0.9 0.9}
+\newrgbcolor{lightgray}{0.85 0.85 0.85}
+\newrgbcolor{halfgray}{0.8 0.8 0.8}
+\newrgbcolor{halfdarkgray}{0.4 0.4 0.4}
+
+\expandafter\let\expandafter\oldproof\csname\string\proof\endcsname
+\let\oldendproof\endproof
+\renewenvironment{proof}[1][\proofname]{%
+  \oldproof[\scshape \noindent {\bfseries \text{Proof}}]%
+}{\oldendproof}
+
+\newenvironment{myitemize}
+{\vspace*{-1mm}
+ \begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \setlength{\parskip}{1pt}
+    \setlength{\parsep}{0pt}}
+{\end{itemize}
+ \vspace*{-1mm}}
+
+\setlength{\topmargin}{0mm}
+\addtolength{\oddsidemargin}{-.8\oddsidemargin}
+\addtolength{\evensidemargin}{-.8\evensidemargin}
+\addtolength{\textwidth}{+.3\textwidth}
+\addtolength{\textheight}{+.05\textheight}
+\setlength{\itemsep}{25mm}
+
+\newcommand{\algorithm} {\bigskip\noindent{\bf Algorithm.}\;\;}
+\newcommand{\example} {\bigskip\noindent{\bf Example.}\;\;}
+\newcommand{\exercise}{\bigskip\noindent{\bf Exercise.}\;\;}
+\newcommand{\lemma}{\bigskip\noindent{\bf Lemma.}\;\;}
+\newcommand{\proposition}{\bigskip\noindent{\bf Proposition.}\;\;}
+\newcommand{\remark}{\bigskip\noindent{\bf Remark.}\;\;}
+\newcommand{\definition}{\bigskip\noindent{\bf Definition.}\;\;}
+\newcommand{\challenge}{\bigskip\noindent{\bf Challenge.}\;\;}
+\newcommand{\corollary}{\bigskip\noindent{\bf Corollary.}\;\;}
+\newcommand{\notation}{\bigskip\noindent{\bf Notation.}\;\;}
+
+\newenvironment{thm}[1]{
+	\begin{framed}
+	\noindent
+	{\bfseries #1}\\}{\setlength{\itemsep}{0pt}
+	\end{framed}
+}
+
+\newcommand{\ph}{\phantom}
+
+\newcommand{\Af}{\mathcal{A}}
+\newcommand{\Bb}{\mathbf{B}}
+\newcommand{\Bf}{\mathcal{B}}
+\newcommand{\Cf}{\mathcal{C}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\Df}{\mathcal{D}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\Ff}{\mathcal{F}}
+\newcommand{\Gf}{\mathcal{G}}
+\newcommand{\If}{\mathcal{I}}
+%\newcommand{\mathbb{N}}{\mathbb{N}}
+\newcommand{\Pf}{\mathcal{P}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\Tf}{\mathcal{T}}
+\newcommand{\Xf}{\mathcal{X}}
+\newcommand{\Yf}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\abs}[1]{\Bigl| #1 \Bigr|}
+\newcommand{\lr}[1]{\Bigl( #1 \Bigr)}
+\newcommand{\vb}{\text{{\bfseries v}}}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Span}{span}
+
+\newcommand{\mybullet}{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=black,linecolor=black,framearc=.3,shadow=true}
+  \pspicture(-.3,0)(.8,.4)\qdisk(.25,.2){.1}\pscircle*[linecolor=gray](.25,.2){.07}\endpspicture}
+
+\newcommand{\nodea}{\nput[labelsep=0]{0}{a}{\mydot}}
+\newcommand{\nodeb}{\nput[labelsep=0]{0}{b}{\mydot}}
+\newcommand{\nodec}{\nput[labelsep=0]{0}{c}{\mydot}}
+\newcommand{\noded}{\nput[labelsep=0]{0}{d}{\mydot}}
+\newcommand{\nodee}{\nput[labelsep=0]{0}{e}{\mydot}}
+\newcommand{\nodef}{\nput[labelsep=0]{0}{f}{\mydot}}
+\newcommand{\nodeg}{\nput[labelsep=0]{0}{g}{\mydot}}
+\newcommand{\nodeh}{\nput[labelsep=0]{0}{h}{\mydot}}
+\newcommand{\nodei}{\nput[labelsep=0]{0}{i}{\mydot}}
+\newcommand{\nodej}{\nput[labelsep=0]{0}{j}{\mydot}}
+
+\newcommand{\edgeab}{\ncline{-}{a}{b}\Aput[.1 ]{5}\nodea\nodeb}
+\newcommand{\edgeae}{\ncline{-}{a}{e}\Bput[.1 ]{3}\nodea\nodee}
+\newcommand{\edgebc}{\ncline{-}{b}{c}\Aput[.1 ]{4}\nodeb\nodec}
+\newcommand{\edgebe}{\ncline{-}{b}{e}\Aput[.08]{3}\nodeb\nodee}
+\newcommand{\edgebi}{\ncline{-}{b}{i}\Bput[.1 ]{2}\nodeb\nodei}
+\newcommand{\edgecd}{\ncline{-}{c}{d}\Aput[.1 ]{2}\nodec\noded}
+\newcommand{\edgecf}{\ncline{-}{c}{f}\Bput[.06]{8}\nodec\nodef}
+\newcommand{\edgecg}{\ncline{-}{c}{g}\Aput[.06]{3}\nodec\nodeg}
+\newcommand{\edgedj}{\ncline{-}{d}{j}\Aput[.1 ]{1}\noded\nodej}
+\newcommand{\edgeeh}{\ncline{-}{e}{h}\Bput[.1 ]{4}\nodee\nodeh}
+\newcommand{\edgeei}{\ncline{-}{e}{i}\Aput[.08]{1}\nodee\nodei}
+\newcommand{\edgefg}{\ncline{-}{f}{g}\Bput[.09]{2}\nodef\nodeg}
+\newcommand{\edgefi}{\ncline{-}{f}{i}\Aput[.06]{3}\nodef\nodei}
+\newcommand{\edgegj}{\ncline{-}{g}{j}\Bput[.06]{2}\nodeg\nodej}
+\newcommand{\edgehi}{\ncline{-}{h}{i}\Bput[.1 ]{6}\nodeh\nodei}
+\newcommand{\edgeij}{\ncline{-}{i}{j}\Bput[.1 ]{4}\nodei\nodej}
+
+\newcommand{\mypicture}[1]{\pspicture(0,0)(0,0)\psset{unit=1cm,
+ shadowcolor=offwhite,shadow=true,shadowangle=-45,linewidth=.03,linecolor=gray,
+ fillcolor=lightgray,shadowsize=.15,framearc=.3}#1\endpspicture}
+
+\newcommand{\myi}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny1}\endpspicture}}
+\newcommand{\myii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny2}\endpspicture}}
+\newcommand{\myiii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny3}\endpspicture}}
+\newcommand{\myiv}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny4}\endpspicture}}
+\newcommand{\myv}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny5}\endpspicture}}
+\newcommand{\myvi}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny6}\endpspicture}}
+\newcommand{\myvii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny7}\endpspicture}}
+\newcommand{\myviii}{{\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillstyle=none,shadow=false}%
+  \pspicture(-.3,0)(.8,.4)\pscircle(.25,.2){.25}\rput(.25,.2){\tiny8}\endpspicture}}
+
+\newcommand{\mymatrix}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(6,4)
+  \psframe(0,0)(7,5)#1\psframe[linecolor=gray,fillcolor=offwhite,linewidth=.03,fillstyle=none,framearc=0](0,0)(7,5)\endpspicture}
+
+\newcommand{\twovector}[2]{\begin{pspicture}(-0.25,-.2)(0.25,0.2)
+  \psframe[framearc=0,shadow=false,fillstyle=solid,fillcolor=lightgray](-0.25,-.2)(0.25,0.2)
+  \rput(-0.1,0){#1}
+  \rput( 0.1,0){#2}\end{pspicture}}
+\newcommand{\twomatrix}[4]{\begin{pspicture}(-0.25,-.35)(0.25,0.35)
+  \psframe[framearc=0,shadow=false,fillstyle=solid,fillcolor=lightgray](-0.25,-.35)(0.25,0.35)
+  \rput(-0.1, 0.15){#1}
+  \rput( 0.1, 0.15){#2}
+  \rput(-0.1,-0.15){#3}
+  \rput( 0.1,-0.15){#4}\end{pspicture}}
+
+\newcommand{\ds}{\displaystyle}
+\newcommand{\mydot}{\pscircle(0,0){.1}}
+
+\pagestyle{fancyplain}
+
+\title{\Large\sc Chapter 4: Extremal Set Theory}
+\author{Thomas Britz}
+\date{}
+
+\begin{document}
+
+\maketitle
+\lhead{MATH5505}
+%\rhead{Combinatorics}
+\rhead{Extremal Set Theory}
+
+
+\section*{Classical Theorems}
+
+Let $\Af$ be a family of subsets of $[n]$.
+Given imposed constraints, we can ask how big $\Af$ can be, how large it must be,
+and what structure $\Af$ must have if it is largest or smallest possible.
+These are questions typically asked in extremal set theory.
+This chapter presents a selection of nice and pretty answers.
+
+
+\begin{thm}{Theorem}
+If $A \cap B \neq \emptyset$ for all $A,B \in \Af$, then $|\Af| \leq 2^{n-1}$.\\
+There is equality if and only if $\Af$ contains $A$ or $A^C$ for each $A \subseteq [n]$.
+\end{thm}
+
+\begin{proof}
+If $A \in \Af$ for some $A \subseteq [n]$, then $A^C \not\in \Af$.
+Hence, $|\Af|\leq \frac{1}{2} |\Pf([n])| = \frac{1}{2} 2^n = 2^{n-1}$.\\
+If $|\Af| < 2^{n-1}$, then $A \not\in \Af$ and $A^C \not\in \Af$ for some set $A$.
+If $A\cap B \neq \emptyset$ for all $B \in \Af$, then add $A$ to~$\Af$.\\
+If $A \cap B = \emptyset$ for some $B \in \Af$, then $B \subset A^C$.
+Then $C \cap A^C\supseteq C \cap B \neq \emptyset$ for all $C \in \Af$; add $A^C$ to~$\Af$.\\
+Keep adding sets or their complement in this way until $\Af$ is a family that contains $2^{n-1}$ sets,
+namely one of the sets $A$ and $A^C$ for each $A \subseteq [n]$.
+\end{proof}
+
+\example
+A \emph{star} is a family whose elements are the sets containing a fixed $i \in [n]$.
+Each such family achieves a bound in the theorem above.
+These are not the only families to achieve the bound, as the following example with $n = 3$ shows:
+\[
+  \Af = \big\{\{1,2\}, \{1,3\}, \{2,3\}, [3]\big\} = \binom{[3]}{2} \cup \{[3]\}\,.
+\]
+
+\begin{thm}{Theorem (Seymour 1973; many others)}
+If $A \cap B \neq \emptyset$ and $A \cup B \neq [n]$ for all $A,B \in \Af$,
+then $|\Af| \leq 2^{n-2}$.
+\end{thm}
+
+We have seen (and partially proven) the following theorem in Chapter 2.
+
+\begin{thm}{Sperner's Theorem (1928)}
+If $A \not\subseteq B$ for all $A,B \in \Af$, then $|\Af| \leq \binom{n}{\lceil n/2\rceil}$.
+\end{thm}
+
+\begin{proof}
+Let $\Cf$ be the set of maximal chains $\emptyset \subseteq \{a\} \subseteq \dots \subseteq [n]$ in $\Bf_n$.\\
+Note that $|\Cf| = n!$ and $|\Af \cap C| \leq 1$ for each $C\in \Cf$.\\
+Also, each given set $A \subseteq [n]$ is an element of $|A|! (n-|A|)!$ maximal chains.
+Then
+\begin{align*}
+	1
+  = \frac{|C|}{n!}
+  = \sum_{C \in \Cf} \frac{1}{n!}
+ &\geq \sum_{C \in \Cf} \sum_{A \in \Af \cap C} \frac{1}{n!}\\
+ &= \sum_{A \in \Af} \sum_{A\in C \in \Cf} \frac{1}{n!}
+  = \sum_{A \in \Af} \frac{|A|! (n-|A|)!}{n!}
+  = \sum_{A \in \Af} \frac{1}{\binom{n}{|A|}}
+  \geq \sum_{A \in \Af}\frac{1}{\binom{n}{\lceil n/2 \rceil}}
+  = \frac{|\Af|}{\binom{n}{\lceil n/2 \rceil}}\,.\qedhere
+\end{align*}
+\end{proof}
+
+\noindent
+{\bfseries Remark.}
+There is equality in Sperner's Theorem if and only if $\Af = \binom{[n]}{\lceil n/2 \rceil}$.
+
+\begin{thm}{The Erd\"os-Ko-Rado Theorem (1961)}
+If $|A| = k \leq \frac{n}{2}$ and $A \cap B < \emptyset$ for all $A, B \in \Af$, then $|\Af| \leq \binom{n-1}{k-1}$.
+\end{thm}
+
+\begin{proof}
+Write the numbers $1, \dots, n$ on a circle and define $\Ff := \{F_1, \dots, F_n\}$,
+where $F_i$ is the $k$-sized interval $\{i, \dots, i+k-1\}\mod n$.
+Each set $F_i$ overlaps $2(k-1)$ other sets,
+namely the pair of sets $F_{i-k+j}, F_{i+j}$.
+These two sets are  disjoint, so at most one of these two can belong to $\Af$.
+Hence, $|\Ff \cap \Af| \leq 1+(k-1) = k$.
+
+This is also true for permuted circle numbers, giving a new family $\Ff^\pi$.\\
+For $A \in \Af$, $F \in \Ff$,
+we have $A = \pi(F)$ for $k! (n-k)!$ permutations $\pi \in \Sigma_n$. Hence,
+\begin{align*}
+	 | \Af |
+   = \sum_{A \in \Af} \sum_{F \in \Ff} \frac{1}{n}
+ & = \sum_{A \in \Af} \sum_{F \in \Ff} \sum_{\substack{\pi \in \Sigma_n:\\ A = \pi(F)}}\frac{1}{n \cdot k!(n-k)!}\\
+ & = \sum_{\pi \in \Sigma_n} \sum_{A \in \Af} \sum_{\substack{F \in \Ff:\\ A = \pi(F)}}\frac{1}{n \cdot k!(n-k)!}\\
+ & = \sum_{\pi \in \Sigma_n} \frac{|\Af \cap \Ff^n|}{n \cdot k! (n-k)!}
+\leq \sum_{\pi \in \Sigma_n} \frac{k}{n \cdot k! (n-k)!}
+   = \frac{n! k}{n \cdot k!(n-k)!} = \binom{n-1}{k-1}\,.\qedhere
+\end{align*}
+\end{proof}
+
+
+\begin{thm}{Theorem (Sch\"onheim 1971, Kleitman \& Spencer 1973)}
+If $|A| \leq k \leq \frac{n}{2}$, $A \not\subset B$
+and $A \cap B \neq \emptyset$ for all $A,B \in \Af$, then $|\Af| < \binom{n-1}{k-1}$.
+\end{thm}
+
+\begin{proof}
+If $|A| = k$ for all $A \in \Af$, then apply the Erd\H{o}s-Ko-Rado Theorem.\\
+Otherwise, consider the sets $A_1, \dots, A_s$ of the smallest size $\ell:= |A_i| \leq k-1$.\\
+Define $\Bf:= \{\Bb_1, \dots, \Bb_s\}$,
+where $\Bb_i := \{ B \in \binom{[n]}{\ell+1} : A_i \subset B\} = \{ A_i \cup \{x\} : x \in [n] - A_i\}$.
+
+Note that $|\Bb_i| = n-\ell \geq 2k-\ell \geq \ell+2$
+and the $|\{i : A_i \subset B\}| \leq\ell + 1$.
+For each $J \subseteq [s]$,
+\begin{align*}
+      |\Bf(J)|
+  & = \sum_{B \in \Bf(J)} \frac{\ell + 1}{\ell + 1}
+    \geq \sum_{B \in \Bf(J)} \sum_{\substack{j \in J:\\ A_j \subset B}} \frac{1}{\ell+1}
+    = \sum_{j \in J} \sum_{B \in \Bb_j} \frac{1}{\ell+1}
+    \geq \sum_{j \in J} \frac{\ell+2}{\ell+1} > |J|\,.
+\end{align*}
+By Hall's Theorem, there are distinct $B_i$ with $A_i \subset B_i \in \Bb_i$ for all $I \in[s]$.
+Replace each $A_i$ by $B_i$ and use induction,
+to find a new family $\Af'$ with $|\Af'| = |\Af|$
+and $|A| = k$ for all $A \in \Af'$ as before.
+\end{proof}
+
+\begin{thm}{Fischer's Inequality (1940; Majumdar 1953)}
+If, for some fixed $k \neq 0$, $|A \cap B| = k$ for all $A, B \in \Af$, then $|\Af| \leq n$.
+\end{thm}
+
+\begin{proof}
+If $|A| = k$ for some $A \in \Af$, then $A \subseteq B$ for all $B \in \Af$,
+and all remainders $B-A \subseteq [n] - A$ are disjoint,
+so $|\Af| - 1 \leq n-k$, and $|\Af| \leq n+1-k \leq n$.
+Suppose then that $|A| \geq k+1$ for all $A \in \Af$.
+
+For each $A \in \Af$, define the \emph{incidence vector} $\vb_A$ by
+	\[(\vb_A)_i: = \begin{cases}
+		1  & i \in A \\
+		0  & \text{otherwise}.
+	\end{cases}\]
+Then,
+	\[\vb_A \cdot \vb_B = |A \cap B| = \begin{cases}
+		|A| \geq k+1  & A= B,\\
+		k             & A \neq B.
+	\end{cases}\]
+Suppose that $\sum_A \lambda_A \vb_A = 0$. Then
+\begin{align*}
+	  0
+    = \left(\sum_{A \in \Af} \lambda_A \vb_A\right)\cdot\left(\sum_{A \in \Af} \lambda_A\vb_A\right)
+  & = \sum_{A \in \Af} \lambda_A^2 |A| + \sum_{\substack{A,B \in \Af:\\ A \neq B}} \lambda_A\lambda_B k
+    \geq \sum_{A \in \Af} \lambda_A^2 (k+1) + \sum_{\substack{A,B \in \Af:\\ A \neq B}}\lambda_A \lambda_B k\\
+  & = k\left(\sum_{A \in \Af} \lambda_A\right)^2 + \sum_{A \in \Af} \lambda_A^2
+    \geq \sum_{A\in \Af} \lambda_A^2
+    \geq 0\,.
+\end{align*}
+Hence, $\lambda_A = 0$ for all $A \in \Af$, so vectors $\vb_A \in \RR^n$ are linearly independent.
+Hence, $|\Af| \leq n$.
+\end{proof}
+
+\begin{thm}{Theorem (Bollob\'as 1986)}
+If, for some fixed $k \neq \frac{n+1}{2}$, $|A \triangle B| = k$ for all $A,B \in \Af$,
+then $|\Af| \leq n$.
+\end{thm}
+
+The proof is similar to that of Fischer's Inequality, but uses a $\pm 1$ incidence vector.
+
+\definition
+Let $\Af$ be a family of subsets of $[n]$.\\
+A subfamily $\Ff\subseteq \Af$ is a \emph{sunflower} with $p$ \emph{petals}
+if $|\Ff| = p$ and $F \cap G = Y$ and petal $F-Y$ is nonempty,
+for all $F \in \Ff$ and a fixed set $Y$.
+
+\begin{thm}{The Sunflower Lemma (Erd\"os \& Rado 1960)}
+If $|A| = k$ for all $A \in \Af$ and $|\Af| > k!(p-1)^k$,
+then $\Af$ contains a sunflower with $p$ petals.
+\end{thm}
+
+\begin{proof}
+The theorem is clearly true is $k=0,1$.
+Assume that the theorem is true for $k-1$.
+Consider a maximal subfamily $\Ff \subseteq \Af$ of pairwise disjoint sets.
+If $|\Ff| \geq p$, then $\Ff$ is a sunflower with $p$ petals.
+
+Suppose that $|\Ff| \leq p-1$ and set $B:= \bigcup_{A \in \Ff} A$.
+By the maximality of $\Ff$, $B$ intersects each set $A \in \Af$.
+By the Pigeonhole Principle, some element $x \in B$ is contained in at least
+	\[ \frac{|\Af|}{|B|} \geq \frac{|\Af|}{k(p-1)} > \frac{k! (p-1)^k}{k(p-1)} = (k-1)!(p-1)^{k-1}\]
+of the sets of $\Af$.
+By assumption, $\Af':= \{A - \{x\} : x \in A \in \Af\}$ has a sunflower $\Gf$ with $p$ petals.\\
+Then $\Af$ has the sunflower $\Ff:= \{A \cup\{x\} : A \in \Gf\}$ with $p$ petals.
+\end{proof}
+
+\begin{thm}{Bondy's Theorem (1972)}
+If $|\Af| \leq n$, then the sets $A - \{x\}$ ($A \in \Af$) are distinct for some element $x$.
+\end{thm}
+
+\begin{proof}
+Assume that the theorem is not true; then $|\Af| \geq 2$.\\
+Set $\Af_D:= \{D \cap A: A \in \Af\}$ and $\Df := \{D \subseteq [n] : |\Af_D| \geq |D| +1\}$.\\
+Choose $d \in A \triangle B$ for some distinct $A, B \in \Af$.
+Then
+	\[ |\Af_{\{d\}}| \geq |\{\emptyset, \{d\}\}| =2 = |\{d\}| +1\]
+so $\{d\} \in \Df$ and $\Df \neq \emptyset$.
+Choose a maximal set $D$ in $\Df$.
+Then by assumption, $|\Af_D| \leq |\Af| - 1$.\\
+By the Pigeonhole Principle,
+$D \cap A = D \cap B$ for some distinct $A, B \in \Af$.\\
+Choose $e \in A\triangle B$ and define $E:=D \cup \{e\}$.
+Then
+\[|\Af_E| = |\Af_D| + 1 \geq (|D|+1)+1=|E|+1\,.\]
+Hence $E \in \Df$, contradicting the maximality of $\Df$.
+\end{proof}
+
+\definition
+The \emph{complete $k$-partite graph} $K_{n_1, \dots, n_k} = (V,E)$ has
+vertices and edges as follows:
+\[
+  V = \bigcup_{i \in [k]} V_i\quad\text{with}\quad|V_i| = n_i
+   \quad\text{and}\quad
+  E = \binom{V}{2} - \bigcup_{i \in [k]} \binom{V_i}{2}\,.
+\]
+Note that if $n_1 = \dots = n_k$ and $|V| = n$, then
+	\[ |E| = \binom{n}{2} - k \binom{\frac{n}{k}}{2} = \frac{1}{2} n (n-1) - \frac{1}{2} k
+\frac{n}{k} \left(\frac{n}{k} - 1\right) = \left(1- \frac{1}{k}\right) \frac{n^2}{2}\,.\]
+
+\begin{thm}{Tur\'an's Theorem (1941)}
+Each simple graph $G = (V,E)$ with $|V| = n$ and
+$\ds|E| > \left(1 - \frac{1}{p-1}\right)\frac{n^2}{2}$ contains $K^p$.
+\end{thm}
+
+\begin{proof}
+We prove the contrapositive:
+if $G$ is $K_p$-free, then $|E| \leq (1-\frac{1}{p-1})\frac{n^2}{2}$.
+We use induction on $n$.
+If $n< p$, then
+	\[ |E| \leq \binom{n}{2} = \left(1 - \frac{1}{n}\right)\frac{n^2}{2}
+           \geq \left(1 -\frac{1}{p-1}\right) \frac{n^2}{2}\,.\]
+Suppose that $G$ is a simple graph on $n$ vertices with no $K_p$ subgraph.
+Add edges to $G$ until none can be added without creating a $K_p$ subgraph.
+Then $G$ must contain a $K_{p-1}$ subgraph, say with vertices~$A$.
+
+Set $B:= V-A$.
+Each vertex of $B$ has at most $p-2$ edges to vertices in $A$.\\
+By induction, there are at most $(1-\frac{1}{p-1})(n-(p-1))^2/2$ edges between the vertices $B$.\\
+Also, there are $\binom{p-1}{2}$ edges between the vertices of $A$. Thus,
+\begin{align*}
+  |E| & \leq (n-(p-1))(p-2) + \left(1-\frac{1}{p-1}\right) \frac{(n-(p-1))^2}{2} + \binom{p-1}{2}
+	     = \left(1-\frac{1}{p-1}\right)\frac{n^2}{2}\,.\qedhere
+\end{align*}
+\end{proof}
+
+As a special case ($p = 3$) of Tur\'an's Theorem,
+we obtain the following theorem, first proved in Chapter~1.
+\begin{thm}{Mantel's Theorem (1907)}
+If $G = (V,E)$ is a simple graph on $n$ vertices with $|E| > \frac{n^2}{4}$ edges,
+then $G$ has at least one triangle.
+\end{thm}
+
+
+\newpage
+\section*{Sperner Applications}
+
+In this section, we will see unexpected and beautiful applications of extremal set theory.\\
+There are many such applications but we will merely consider applications of two of Sperner's results,
+the first of which is Sperner's Theorem that we have seen earlier in the chapter and also in Chapter~2.
+
+%\begin{thm}{Sperner's Theorem (1928)}
+%	If $A \not\subset B$ for all $A,B \in \Af$, then $|\Af| \leq \binom{n}{\lceil n/2 \rceil}$.
+%\end{thm}
+
+\begin{thm}{Theorem (Erd\"os 1945)}
+Let $a_1, \dots, a_n \in \RR$ satisfy $|a_i| \geq 1$ for all $i \in [n]$.
+The number of sums $\sum_{i \in [n]} \epsilon_i a_i$
+with $\epsilon_i = \pm 1$ that lie in some open interval of length 2 is
+at most $\binom{n}{\lceil n/2 \rceil}$.
+\end{thm}
+
+\begin{proof}
+By changing the signs of $\epsilon_i$, we may assume that $a_i \geq 1$ for each~$i$.
+Consider the sums $\sum_{i \in [n]} \epsilon_i a_i$ that lie in a given interval $I$ with $|I| = 2$.
+Each such sum $S$ determines bijectively a subsets $J = \{i \in [n] : \epsilon_i = 2\}$.
+Assume that $J' \subset J$ for associated sums $S, S' \in I$. Then
+\begin{align*}
+	S-S' & = \sum_{i \in [n]} \epsilon_i a_i - \sum_{i \in [n]} \epsilon_i' a_i
+	 = \left( \sum_{i \in J} a_i - \sum_{i \in [n] -J} a_i\right) - \left(\sum_{i \in J'} a_i
+- \sum_{i \in [n] - J'} a_i\right)
+	 = 2 \sum_{i \in J - J'} a_i \geq 2\,,
+\end{align*}
+a contradiction, so $J' \not\subset J$.
+By Sperner's Theorem, the number of sums $S \in I$ is at most $\binom{n}{\lceil n/2 \rceil}$.
+\end{proof}
+
+Kleitman generalised this to arbitrary dimension and multiple regions.
+
+\begin{thm}{Kleitman's Theorem (simple, 1970)}
+Let $a_1, \dots, a_n \in \RR^d$ satisfy $|a_i| \geq 1$ for all $i \in [n]$.
+The number of sums $\sum_{i \in [n]} \epsilon_i a_i$ with $\epsilon_i = \pm$ that lie in some open interval
+ball of radius 1 is at most $\binom{n}{\lceil n/2 \rceil}$.
+\end{thm}
+
+The next two application rely on the following simple but technical combinatorial lemma.
+
+\begin{thm}{Sperner's Lemma (1928)}
+Consider a triangulation of a triangle with vertices $V_1, V_2, V_3$.\\
+If the vertices $V$ in the triangulation have a colouring $\chi : V \to [3]$ so that
+	\begin{itemize}
+		\item $\chi(V_i) = i$ for each $i \in [3]$, and
+		\item $\chi(v) \in \{i,j\}$ for perimeter vertices $v \in V$ between $V_i, V_j$,
+	\end{itemize}
+	then at least on triangle is tri-coloured.
+\end{thm}
+\begin{proof}
+Draw part of the dual graph of this triangulation,
+namely by placing a vertex in each (triangular) region
+and drawing an edge between two vertices if and only if this edge passes between a vertex of colour~1 and a vertex of colour~2.
+The pendent vertices of this graph lie in tri-coloured triangles, and each such triangle contains a pendent vertex.
+Each vertex within the triangle has either degree 1 or 2;
+removing cycles and isolated paths yields a tree,
+namely a number of paths that are vertex-disjoint in one vertex,
+namely the vertex outside of the triangle, where these paths meet up.
+There must be an odd number of such paths, having to cross the 1-2 coloured triangle side.
+Hence, there is an odd number of tri-coloured triangles.
+In particular, there must be at least one.
+\end{proof}
+
+\newpage
+\begin{thm}{Brouwer's Fixed Point Theorem (1912)}
+Each continuous function $f: B_n \to B_n$ on a ball $B_n \subset \RR^n$ has a fixed point.
+\end{thm}
+
+\begin{proof} The triangle $\triangle \subset \RR^3$ with vertices $e_1, e_2, e_3$ is
+homeomorphic to $B_2$. Assume that $f: \triangle \to \triangle$ is a continuous function
+without a fixed point. Let $\delta(\Tf)$ be the maximal length of an edge in a triangulation
+$\Tf$. Form a sequence of triangulations $\Tf_1, \Tf_2, \dots$ for which $\delta(\Tf_k) \to
+0$. Colour the vertices of each $\Tf_k$ by $\lambda(v) = \min\{ oi : (f(v) - v)_i < 0\}$. This
+is well-defined: $f(v)-v$ lies in the plane $x+y+z =0 $ and is nonzero by assumption, so at
+least one coordinate is negative (resp. positive).
+
+It is not hard to check that $\lambda$ is a Sperner colouring; for instance, $\lambda(e_i) =
+i$. By Sperner's Lemma, each triangulation $\Tf_k$ contains a tri-coloured triangle $\{v^{k1},
+v^{k2}, v^{k3}\}$ with $\lambda(v^{ki}) = i$.
+
+Since $\triangle$ is compact, $\{v^{k1}\}_k$ has a converging subsequence with limit $v$.
+Since $\delta(\Tf_k) \to 0$, the corresponding subsequences of $\{v^{k2}\}_k$ and
+$\{v^{k3}\}_k$ must also converge to $v$. Note that $f(v^{ki})_i < v_i^{ki}$ for all $k$. By
+continuity, $f(v)_i \leq v_i$ for all $i$, which is a contradiction.
+\end{proof}
+
+Another well-known application of Sperner's Lemma is the following theorem.
+
+\begin{thm}{Monsky's Theorem (1970)}
+	A square cannot be dissected by an odd number of equal-sized triangles.
+\end{thm}
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{aigner79} M.~Aigner,
+{\sl Combinatorial Theory}, Springer-Verlag, New York, 1979.
+
+\bibitem{AiZi10}
+M.~Aigner and G.M.~Ziegler,
+{\sl Proofs from The Book}, 4th edition, Springer-Verlag, Berlin, 2010.
+
+\bibitem{anderson87} I.~Anderson,
+{\sl Combinatorics of Finite Sets}, Oxford University Press, New York, 1987.
+
+%\bibitem{bogomolny}
+%A.~Bogomolny, {\sl Pigeonhole Principle}, \url{http://www.cut-the-knot.org/do_you_know/pigeon.shtml}, 2016--03.
+
+\bibitem{bollobas86} B.~Bollob\'as,
+{\sl Combinatorics. Set Systems, Hypergraphs, Families of Vectors and Combinatorial Probability},
+Cambridge University Press, Cambridge, 1986.
+
+%\bibitem{BoMu76} J.A.~Bondy and U.S.R.~Murty,
+%{\sl Graph Theory with Applications}, Macmillan Press, New York, 1976.
+
+%\bibitem{brandt01}
+%J.~Brandt, {\sl Kombinatorik}, Aarhus University, lecture notes, 2001.
+
+%\bibitem{britz07a} T.~Britz,
+%Higher support matroids,
+%{\sl Discrete Math.}~{\bf 307} (2007), 2300--2308.
+
+%\bibitem{BrJoMaSh12} T.~Britz, T.~Johnsen, D.~Mayhew, and K.~Shiromoto,
+%Wei-type duality theorems for matroids,
+%{\sl Des.\ Codes Cryptogr.}~{\bf 62} (2012), 331--341.
+
+%\bibitem{FoFu62} L.R.~Ford, Jr.\ and D.R.~Fulkerson,
+%{\sl Flows in Networks}, Princeton Univ.\ Press, 1962.
+
+\bibitem{GrGrLo95} R.L.~Graham, M.~Gr\"otschel, and L.~Lov\'asz (eds.),\\
+{\sl Handbook of Combinatorics. I--II}, North-Holland, Amsterdam, 1995.
+
+%\bibitem{GrRoSp90}
+%R.L.~Graham, B.L.~Rothschild, and J.~Spencer,
+%{\sl Ramsey Theory}, 2nd edition, John Wiley \&\ Sons, Inc., New York, 1990.
+
+\bibitem{jukna11} S.~Jukna,
+{\sl Extremal Combinatorics. With Applications in Computer Science}, 2nd ed., Springer, Heidelberg, 2011.
+
+%\bibitem{LaRob14}
+%B.M.~Landman and A.~Robertson,
+%{\sl Ramsey Theory on the Integers}, 2nd edition, AMS, Providence, RI, 2014.
+
+%\bibitem{LoPl86} L.~Lov\'asz and M.D.~Plummer,
+%{\sl Matching Theory}, Akad\'emiai Kiad\'o, North Holland, Budapest, 1986.
+
+%\bibitem{liu68} C.L.~Liu,
+%{\sl Introduction to Combinatorial Mathematics}, McGraw-Hill Book Co., New York,~1968.
+
+\bibitem{vLiWi92} J.H.~van Lint and R.M.~Wilson,
+{\sl A Course in Combinatorics}, Cambridge University Press, 1992.
+
+%\bibitem{rado42} R.~Rado,
+%A theorem on independence relations,
+%{\sl Quart.\ J.~Math., Oxford Ser.}~{\bf 13} (1942), 83--89.
+
+%\bibitem{wei91} V.K.~Wei,
+%Generalized Hamming weights for linear codes,
+%{\sl IEEE Trans.\ Inform.\ Theory}~{\bf 37} (1991), 1412--1418.
+
+\end{thebibliography}
+
+
+\end{document}

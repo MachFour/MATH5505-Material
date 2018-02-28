@@ -1,0 +1,86 @@
+%\documentclass[crop,tikz,convert={outext=.svg,command=\unexpanded{pdf2svg \infile\space\outfile}},multi=false]{standalone}[2012/04/13]
+\documentclass[crop,tikz,multi=false]{standalone}[2012/04/13]
+%\usetikzlibrary{...}% tikz package already loaded by 'tikz' option
+
+% Run pdflatex -shell-escape [filename].tex
+% to produce [filename].svg file with the standalone document class.
+
+\definecolor{myaqua}{RGB}{15,205,255}
+
+\pgfmathsetlengthmacro\mypaperdummy{300pt}
+\pgfmathsetlengthmacro\mypaperwidth{300pt}
+\pgfmathsetlengthmacro\mypaperheight{\mypaperwidth}
+
+%\usetikzlibrary{fadings}
+%\tikzfading[name=fade myblueball, color=myaqua, middle color=myaqua, inner color=myaqua, outer color=transparent!50]
+
+
+\newcommand{\rr}{17pt}
+\newcommand{\penta}[5]{\begin{scope}[shift={#1},rotate={#2},xscale={#3}]
+  \draw[color=#4,fill=#5] (0,0) --++ (60:\rr) --++ (80:\rr) --++(180:\rr) --++(-100:\rr) -- cycle;
+  \end{scope}}
+\newcommand{\chunk}[6]{\begin{scope}[shift={#1},rotate={#2},xscale={#3}]
+  \penta{(0,0)}{0}{-1}{#4}{#5};
+  \foreach \z in {1,...,#6}{%
+    \pgfmathsetlengthmacro\tax{-\rr*\z}
+    \pgfmathsetlengthmacro\tay{0}
+    \pgfmathsetlengthmacro\tbx{\rr*(cos(120)-\z+1)}
+    \pgfmathsetlengthmacro\tby{\rr*(sin(120))}
+    \penta{(\tax,\tay)}{  0}{-1}{#4}{#5};
+    \penta{(\tbx,\tby)}{180}{ 1}{#4}{#5};}
+  \end{scope}}
+\newcommand{\halfchunk}[6]{\begin{scope}[shift={#1},rotate={#2},xscale={#3}]
+  \foreach \z in {1,...,#6}{%
+    \pgfmathsetlengthmacro\tax{-\rr*\z}
+    \pgfmathsetlengthmacro\tay{0}
+    \pgfmathsetlengthmacro\tbx{\rr*(cos(120)-\z+1)}
+    \pgfmathsetlengthmacro\tby{\rr*(sin(120))}
+    \penta{(\tbx,\tby)}{180}{ 1}{#4}{#5};}
+  \end{scope}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1,line width=.7pt]
+  \fill[white]           (0,0) rectangle (\mypaperwidth,\mypaperheight);
+%  \clip[draw]            (0,0) rectangle (0.98*\mypaperwidth,0.98*\mypaperheight);
+  \fill[myaqua!100!white] (0.5*\mypaperwidth,0.5*\mypaperheight) circle (0.49*\mypaperwidth);
+  \begin{scope}[shift={(0.5*\mypaperwidth,0.5*\mypaperheight)},rotate={0}]
+    \foreach \y in {0,60,...,300}{%
+      \pgfmathsetlengthmacro\xa{\rr*cos(60+\y)}
+      \pgfmathsetlengthmacro\ya{\rr*sin(60+\y)}
+      \pgfmathsetlengthmacro\ra{\y-20}
+      \pgfmathsetlengthmacro\xb{\xa+\rr*(cos(40+\y)+cos(80+\y))}
+      \pgfmathsetlengthmacro\yb{\ya+\rr*(sin(40+\y)+sin(80+\y))}
+      \pgfmathsetlengthmacro\rb{\y-160}
+      \penta{(  0,  0)}{\y }{-1}{white}{myaqua} % Replace -1 by 1 to flip the orientation of the pentagon
+      \penta{(\xa,\ya)}{\ra}{-1}{white}{myaqua}
+      \penta{(\xb,\yb)}{\rb}{-1}{white}{myaqua}
+      }
+   \foreach \yy in {0,20,...,340}{%
+    \pgfmathsetlengthmacro\xc{\rr*(cos(60+\yy)+cos(40+\yy)+cos(80+\yy))}
+    \pgfmathsetlengthmacro\yc{\rr*(sin(60+\yy)+sin(40+\yy)+sin(80+\yy))}
+    \pgfmathsetlengthmacro\rc{40+\yy}
+    \penta{(\xc,\yc)}{\rc}{ 1}{white}{myaqua}
+      \pgfmathsetlengthmacro\xd{\xc+\rr*(cos(100+\yy)-cos(40+\yy)-cos(\yy))}
+      \pgfmathsetlengthmacro\yd{\yc+\rr*(sin(100+\yy)-sin(40+\yy)-sin(\yy))}
+      \pgfmathsetlengthmacro\rd{\rc-100}
+      \pgfmathsetlengthmacro\xo{\rr*(cos(\yy)+cos(40+\yy)+cos(20+\yy))}
+      \pgfmathsetlengthmacro\yo{\rr*(sin(\yy)+sin(40+\yy)+sin(20+\yy))}
+      % Layer 1
+      \pgfmathsetlengthmacro\xe{\xd+\xo}
+      \pgfmathsetlengthmacro\ye{\yd+\yo}
+      \chunk{(\xe,\ye)}{\rd}{ 1}{white}{myaqua}{1}
+      % Layer 2
+      \pgfmathsetlengthmacro\xe{\xd+2*\xo}
+      \pgfmathsetlengthmacro\ye{\yd+2*\yo}
+      \halfchunk{(\xe,\ye)}{\rd}{ 1}{white}{myaqua}{2}
+      }
+  \end{scope}%
+\end{tikzpicture}
+\end{document}
+
+
+
+

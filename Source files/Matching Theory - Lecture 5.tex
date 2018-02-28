@@ -1,0 +1,1120 @@
+%  Lecture 5:
+%
+%  OK Graph stuff recap, in slightly more detail
+%  OK Recap briefly PT/Hall's Theorem
+%  OK Augmenting paths
+%  OK Alternating Path Algorithm
+%  OK Directed graphs
+%  OK Flows in networks
+%  OK Upper limit: |F| \mlt = c(X,Y)
+%  OK Max Flow - Min Cut Theorem
+%  OK Ford-Fulkerson Algorithm
+%  OK Flow proof of K\"onig's Theorem
+%
+
+\include{mydefinitionsmatchings}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\end{center}}
+
+\newcommand{\lecturetitlev}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\\[3mm]
+  \darkgreen Lecture 5: Augmenting Paths\end{center}}
+
+\newcommand{\hallia}[1]{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psline(6.6,4.7)(2.9,6.7)\psline(6.9,4.7)(4.7,6.7)
+  \psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)#1
+  \endpspicture\end{center}}
+
+\newcommand{\halliav}{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psset{linecolor=lightgray}\psline(6.6,4.7)(2.9,6.7)
+  \psline(6.9,4.7)(4.7,6.7)\psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)\psset{linecolor= blue}
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)
+  \endpspicture\end{center}}
+
+\newcommand{\halliaa}{\put(2.3,1.5){\pspicture(0,0)(20,4)
+  \psset{unit=.4,linecolor=gray,fillcolor=offwhite,shadow=true,shadowcolor=nearlywhite,shadowsize=.2,framearc=.3}
+  \psframe(0,-4)(20.6,1.5)\rput(10.2,.6){{\darkgreen The Marriage Theorem}}
+   \rput(10.6,-.8){The girls can each get a boy}
+  \rput(10.2,-1.95){\:\:{\small$\Updownarrow$}} % if and only if}}
+  \rput(10.6,-3.1){Each $\bl k$ girls together like at least $\bl k$ boys.}\endpspicture}}
+
+\newcommand{\hallib}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of sets. }
+\newcommand{\hallibv}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of subsets of a finite set $\bl E$. }
+\newcommand{\hallic}{\\A {\dg matching} of $\bl\mathcal{A}$ is
+  a set of distinct elements $\bl\{a_i\}_I$ with $\bl a_i\myin A_i$ ($\bl\forall i\myin I$).}
+\newcommand{\hallid}{\\[3mm]\example}
+\newcommand{\hallida}{\\$\bl {\blue\mathcal{A}} \meq  \{A_1,A_2,A_4\}$ where $\bl A_i$ is the set of boys that girl $\bl i$ likes.}
+\newcommand{\hallidb}{\\Then $\bl \{\textrm{boy \blue1},\textrm{boy \blue2},\textrm{boy \blue3}\}$ is a {\blue matching} of $\bl\mathcal{A}$.}
+\newcommand{\hallide}{\\In contrast, $\bl {\blue\mathcal{B}} \meq  \{A_1,A_2,A_3,A_4\}$ has no matching.}
+\newcommand{\halliea}{\\Set $\bl {\blue\mathcal{A}(J)} \meq  \bigcup_{i\myin J} A_i$ for all $\bl J\msubseteq I$.}
+\newcommand{\hallieaexa}{\\[2mm]\example}
+\newcommand{\hallieaexb}[2]{\\Let $\bl\mathcal{A}\meq \;{{\{A_1,A_2\}}}$ \, where \, $\bl A_1\meq \{1,2\}\quad\text{\black and}\quad A_2\meq \{2,4\}$.
+   \uput[r](-18.3,-.7){{#1{Then $\bl\mathcal{A}(\{1\})\meq A_1\meq \{1,2\}$}} \,
+   {#2{and \, $\bl\mathcal{A}(\{1,2\})\meq A_1\cup A_2\meq \{1,2,4\}$.\vspace*{-15mm}}}}}
+
+\newcommand{\hallieb}{\\[4mm]{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliebv}{{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl\mathcal{A}$ has a matching if and only if $\bl|\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliec}{\\[3mm]{\gray Also called ``{\green Hall's Theorem}".}}
+
+\newcommand{\hallif}{\\A {\dg partial matching} of $\bl\mathcal{A}$ is
+  a matching of some subfamily $\bl\mathcal{B}\msubseteq \mathcal{A}$.}
+
+\newcommand{\halliga}{\\[5mm]\example}
+%\newcommand{\halligav}{\example\vspace{2.5mm}}
+\newcommand{\halligav}{\example}
+\newcommand{\halligb}{\\$\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2\},\{1,2\}\bigr\}$ has no matching.}
+\newcommand{\halligc}{\\However, $\bl\mathcal{A}$ does have the following partial matchings:\vspace{-1mm}
+  \[\bl\emptyset, \{1\}, \{2\}, \{1,2\}\vspace{-2mm}\]}
+
+\newcommand{\halliha}{{\darkgreen\sf Theorem {\gray (Ore 1955)}}\\
+  $\bl\mathcal{A}$ has a partial matching of size $\bl k$ if and only if, for all $\bl J\msubseteq I$,\\
+  $\bl|\mathcal{A}(J)|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihb}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ contains a partial matching of $\bl\mathcal{A}$ of size $\bl k$ {\em iff},
+  for all $\bl J\msubseteq I$, $\bl|\mathcal{A}(J)\cap B|\mgeq |J| - |I| + k$.}
+\newcommand{\hallihc}{\\[2mm]{\darkgreen\sf Theorem \gray(Ore 1955)}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl J\msubseteq I$,
+  \\$\bl |\bl\mathcal{A}(J)\cap B|\mgeq |J| - |I| + |B|$.}
+\newcommand{\hallihd}{\\[2mm]{\darkgreen\sf Theorem}\\
+  A set $\bl B$ is a partial matching of $\bl\mathcal{A}$ if and only if, for all $\bl A\msubseteq B$,
+  \\$\bl|\{i\myin I\::\:A_i\cap A\neq \emptyset\}|\mgeq|A|$.}
+
+\newcommand{\hallija}{\\Consider the family $\bl\mathcal{I}(\mathcal{A})$ of partial matchings of $\bl\mathcal{A}$.}
+
+\newcommand{\hallika}{\\[6mm]\example}
+\newcommand{\hallikav}{\example\vspace{2.5mm}}
+\newcommand{\hallikb}{\\Let $\bl {\blue\mathcal{A}} \meq  \bigl\{\{1\},\{2,3\}\bigr\}$. }
+\newcommand{\hallikc}{Then\vspace{-1mm}
+  \[{\blue \mathcal{I}(\mathcal{A})} \meq  \bigl\{\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}\bigr\}\]}
+
+\newcommand{\hallima}{{\darkgreen Lemma}\\
+  If $\bl A\myin\mathcal{I}(\mathcal{A})$ and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$.}
+\newcommand{\hallimb}{\\Let $\bl \{z_{ai}\::\: a\myin E\,,i\myin I\}$ be independent variables. }
+\newcommand{\hallimc}[1]{\\Define the {\dg formal incidence matrix} $\bl {\blue M_{\mathcal{A}}} \meq  (m_{ai})$ as follows: \vspace{-1mm}
+  \[\psset{unit=6mm,dotscale=1.5,linewidth=.05,fillcolor=green,linecolor=lightblue,framearc=.3,shadow=false}
+    \pspicture(-1,1)(16,4.2)\rput(3,2){$\displaystyle \bl m_{ai}\meq \begin{cases}z_{ai}&\text{\black if}\:\;a\myin A_i\\0&\text{\black if}\:\;a\notin A_i\end{cases}$}
+    \rput(12,2.5){\pspicture(-1,0)(6,3)#1\endpspicture}\endpspicture\]}
+\newcommand{\hallimca}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.75)(4,1.25)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](1.45,0)(2.55,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.45,.75)(2.55,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1){$\bl a$}\rput(2,2.5){$\bl A_i$}\rput(2,1){$\bl m_{ai}$}\rput(2,-.75){$\blue M_{\mathcal{A}}$}}
+\newcommand{\hallimcb}{\psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](-1,.25)(4,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=lightgray,linecolor=lightgray](.5,0)(3.5,3)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](.5,1.25)(1.5,1.75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](1.5, .25)(2.5, .75)
+    \psframe[framearc=0,fillstyle=solid,fillcolor=offwhite,linecolor=offwhite](2.5, .75)(3.5,1.25)
+    \psline(0,0)(4,0)(4,2)(0,2)(0,0)
+    \rput(-.5,1.5){$\bl a$}\rput(1,2.5){$\bl A_1$}\rput(1,1.5){$\bl z_{a1}$}
+    \rput(-.5,1  ){$\bl b$}\rput(2,2.5){$\bl A_2$}\rput(2, .5){$\bl z_{c2}$}
+    \rput(-.5, .5){$\bl c$}\rput(3,2.5){$\bl A_3$}\rput(3,1  ){$\bl z_{b3}$}
+    \rput(2,-.75){$\blue M_{\mathcal{A}}$}\rput(-1.5,1){$\blue B$}}
+
+\newcommand{\hallimd}{{\darkgreen Lemma}\\
+  $\bl B\myin\mathcal{I}(\mathcal{A})$  {\em\dg iff}\;  the rows of $\bl {\blue M_{\mathcal{A}}}$ indexed by $\bl B$ are linearly independent.}
+
+\newcommand{\hallime}{\\[3mm]{\darkgreen\sf Theorem}\\
+  The family $\bl\mathcal{I}(\mathcal{A})$ satisfies the following properties:
+  \\[.5mm]\mybullet $\bl \emptyset\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A\myin\mathcal{I}(\mathcal{A})$   and $\bl B\msubseteq A$, then $\bl B\myin\mathcal{I}(\mathcal{A})$;
+  \\[.5mm]\mybullet If $\bl A,B\!\myin\!\mathcal{I}(\mathcal{A})$ and $\bl|A|\!\mlt \!|B|$,
+    then $\bl A\cup\{a\}\!\myin\!\mathcal{I}(\mathcal{A})$ for some $\bl a\!\myin\!B\!-\!A$.}
+
+\newcommand{\hallimf}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\dg matroid}\\(or {\dg independence structure}, or {\dg combinatorial geometry}).}
+\newcommand{\hallimfv}{\\[3mm]Since the tuple $\bl(E,\mathcal{I}(\mathcal{A}))$ satisfies these properties,
+  it is a {\dg  matroid}.}
+\newcommand{\hallimg}{\\Matroids arise in numerous ways and are very useful in combinatorics.}
+
+\newcommand{\hallimha}{\\[3mm]\example}
+\newcommand{\hallimhav}{\example\vspace{2.5mm}}
+\newcommand{\hallimhb}{\\Let $\bl E$ be a finite set and let $\bl\mathcal{I}$ be the subsets of $\bl E$ of size at most $\bl k$.}
+\newcommand{\hallimhc}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallimja}{\\[3mm]\example}
+\newcommand{\hallimjav}{\example\vspace{2.5mm}}
+\newcommand{\hallimjb}{\\Let $\bl E$ be a finite set of vectors of a vector space.}
+\newcommand{\hallimjc}{\\Let $\bl\mathcal{I}$ be the linearly independent sets of vectors in $\bl E$.}
+\newcommand{\hallimjd}{\\Then $\bl(E,\mathcal{I})$ is a matroid.}
+
+\newcommand{\hallipfviia}{\\[2.5mm]\proof}
+\newcommand{\hallipfviib}{\\This follows by the above lemma and the preceding example.\qed}
+
+\newcommand{\hallimk}{\\[3mm]{\darkgreen Corollary}\\
+  The maximal partial matchings of $\bl\mathcal{A}$ have equal size.}
+
+\newcommand{\halliml}{\\[3mm]{\darkgreen Corollary \gray(Hoffman and Kuhn 1956)}\\
+  A set $\bl M$ is contained in a matching of $\bl\mathcal{A}$ if and only if\\
+  $\bl\mathcal{A}$ has matching and $\bl M$ is a partial matching of $\bl\mathcal{A}$.}
+
+\newcommand{\hallinea}[1]{
+ \psset{unit=3mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=gray,shadow=false}
+ \pspicture(0,19)(0,19)\multips(4,1)(4,0){4}{\womanv}\multips(2,7)(4,0){3}{\manv}
+  \put(18,7){\sadmanv}\psline(4.7,4.7)(3.5,6.7)\psline(5.3,4.7)(6.3,6.7)
+  \psline(7.8,4.7)(3.9,6.7)\psline(11.6,4.7)(4.3,6.7)\psline(12.1,4.7)(8.1,6.7)
+  \psline(15.9,4.7)(11.7,6.7)\psline(16.7,4.7)(15.5,6.7)#1\endpspicture}
+
+\newcommand{\hallivra}{A (simple) {\dg graph} $\bl G\meq (V,E)$ consists of
+  {\dg vertices} $\bl V$ and {\dg edges} $\bl {\blue E}\msubseteq\binom{V}{2}$.}
+\newcommand{\hallivrb}{\\We draw $\bl G$ as dots (vertices) and lines between the dots (edges).}
+
+\newcommand{\hallivrc}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallivrcv}{{\darkgreen Example}}
+\newcommand{\hallivrd}{\\Let $\bl G$ be the graph $\bl (V,E)$ where
+  $\bl V \meq \{\textsf{1},\textsf{2},\textsf{3},\textsf{4}\}$ and
+  $\bl E \meq \binom{V}{2}$:} % \meq \bigl\{\{1,2\},\{1,3\},\{1,4\},\{2,3\},\{3,4\},\{2,4\}\bigr\}$:}
+\newcommand{\hallivre}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-1)(5,2)#1\endpspicture}}
+\newcommand{\hallivrea}{\rput(-.3,0){\pspicture(-1,-1)(1,1)\psline(0,0)(.866,-.5)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(.866,-.5)(0,1)(0,0)(-.866,-.5)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\small\darkgray
+  \rput[b](0,1.2){1}\rput[u](0,-.25){4}\rput[l](-1.216,-.625){2}\rput[r](1.216,-.625){3}\endpspicture}}
+\newcommand{\hallivrec}[2]{\rput(0,1){\pspicture(-.5,0)(2.5,1)#1\psline(0,0)(-.5,.866)
+  \psline[fillstyle=none](0,0)(.5,.866)(1,0)(1.5,.866)(0,0)\pscircle(0,0){.1}
+  \pscircle(1,0){.1}\multips(-.5,.866)(1,0){3}{\pscircle(0,0){.1}}#2\endpspicture}}
+\newcommand{\hallivreca}{{\psset{linecolor=lightgray,fillcolor=offwhite,framearc=1}
+  \psframe(-.7,.666)(1.7,1.066)\psframe(-.2,-.2)(1.2,.2)}
+  \rput(-1,.866){$\bl Y$}\rput(-1,0){$\bl X$}}
+\newcommand{\hallivrecb}{{\bhg\psline(0,0)(-.5,.866)\psline(1,0)(.5,.866)
+  \pscircle(0,0){.1}\pscircle(1,0){.1}\pscircle(-.5,.866){.1}\pscircle(.5,.866){.1}}}
+\newcommand{\hallivrecc}[1]{\rput(3,.75){\pspicture(-1,-1)(1,1)
+  \psline[fillstyle=none](0,1)(-.866,-.5)(0,0)(.866,-.5)(0,1)
+  #1\psline(-.866,-.5)(.866,-.5)\psline(0,0)(0,1)\pscircle(0,0){.1}
+  \pscircle(0,1){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}\endpspicture}}
+\newcommand{\hallivrecd}{{\psset{linecolor=lightgray,fillcolor=offwhite,framearc=1}
+  \psframe(.3,.666)(1.7,1.066)\psframe(.8,-.2)(1.2,.2)}
+  \rput(1,-.4){$\bl v$}\rput(1,1.35){$\bl N(\{v\})$}}
+
+\newcommand{\hallivrf}{\\The graph $\bl G$ is {\dg bipartite} graph if
+  there is a bipartition $\bl V \meq X\cup Y$ so that all edges go from one part to the other
+  ($\bl E\cap\binom{X}{2}\meq E\cap\binom{Y}{2}\meq\emptyset$.)}
+\newcommand{\hallivrg}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallivrgv}{{\darkgreen Example}}
+\newcommand{\hallivrh}{\\[-5mm]A {\dg matching} is a set of disjoint edges.}
+\newcommand{\hallivrj}{\\Vertex set $\bl {\blue X}\msubseteq V$ is {\dg matched} if it is covered by a matching.}
+\newcommand{\hallivrk}{\\A {\dg complete matching } (or {\dg 1-factor}) is a matching that covers $\bl V$.}
+\newcommand{\hallivrm}{\\The neighbours of vertices $\bl {\blue Z}\msubseteq V$ are denoted by $\bl N(Z)$;
+  \\that is, $\bl {\blue N(Z)}=\{u\myin V\::\:\{u,v\}\myin E\:\:\,\mytext{for some}\,\:\:v\myin Z\}$.}
+\newcommand{\hallivrn}{Let $\bl B\meq(X\cup Y,E_B)$ be a bipartite graph.}
+\newcommand{\hallivrp}{{\darkgreen Hall's Marriage Theorem}
+  \\$\blue X$ is matched in $\bl B$ if and only if, for all $\bl A\msubseteq X$, $\bl |N(A)|\mgeq |A|$.}
+
+\newcommand{\hallivrq}{\\[3mm]Let $\bl G \meq (V,E)$ be a graph. }
+\newcommand{\hallivrqv}{Let $\bl G \meq (V,E)$ be a (simple) graph. }
+\newcommand{\hallivrr}{\\ A {\dg walk} in $\bl G$ is
+  a sequence of vertices $\bl v_1,v_2,\ldots,v_n$ with $\bl \{v_i,v_{i+1}\}\myin E$.}
+\newcommand{\hallivrs}{\\If a walk exists between each pair of vertices in $\bl G$, then $\bl G$ is {\blue connected}.}
+\newcommand{\hallivrt}{\\The {\em maximally connected subgraphs} of $\bl G$ are the {\dg components} of $\bl G$.}
+\newcommand{\hallivru}{\\Let $\bl c_o(G)$ denote the number of components in $\bl G$ of {\em odd} vertex size.}
+\newcommand{\hallivrv}{{\darkgreen Tutte's 1-Factor Theorem} {\gray (1947)}
+  \\$\blue G$ has a complete matching if and only if, for all $\bl S\msubseteq V$, $\bl c_o(G-S)\mleq |S|$.}
+
+\newcommand{\hallivreb}[2]{\rput(-.3,0.3){\pspicture(-1,-1)(2.5,1)#1{#2
+  \psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)}
+  \psline[fillstyle=none](0,1)(.866,-.5)(0,0)(-.866,-.5)
+  \psline[fillstyle=none](.866,1)(2.589,1)(1.732,-.5)
+  \pscircle(.866,1){.1}\pscircle(2.598,1){.1}\pscircle(1.732,-.5){.1}{#2\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}\endpspicture}}
+\newcommand{\hallivreba}{{\psset{linecolor=lightgray,fillcolor=offwhite,linearc=.2,fillstyle=solid}
+  \pspolygon(-1.22,-.7)(0,1.4)(1.22,-.7)\pspolygon(.512,1.2)(1.732,-.9)(2.952,1.2)}}
+\newcommand{\hallivrebb}{\rput(4,.25){$\blue c_o(G)\meq$\:\blue1}}
+
+\newcommand{\hallivred}[2]{\rput(-.3,0.3){\pspicture(-1,-1)(2.5,1)#1{#2
+  \psline[fillstyle=none](0,0)(0,1)(-.866,-.5)(.866,-.5)(0,0)}
+  \psline(0,1)(.866,-.5)\psline(0,0)(-.866,-.5)
+  \psline[fillstyle=none](.866,1)(2.589,1)(1.732,-.5)
+  \pscircle(.866,1){.1}\pscircle(2.598,1){.1}\pscircle(1.732,-.5){.1}{#2\pscircle(0,1){.1}
+  \pscircle(0,0){.1}\pscircle(-.866,-.5){.1}\pscircle(.866,-.5){.1}}\endpspicture}}
+
+\newcommand{\hallivrw}{\\Define $\bl B \meq (V,E_B)$ where $\bl V \meq \mathcal{A}\cup\mathcal{A}(I)$ and $\bl E_B \meq \bigl\{\{a,A\}\::\:a\myin A\bigr\}$.}
+\newcommand{\hallivrwa}{\\Then $\bl\mathcal{A}$ has a matching if and only if $\bl\mathcal{A}$ is matched in $\bl B$.}
+\newcommand{\hallivrx}{\\ A {\dg path} in $\bl G$ is a walk with no repeated vertex.}
+\newcommand{\hallivry}{\\ A {\dg closed walk} in $\bl G$ is a walk of the form $\bl v_1,v_2,\ldots,v_n,v_1$.}
+\newcommand{\hallivrz}{\\ A {\dg cycle} in $\bl G$ is a closed walk with no repeated vertex but the first and~last.}
+
+\newcommand{\hallva}{Let $\bl G \meq (V,E)$ be a (simple) graph and let $\bl \darkred M$ be a matching in $\bl G$. }
+
+\newcommand{\hallvaa}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false}\pspicture(-4.5,-1)(5,2)#1\endpspicture}}
+\newcommand{\hallvaaa}[1]{\rput(0,1){\pspicture(-.5,0)(2.5,1)#1
+  \pspolygon[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+  \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}#1\endpspicture}}
+\newcommand{\hallvaaaa}{{\psset{linecolor=halfred,fillcolor=red}{\psset{linewidth=.08}\psline(-1,0)(-.5,.866)\psline(.5,.866)(1,0)}
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}}}
+\newcommand{\hallvaaaav}{{\psset{linecolor=red,fillcolor=red}{\psset{linewidth=.08}\psline(-1,0)(-.5,.866)\psline(.5,.866)(1,0)}
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}}}
+\newcommand{\hallvaaab}{{\psset{linewidth=.025,linecolor=blue}\psline(-1,0)(-.5,.866)
+  \psline(.5,.866)(1,0)}{\bhg\psline(-.5,-.866)(-1,0)\psline(-.5,.866)(.5,.866)
+  \rput(-.5,-.866){\mydot}\psset{fillcolor=red}\rput(-1,0){\mydot}\rput(-.5,.866){\mydot}
+  \rput(.5,.866){\mydot}\rput(1,0){\mydot}}}
+\newcommand{\hallvaaac}{{\psset{linewidth=.025,linecolor=blue}\psline(-1,0)(-.5,.866)
+  \psline(.5,.866)(1,0)}{\bhg\psline(-.5,-.866)(-1,0)\psline(-.5,.866)(.5,.866)
+  \psline(.5,-.866)(1,0)\rput(-.5,-.866){\mydot}\rput(.5,-.866){\mydot}\psset{fillcolor=red}
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}}}
+\newcommand{\hallvaaad}{{\psset{linewidth=.08,fillstyle=none,linecolor=lightgreen}
+  \psline(-.5,.866)(.5,.866)\psline(-1,0)(-.5,-.866)\psline(.5,-.866)(1,0)}
+  {\psset{linecolor=blue,fillcolor=lightgreen}{\psset{linewidth=.025}
+  \psline[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)}
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+  \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}}}
+
+\newcommand{\hexagonpic}{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadow=false,fillstyle=solid}\pspicture(-4.5,-1)(5,2)
+  \rput(-1,.5){\pspicture(-1,-1)(1,1)
+  \pspolygon[fillstyle=none](-.5,-.866)(-1,0)(-.5,.866)(.5,.866)(1,0)(.5,-.866)
+  \rput(-1,0){\mydot}\rput(-.5,.866){\mydot}\rput(.5,.866){\mydot}\rput(1,0){\mydot}
+  \rput(.5,-.866){\mydot}\rput(-.5,-.866){\mydot}\endpspicture}\endpspicture}}
+
+\newcommand{\hallvab}{\\An {\dg alternating path} for $\bl M$ is a path where every second edge lies in $\bl M$.}
+\newcommand{\hallvac}{\\An alternating path $\bl P$ is {\dg augmenting} if its end-edges lie outside $\bl M$.}
+\newcommand{\hallvad}{\\Let $\bl E(P)$ denote the edges along $\bl P$.}
+\newcommand{\hallvae}{{\darkgreen\sf Lemma}
+  \\The set of edges $\bl {\darkgreen M'}= {\darkred M}\oplus {\blue E(P)}$ is a matching of size $\bl |M'| \meq |M| + 1$.}
+
+\newcommand{\hallvpfia}{\\[2mm]\proof}
+\newcommand{\hallvpfib}{\\The vertices covered by $\bl M'$ are those of $\bl P$. }
+\newcommand{\hallvpfic}{\\Each is in one edge of $\bl M'$, so $\bl M'$ is a matching, and $\bl |M'|=|M|+1$.\qed\vspace*{-12mm}}
+
+\newcommand{\hallvaf}{{\darkgreen\sf Theorem}
+  \\$\bl \darkred M$ has maximal size in $\bl G$ if and only if $\bl \darkred M$ has no augmenting path.}
+
+\newcommand{\hallvpfiia}{\\[2mm]\proof}
+\newcommand{\hallvpfiib}{By the lemma, $\bl M$ is not maximal if an augmenting path exists.}
+\newcommand{\hallvpfiic}{\\Suppose that no such path exists and let $\bl M'$ be a maximal matching in~$\bl G$.}
+\newcommand{\hallvpfiid}{\\Each vertex of $\bl D \meq M\oplus M'$ is in at most one edge of $\bl M$ and of $\bl M'$.}
+\newcommand{\hallvpfiie}{\\Thus, $\bl D$ is a disjoint union of cycles and alternating paths. }
+\newcommand{\hallvpfiif}{\\The edges alternate between $\bl M$ and $\bl M'$, so each cycle has even edge~total. }
+\newcommand{\hallvpfiig}{\\By assumption, no path is augmenting, so each path has even edge totals.}
+\newcommand{\hallvpfiih}{\\Therefore, all of the cycles and paths contain the same number of edges from $\bl M$ as from $\bl M'$. }
+\newcommand{\hallvpfiij}{This implies that $\bl |M-M'| \meq |M'-M|$.}
+\newcommand{\hallvpfiik}{\\Hence, $\bl |M| \meq |M-M'|+|M\cap M'| \meq |M'-M|+|M\cap M'| \meq |M'|$.}
+\newcommand{\hallvpfiim}{\\Thus, $\bl M$ has maximal size. \qed}
+
+\newcommand{\hallvag}[1]{{\dg\sc Maximal Matching Algorithm}#1}
+\newcommand{\hallvaga}{\\[1mm]\mybullet Set $\bl M =\emptyset$.}
+\newcommand{\hallvagb}{\\\mybullet Search for an augmenting path $\bl P$ for $\bl M$.}
+\newcommand{\hallvagc}{\\\mybullet Replace $\bl M$ by $\bl M\oplus E(P)$.}
+\newcommand{\hallvagd}{\\\mybullet Continue until there is no augmenting path.}
+\newcommand{\hallvage}{\\\mybullet Then $\bl \halfred M$ is a maximal matching.}
+\newcommand{\hallvagav}{\\[1mm]\mystep Set $\bl {\halfred M} =\emptyset$.}
+\newcommand{\hallvagbv}{\\\mystep Search for an augmenting path $\bl P$ for $\bl \halfred M$.}
+\newcommand{\hallvagcv}{\\\mystep Replace $\bl \halfred M$ by $\bl {\halfred M}\oplus\blue E(P)$.}
+\newcommand{\hallvagdv}{\\\mystep Continue until there is no augmenting path.}
+\newcommand{\hallvagev}{\\\mystep Then $\bl \halfred M$ is a maximal matching.}
+
+\newcommand{\hallvb}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false,linearc=0}\pspicture(-3.6,-1)(5,2.5)#1\endpspicture}}
+\newcommand{\hallvba}[1]{\rput(0,1){\pspicture(-.5,0)(2.5,1)#1{\psset{fillstyle=none}
+  \pspolygon(0,1)(.951,.309)(.588,-.809)(-.588,-.809)(-.951,.309)
+  \pspolygon(0,1)(.588,-.809)(-.951,.309)(.951,.309)(-.588,-.809)}\rput(0,1){\mydot}
+  \rput(.588,-.809){\mydot}\rput(-.951,.309){\mydot}\rput(.951,.309){\mydot}
+  \rput(-.588,-.809){\mydot}#1\endpspicture}}
+\newcommand{\hallvbaa}{{\psset{linecolor=blue,fillcolor=lightblue}
+  \psline(-.588,-.809)(.588,-.809)\rput(-.588,-.809){\mydot}\rput(.588,-.809){\mydot}}}
+\newcommand{\hallvbab}{{\psset{linecolor=halfred,fillcolor=red}
+  \psline[linewidth=.08](-.588,-.809)(.588,-.809)
+  \rput(-.588,-.809){\mydot}\rput(.588,-.809){\mydot}}}
+\newcommand{\hallvbac}{{\bhg\psline(-.951,.309)(.588,-.809)\psline(.951,.309)(-.588,-.809)
+  \rput(-.951,.309){\mydot}\rput(.951,.309){\mydot}}
+  {\psset{linecolor=red,linewidth=.08}\psline(-.588,-.809)(.588,-.809)}
+  {\psset{linecolor=blue}\psline[linewidth=.025](-.588,-.809)(.588,-.809)
+   \psset{fillcolor=red}\rput(-.588,-.809){\mydot}\rput(.588,-.809){\mydot}}}
+\newcommand{\hallvbad}{{\psset{linecolor=halfred,fillcolor=red}
+  {\psset{linewidth=.08}\psline(-.951,.309)(.588,-.809)\psline(.951,.309)(-.588,-.809)}
+  \rput(-.951,.309){\mydot}\rput(.951,.309){\mydot}\rput(-.588,-.809){\mydot}\rput(.588,-.809){\mydot}}}
+
+\newcommand{\hallvah}{\\[3mm]But how to find the augmenting paths efficiently?}
+
+\newcommand{\hallvaj}{Let $\bl B\meq(X\cup Y,E_B)$ be a bipartite graph and let $\bl \darkred M$ be a matching in~$\blue B$.}
+
+\newcommand{\hallvak}[1]{{\dg\sc Augmenting Path Algorithm for Bipartite Graphs}#1}
+\newcommand{\hallvaka}{\\\mybullet If $\bl M$ covers $\bl X$, then $\bl M$ is maximal; set $\bl T=\emptyset$; {\red end}.}
+\newcommand{\hallvakb}{\\\mybullet Otherwise, set $\bl T=\{v\}$ for some vertex $\bl v\myin X-V(M)$.}
+\newcommand{\hallvakc}{\\\mybullet Let $\bl 2m$ be the longest path-length from $\bl v$ in $\bl T$.}
+\newcommand{\hallvakd}{\\\mybullet Consider each $\bl x\myin V(T)$ at distance $\bl 2m$ from $\bl v$.}
+\newcommand{\hallvake}{\\\mybullet If $\bl y\myin N(x)-V(T)-V(M)$, then add edge $\bl \{x,y\}$ to $\bl T$; {\red end}. }
+\newcommand{\hallvakf}{\\\mybullet If $\bl y\myin N(x)-V(T)$, then add edges $\bl \{x,y\}$ and $\bl \{y,x'\}\myin M$ to $\bl T$.}
+\newcommand{\hallvakg}{\\\mybullet Repeat until $\bl N(x)-V(T)\meq\emptyset$.}
+\newcommand{\hallvakh}{\\\mybullet Then $\bl T$ contains an augmenting path starting from $\bl v$, if one exists.}
+\newcommand{\hallvakav}{\\\mystep If $\bl \halfred M$ covers $\bl X$, then $\bl \halfred M$ is maximal; set $\bl T\meq\emptyset$; {\red end}.}
+\newcommand{\hallvakbv}{\\\mystep Otherwise, set $\bl T\meq\{v\}$ for some vertex $\bl v\myin X-\halfred V(M)$.}
+\newcommand{\hallvakcv}{\\\mystep Let $\bl 2m$ be the longest path-length from $\bl v$ in $\bl T$.}
+\newcommand{\hallvakdv}{\\\mystep Consider each $\bl x\myin V(T)$ at distance $\bl 2m$ from $\bl v$.}
+\newcommand{\hallvakev}{\\\mystep If $\bl y\myin N(x)-V(T)-\halfred V(M)$, then add edge $\bl\{x,y\}$ to $\bl T$; {\red end}. }
+\newcommand{\hallvakfv}{\\\mystep If $\bl y\myin N(x)-V(T)$, then add edges $\bl\{x,y\}$ and $\bl\{y,x'\}\myin M$ to $\bl T$.}
+\newcommand{\hallvakgv}{\\\mystep Repeat until $\bl N(x)-V(T)\meq\emptyset$.}
+\newcommand{\hallvakhv}{\\\mystep Then $\bl T$ contains an augmenting path starting from $\bl v$, if one exists.}
+
+
+\newcommand{\hallvm}[1]{\\{\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false,linearc=0}\pspicture(-.7,-.3)(10,2.3)#1\endpspicture}}
+\newcommand{\hallvma}[1]{\rput(2.5,.4){\pspicture(0,0)(5,2)
+  {\psset{linecolor=halfgray,fillcolor=offwhite,framearc=1}\psframe(-.2,-.2)(5.2,.2)
+  \psframe(-.2,1.8)(5.2,2.2)}\rput(-.65,0){$\blue X$}\rput(-.65,2){$\blue Y$}{\psset{fillstyle=none}
+  \psline(0,2)(0,0)(1,2)(1,0)(5,2)(4,0)(4,2)(5,0)(1,2)\psline(3,2)(4,0)
+  \psline(2,0)(2,2)(4,0)(4,2)(3,0)(5,2)}\rput(0,2){\mydot}\rput(1,0){\mydot}
+  {\psset{linecolor=halfred,fillcolor=red}{\psset{linewidth=.08}
+  \psline(0,0)(3,2)\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(4,0)(5,2)\psline(4,2)(5,0)}
+  \multips(1,2)(1,0){5}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}#1\endpspicture}}
+\newcommand{\hallvmav}[1]{\rput(2.5,.4){\pspicture(0,0)(5,2)
+ {\psset{linecolor=halfgray,fillcolor=offwhite,framearc=1}\psframe(-.2,-.2)(5.2,.2)
+  \psframe(-.2,1.8)(5.2,2.2)}\rput(-.65,0){$\blue X$}\rput(-.65,2){$\blue Y$}{\psset{fillstyle=none}
+  \psline(0,2)(0,0)(1,2)(1,0)(5,2)(4,0)(4,2)(5,0)(1,2)\psline(3,2)(4,0)
+  \psline(2,0)(2,2)(4,0)(4,2)(3,0)(5,2)}\rput(0,2){\mydot}\rput(1,0){\mydot}
+ {\psset{linecolor=halfred,fillcolor=red}{\psset{linewidth=.08}
+  \psline(0,0)(3,2)\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(4,0)(5,2)\psline(4,2)(5,0)}
+ {\psset{linewidth=.12,linearc=.2,fillstyle=none,linecolor=green}
+  \psline(0,0)(0,2)\psline(2,0)(1,2)\psline(3,0)(2,2)\psline(4,0)(3,2)\psline(5,0)(4,2)\psline(1,0)(5,2)}
+  \multips(1,2)(1,0){5}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}#1\endpspicture}}
+\newcommand{\hallvmaa}{\rput(1,-.4){$\blue v$}\psset{linecolor=blue,fillcolor=lightblue}\rput(1,0){\mydot}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(.7,1){\mydot}\endpspicture}}
+\newcommand{\hallvmab}{\rput(1,-.4){$\blue v$}\rput(.43,-.4){$\blue x\meq$}\psset{linecolor=blue,fillcolor=lightblue}\rput(1,0){\mydot}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(.7,1){\mydot}\endpspicture}}
+\newcommand{\hallvmac}{\rput(1,-.4){$\blue v$}\rput(.43,-.4){$\blue x\meq$}\psset{linecolor=blue,fillcolor=lightblue}
+  \rput(1,0){\mydot}\rput(1,2){\mydot}\rput(1,2.4){$\blue y_2$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(.7,1){\mydot}\endpspicture}}
+\newcommand{\hallvmad}{\rput(1,-.4){$\blue v$}\rput(.43,-.4){$\blue x\meq$}
+  \psset{linecolor=blue,fillcolor=lightblue}\psline(1,2)(1,0)\psline(1,2)(2,0)\rput(1,0){\mydot}
+  \psline[linewidth=.08,linecolor=red](1,2)(2,0)\psline[linewidth=.025](1,2)(2,0)
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(2,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(2,-.4){$\blue x_3$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\psline[linecolor=red,linewidth=.08](1.566,1.5)(2.566,1.5)
+  \psline(1.566,1.5)(2.566,1.5)\psline(.7,1)(1.566,1.5)\rput(.7,1){\mydot}\rput(0,1){$\blue T$}
+  \rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(1.566,1.8){$\blue y_2$}
+  \rput(.7,1){\mydot}{\psset{fillcolor=red}\rput(1.566,1.5){\mydot}\rput(2.566,1.5){\mydot}}\endpspicture}}
+\newcommand{\hallvmada}{\rput(1,-.4){$\blue v$}\rput(.43,-.4){$\blue x$}
+  \psset{linecolor=blue,fillcolor=lightblue}\psline(1,2)(1,0)\psline(1,2)(2,0)\rput(1,0){\mydot}\rput(5,2){\mydot}
+  \psline[linewidth=.08,linecolor=red](1,2)(2,0)\psline[linewidth=.025](1,2)(2,0)
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(2,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(5,2.4){$\blue y_6$}\rput(2,-.4){$\blue x_3$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\psline[linecolor=red,linewidth=.08](1.566,1.5)(2.566,1.5)
+  \psline(1.566,1.5)(2.566,1.5)\psline(.7,1)(1.566,1.5)\rput(.7,1){\mydot}\rput(0,1){$\blue T$}
+  \rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(1.566,1.8){$\blue y_2$}
+  \rput(.7,1){\mydot}{\psset{fillcolor=red}\rput(1.566,1.5){\mydot}\rput(2.566,1.5){\mydot}}\endpspicture}}
+\newcommand{\hallvmae}[2]{\rput(1,-.4){$\blue v$}\rput(.43,-.4){${#1{\blue x\meq}}$}\rput(2.65,-.36){${#2{=\blue x}}$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  \psline[linewidth=.025](1,2)(2,0)\psline[linewidth=.025](5,2)(4,0)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(5,2){\mydot}\rput(4,0){\mydot}\rput(2,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(5,2.4){$\blue y_6$}\rput(2,-.4){$\blue x_3$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(1.566,.5)(2.566,.5)}
+  \psline(1.566,1.5)(2.566,1.5)\psline(1.566,.5)(2.566,.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(1.566,.2){$\blue y_6$}
+  {\psset{fillcolor=red}\rput(1.566,1.5){\mydot}\rput(2.566,1.5){\mydot}\rput(2.566,.5){\mydot}\rput(1.566,.5){\mydot}}
+  \endpspicture}}
+\newcommand{\hallvmaf}{\rput(1,-.4){$\blue v$}\rput(2.65,-.36){$=\blue x$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  \psline[linewidth=.025](1,2)(2,0)\psline[linewidth=.025](5,2)(4,0)\rput(1,0){\mydot}\rput(2,2){\mydot}
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(5,2){\mydot}\rput(4,0){\mydot}\rput(2,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(5,2.4){$\blue y_6$}\rput(2,-.4){$\blue x_3$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(1.566,.5)(2.566,.5)}
+  \psline(1.566,1.5)(2.566,1.5)\psline(1.566,.5)(2.566,.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(1.566,.2){$\blue y_6$}
+  {\psset{fillcolor=red}\rput(1.566,1.5){\mydot}\rput(2.566,1.5){\mydot}\rput(2.566,.5){\mydot}\rput(1.566,.5){\mydot}}
+  \endpspicture}}
+\newcommand{\hallvmafa}[2]{\rput(1,-.4){$\blue v$}\rput(1.25,-.6){${#1{\blue x}}$}\rput{20}(1.6,-.51){${#1{=}}$}
+  \rput(3.27,-.6){${#2{\blue x}}$}\rput{20}(3.6,-.51){${#2{=}}$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)}\psline(2,0)(2,2)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(5,2){\mydot}\multips(2,0)(1,0){3}{\mydot}
+  \rput(2,2){\mydot}\rput(4,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(5,2.4){$\blue y_6$}
+  \rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(1.566,.5)(2.566,.5)}\psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(2.566,.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\rput(2.566,.5){\mydot}\rput(1.566,.5){\mydot}}
+  \endpspicture}}
+
+\newcommand{\hallvmag}{\rput(1,-.4){$\blue v$}\rput(3.27,-.6){$\blue x$}\rput{20}(3.6,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)}\psline(2,0)(2,2)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\rput(1,2){\mydot}\rput(5,2){\mydot}\multips(2,0)(1,0){3}{\mydot}
+  \rput(2,2){\mydot}\rput(4,0){\mydot}}\rput(3,2){\mydot}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(5,2.4){$\blue y_6$}
+  \rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(1.566,.5)(2.566,.5)}\psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(2.566,.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\rput(2.566,.5){\mydot}\rput(1.566,.5){\mydot}}
+  \endpspicture}}
+
+\newcommand{\hallvmaga}{\rput(1,-.4){$\blue v$}\rput(3.27,-.6){$\blue x$}\rput{20}(3.6,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)}
+  \psline(2,0)(2,2)\psline(3,2)(4,0)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\multips(1,2)(1,0){3}{\mydot}\multips(2,0)(1,0){3}{\mydot}
+  \rput(2,2){\mydot}\rput(4,0){\mydot}\rput(0,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)}\psline(1.566,1.5)(4.566,1.5)
+  \psline(1.566,.5)(4.566,.5)\psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,.2){$\blue x_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}}\endpspicture}}
+
+\newcommand{\hallvmagb}{\rput(1,-.4){$\blue v$}\rput(3.27,-.6){$\blue x$}\rput{20}(3.6,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)}
+  \psline(2,0)(2,2)\psline(3,2)(4,0)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\multips(1,2)(1,0){3}{\mydot}\multips(2,0)(1,0){3}{\mydot}
+  \rput(2,2){\mydot}\rput(4,0){\mydot}\rput(0,0){\mydot}}\rput(4,2){\mydot}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)}\psline(1.566,1.5)(4.566,1.5)
+  \psline(1.566,.5)(4.566,.5)\psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(.7,1){\mydot}
+  \rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}\rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}
+  \rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,.2){$\blue x_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}}\endpspicture}}
+
+\newcommand{\hallvmah}[2]{\rput(1,-.4){$\blue v$}\rput(3.27,-.6){${#1{\blue x}}$}\rput{20}(3.6,-.51){${#1{=}}$}
+  \rput(-.73,-.6){${#2{\blue x}}$}\rput{20}(-.4,-.51){${#2{=}}$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)\psline(5,0)(4,2)}
+  \psline(2,0)(2,2)\psline(3,2)(4,0)\psline(4,0)(4,2)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\multips(1,2)(1,0){5}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}
+  \rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}\rput(5,-.4){$\blue x_6$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)\psline(3.566,-.5)(4.566,-.5)}
+  \psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(4.566,.5)\psline(2.566,.5)(3.566,-.5)\psline(3.566,-.5)(4.566,-.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}
+  \rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}\rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,-.8){$\blue x_6$}\rput(3.566,-.8){$\blue y_5$}\rput(4.566,.2){$\blue x_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}
+  \multips(3.566,-.5)(1,0){2}{\mydot}}\endpspicture}}
+
+\newcommand{\hallvmaj}{\rput(1,-.4){$\blue v$}\rput(-.73,-.6){$\blue x$}\rput{20}(-.4,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)\psline(5,0)(4,2)}
+  \psline(2,0)(2,2)\psline(3,2)(4,0)\psline(4,0)(4,2)\rput(1,0){\mydot}\rput(0,2){\mydot}
+  {\psset{fillcolor=red}\multips(1,2)(1,0){5}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}
+  \rput(0,2.4){$\blue y_1$}\rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}\rput(5,-.4){$\blue x_6$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)\psline(3.566,-.5)(4.566,-.5)}
+  \psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(4.566,.5)\psline(2.566,.5)(3.566,-.5)\psline(3.566,-.5)(4.566,-.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(0,1){$\blue T$}\rput(.7,1.3){$\blue v$}
+  \rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}\rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,-.8){$\blue x_6$}\rput(3.566,-.8){$\blue y_5$}\rput(4.566,.2){$\blue x_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}
+  \multips(3.566,-.5)(1,0){2}{\mydot}}\endpspicture}}
+
+\newcommand{\hallvmak}{\rput(1,-.4){$\blue v$}\rput(-.73,-.6){$\blue x$}\rput{20}(-.4,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)\psline(5,0)(4,2)}
+  \psline(0,0)(0,2)\psline(2,0)(2,2)\psline(3,2)(4,0)\psline(4,0)(4,2)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\multips(0,2)(1,0){6}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}
+  \rput(0,2.4){$\blue y_1$}\rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}\rput(5,-.4){$\blue x_6$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)\psline(3.566,-.5)(4.566,-.5)}
+  \psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(5.566,.5)\psline(2.566,.5)(3.566,-.5)\psline(3.566,-.5)(4.566,-.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(0.2,1){$\blue T$}\rput(.7,1.3){$\blue v$}
+  \rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}\rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,-.8){$\blue x_6$}\rput(3.566,-.8){$\blue y_5$}
+  \rput(4.566,.2){$\blue x_1$}\rput(5.566,.2){$\blue y_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}
+  \multips(3.566,-.5)(1,0){2}{\mydot}}\rput(5.566,.5){\mydot}\endpspicture}}
+
+\newcommand{\hallvmakv}{\rput(1,-.4){$\blue v$}\rput(-.73,-.6){$\blue x$}\rput{20}(-.4,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}{\psset{fillstyle=none}\psline(1,2)(1,0)(5,2)}
+  {\psset{linewidth=.025}\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(5,2)(4,0)\psline(0,0)(3,2)\psline(5,0)(4,2)}
+  \psline(0,0)(0,2)\psline(2,0)(2,2)\psline(3,2)(4,0)\psline(4,0)(4,2)\rput(1,0){\mydot}
+  {\psset{fillcolor=red}\multips(0,2)(1,0){6}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}
+  \rput(0,2.4){$\blue y_1$}\rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}\rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}
+  \rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}\rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}\rput(5,-.4){$\blue x_6$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)\psline(3.566,-.5)(4.566,-.5)}
+  {\psset{linewidth=.12,linearc=.2,fillstyle=none,linecolor=green}
+  \psline(.7,1)(1.566,0.5)
+  \psline(2.566,.5)(3.566,.5)
+  \psline(4.566,.5)(5.566,.5)}
+  \psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(5.566,.5)\psline(2.566,.5)(3.566,-.5)\psline(3.566,-.5)(4.566,-.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(0.2,1){$\blue T$}\rput(.7,1.3){$\blue v$}
+  \rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}\rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,-.8){$\blue x_6$}\rput(3.566,-.8){$\blue y_5$}
+  \rput(4.566,.2){$\blue x_1$}\rput(5.566,.2){$\blue y_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}
+  \multips(3.566,-.5)(1,0){2}{\mydot}}\rput(5.566,.5){\mydot}\endpspicture}}
+
+
+\newcommand{\hallvmb}{\rput(2.5,.4){\pspicture(0,0)(5,2)
+  {\psset{linecolor=halfgray,fillcolor=offwhite,framearc=1}\psframe(-.2,-.2)(5.2,.2)
+  \psframe(-.2,1.8)(5.2,2.2)}{\psset{linewidth=.2,linearc=.2,fillstyle=none,linecolor=halfgray}
+  \psline(1,0)(5,2)\psline(5,2)(4,0)\psline(4,0)(3,2)\psline(3,2)(0,0)\psline(0,0)(0,2)}
+  \rput(-.65,0){$\blue X$}\rput(-.65,2){$\blue Y$}{\psset{fillstyle=none}
+  \psline(0,2)(0,0)(1,2)(1,0)(5,2)(4,0)(4,2)(5,0)(1,2)\psline(3,2)(4,0)
+  \psline(2,0)(2,2)(4,0)(4,2)(3,0)(5,2)}\rput(0,2){\mydot}\rput(1,0){\mydot}
+  {\psset{linecolor=halfred,fillcolor=red}{\psset{linewidth=.08}
+  \psline(0,0)(3,2)\psline(1,2)(2,0)\psline(2,2)(3,0)\psline(4,0)(5,2)\psline(4,2)(5,0)}
+  \multips(1,2)(1,0){5}{\mydot}\multips(2,0)(1,0){4}{\mydot}\rput(0,0){\mydot}}
+  \rput(1,-.4){$\blue v$}\rput(-.73,-.6){$\blue x$}\rput{20}(-.4,-.51){$=$}
+  \psset{linecolor=blue,fillcolor=lightblue}\psline(1,0)(5,2)\psline(3,2)(4,0)
+  {\psset{linewidth=.025}\psline(5,2)(4,0)\psline(0,0)(3,2)}
+  \psline(0,0)(0,2)\rput(1,0){\mydot}\rput(0,2){\mydot}
+  {\psset{fillcolor=red}\rput(5,2){\mydot}\rput(4,0){\mydot}\rput(3,2){\mydot}\rput(0,0){\mydot}}
+  \rput(0,2.4){$\blue y_1$}\rput(1,2.4){$\blue y_2$}\rput(2,2.4){$\blue y_3$}\rput(3,2.4){$\blue y_4$}
+  \rput(4,2.4){$\blue y_5$}\rput(5,2.4){$\blue y_6$}\rput(0,-.4){$\blue x_1$}\rput(2,-.4){$\blue x_3$}
+  \rput(3,-.4){$\blue x_4$}\rput(4,-.4){$\blue x_5$}\rput(5,-.4){$\blue x_6$}
+  \rput(8.4,1){\pspicture(0,-.5)(4.5,1.5)\psline[linewidth=.2,linearc=.2,fillstyle=none,linecolor=halfgray](.7,1)(1.566,.5)(5.566,.5)
+  {\psset{linecolor=red,linewidth=.08}\psline(1.566,1.5)(2.566,1.5)\psline(3.566,1.5)(4.566,1.5)
+  \psline(3.566,.5)(4.566,.5)\psline(1.566,.5)(2.566,.5)\psline(3.566,.5)(4.566,.5)\psline(3.566,-.5)(4.566,-.5)}
+  \psline(1.566,1.5)(4.566,1.5)\psline(1.566,.5)(5.566,.5)\psline(2.566,.5)(3.566,-.5)\psline(3.566,-.5)(4.566,-.5)
+  \psline(.7,1)(1.566,1.5)\psline(.7,1)(1.566,.5)\rput(0.2,1){$\blue T$}\rput(.7,1.3){$\blue v$}
+  \rput(2.566,1.8){$\blue x_3$}\rput(2.566,.2){$\blue x_5$}\rput(4.566,1.8){$\blue x_4$}
+  \rput(.7,1){\mydot}\rput(1.566,1.8){$\blue y_2$}\rput(3.566,1.8){$\blue y_3$}\rput(1.566,.2){$\blue y_6$}
+  \rput(3.566,.2){$\blue y_4$}\rput(4.566,-.8){$\blue x_6$}\rput(3.566,-.8){$\blue y_5$}
+  \rput(4.566,.2){$\blue x_1$}\rput(5.566,.2){$\blue y_1$}
+  {\psset{fillcolor=red}\multips(1.566,1.5)(1,0){4}{\mydot}\multips(1.566,.5)(1,0){4}{\mydot}
+  \multips(3.566,-.5)(1,0){2}{\mydot}}\rput(5.566,.5){\mydot}\endpspicture}\endpspicture}}
+
+\newcommand{\hallvna}{A {\dg directed graph} $\bl D\meq (V,A)$ consists of {\dg vertices} $\bl V$ and {\dg arcs } $\bl {\blue A}\msubseteq \blue V\times V$.}
+\newcommand{\hallvnb}{\\We draw $\bl D$ as dots (vertices) and arrows between the dots (arcs).}
+
+\newcommand{\hallvnc}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallvncv}{{\darkgreen Example}}
+\newcommand{\hallvnca}{\\Let $\bl D$ be the directed graph $\bl(V,A)$ where
+  \[{\blue V} \meq \{ \textsf{1},\textsf{2},  \textsf{3}\}\qquad\mytext{and}\qquad
+    {\blue A} \meq \{(\textsf{1},\textsf{2}),(\textsf{2},\textsf{1}),(\textsf{2},\textsf{3})\}\]}
+\newcommand{\hallvncb}{\begin{center}{\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=none,shadow=false,labelsep=8pt}\pspicture(0,-.75)(3.5,.75){\small\darkgray
+  \cnode(0  ,0){.1}{a}\uput[180](0  ,0){1}
+  \cnode(1.5,0){.1}{b}\uput[ 90](1.5,0){2}
+  \cnode(3  ,0){.1}{c}\uput[  0](3  ,0){3}
+  \ncarc[arcangleA=45,arcangleB=45]{-> }{a}{b}
+  \ncarc[arcangleA=45,arcangleB=45]{-> }{b}{a}
+  \ncline{-> }{b}{c}
+ \psset{fillstyle=solid}\multips(0,0)(1.5,0){3}{\mydot}}\endpspicture}\end{center}}
+
+\newcommand{\hallvnd}{A {\dg network} is a directed graph $\bl {\blue D} \meq (V,A)$ with two distinguished vertices,
+the {\dg source\, $\bl \mathsf{s}$} and {\dg sink\, $\bl \mathsf{t}$} (or {\em{\blue t}erminal}),
+and a {\dg capacity function}\, $\bl {\blue\mathsf c}:\!A\!\rightarrow\!\mathbb{R}_{\mgeq 0}$.}
+
+\newcommand{\hallvne}{\\[3mm]{\darkgreen Example}}
+\newcommand{\hallvnev}{{\darkgreen Example}}
+\newcommand{\hallvnea}[2]{\begin{center}{\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=none,shadow=false,labelsep=8pt}\pspicture(0,-.25)(3.5,1.65){#1
+  \cnode(-1.5,.75){.1}{s}\cnode(0,0){.1}{a}\cnode(0,1.5){.1}{b}\cnode(1.5,1.5){.1}{c}\cnode(1.5,0){.1}{d}\cnode(3,.75){.1}{t}
+  \uput[180](-1.5,.75){\blue s}\uput[0](3,.75){\blue t}
+  \ncarc[arcangleA= 30,arcangleB= 30]{-> }{s}{b}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{s}{a}
+  \ncarc[arcangleA= 30,arcangleB= 30]{-> }{c}{t}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{d}{t}
+  \ncline{-> }{a}{b}\ncline{-> }{a}{d}\ncline{-> }{c}{d}\ncline{-> }{b}{c}}\psset{fillstyle=solid}
+  \rput(-1.5,.75){\mydot}\rput(0,0){\mydot}\rput(0,1.5){\mydot}\rput(1.5,1.5){\mydot}\rput(1.5,0){\mydot}\rput(3,.75){\mydot}
+  \rput(-.75,.4 ){\darkgray4}\rput(-.75,1.1){\darkgray3}
+  \rput(-.25,.75){\darkgray3}\rput(1.75,.75){\darkgray1}
+  \rput(.75,1.25){\darkgray6}\rput(.75, .25){\darkgray1}
+  \rput( 2.25,.4){\darkgray3}\rput(2.25,1.1){\darkgray3}#2\endpspicture}\end{center}}
+\newcommand{\hallvneav}[2]{\begin{center}{\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=none,shadow=false,labelsep=8pt}\pspicture(0,-1.1)(7,1.65){#1
+  \cnode(-1.5,.75){.1}{s}\cnode(0,0){.1}{a}\cnode(0,1.5){.1}{b}\cnode(1.5,1.5){.1}{c}\cnode(1.5,0){.1}{d}\cnode(3,.75){.1}{t}
+  \uput[180](-1.5,.75){\blue s}\uput[0](3,.75){\blue t}
+  \ncarc[arcangleA= 30,arcangleB= 30]{-> }{s}{b}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{s}{a}
+  \ncarc[arcangleA= 30,arcangleB= 30]{-> }{c}{t}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{d}{t}
+  \ncline{-> }{a}{b}\ncline{-> }{a}{d}\ncline{-> }{c}{d}\ncline{-> }{b}{c}}\psset{fillstyle=solid}
+  \rput(-1.5,.75){\mydot}\rput(0,0){\mydot}\rput(0,1.5){\mydot}\rput(1.5,1.5){\mydot}\rput(1.5,0){\mydot}\rput(3,.75){\mydot}
+  \rput(-.75,.4 ){\darkgray4}\rput(-.75,1.1){\darkgray3}
+  \rput(-.25,.75){\darkgray3}\rput(1.75,.75){\darkgray1}
+  \rput(.75,1.25){\darkgray6}\rput(.75, .25){\darkgray1}
+  \rput( 2.25,.4){\darkgray3}\rput(2.25,1.1){\darkgray3}#2\endpspicture}\end{center}}
+\newcommand{\hallvneaa}{
+  \rput(-1.02,-.05){\blue3}\rput(-1.02,1.55){\blue2}
+  \rput(  .25, .75){\blue2}\rput( 1.25, .75){\blue1}
+  \rput(  .75,1.75){\blue4}\rput(  .75,-.25){\blue1}
+  \rput( 2.52,-.05){\blue2}\rput( 2.52,1.55){\blue3}}
+\newcommand{\hallvneab}[1]{\rput[l](4,1.35){$\mathsf{\blue|f|\meq \mathsf{f^+(s)-f^-(s)}}$}
+  \rput[l](4.5,.79){$\meq{#1{\mathsf{2}\mypl\mathsf{3}\black-\blue\mathsf{0}}}$}
+  \rput[l](4.5,.25){${#1{\meq\mathsf{5}}}$}}
+\newcommand{\hallvneac}{{\psset{linecolor=lightgray,fillcolor=offwhite,fillstyle=solid}
+  \psccurve(-1.6,.9)(1.9,1.7)(.2,-.3)
+  \psccurve(1.38,-.1)(3.32,.89)(2.7,0)}}
+\newcommand{\hallvnead}{\uput[270](0,0){$\blue\mathsf u$}\uput[90](0,1.5){$\blue\mathsf v$}
+  \uput[90](1.5,1.5){$\blue\mathsf w$}\uput[270](1.5,0){$\blue\mathsf x$}
+  \rput(-1.2,2){$\blue X$}\rput(3.1,-.1){$\blue Y$}}
+\newcommand{\hallvneae}[3]{\rput(.75,.25){\blue1}\rput(2.25,1.1){\blue3}\rput(1.75,.75){\blue1}
+  {\psset{linecolor=blue,fillstyle=none}\ncarc[arcangleA=30,arcangleB=30]{-> }{c}{t}\ncline{-> }{c}{d}\ncline{-> }{a}{d}}
+  \rput[l](2.2 ,2.2 ){{#1{${\blue\mathsf{c}(X,Y)} \meq \mathsf{\blue c(u,x)\!\mypl\!c(w,x)\!\mypl\!c(w,t)}$}}}
+  \rput[l](3.69,1.63){{#2{$= \mathsf{\blue1\mypl1\mypl3}$}}}
+  \rput[l](3.69,1.07){{#3{$= \mathsf{\blue5}$}}}}
+
+\newcommand{\hallvnf}{A {\dg flow} in $\bl D$ is a function $\bl \mathsf{\blue f}:\!A\rightarrow\mathbb{R}_{\mgeq 0}$ such that
+  \\[1mm]\mybullet $\bl 0\mleq \blue\mathsf{f(a)\mleq c(a)}$ \:for each arc $\bl {\blue\mathsf a}\myin A$
+  \\\mybullet $\bl \mathsf{\blue f^+(v)\meq f^-(v)}$   \:for each vertex $\bl {\blue\mathsf v}\myin V-\{\mathsf{s},\mathsf{t}\}$}
+\newcommand{\hallvnfa}{\\[1mm]where\vspace{-7mm}
+  \[{\blue\mathsf{f^-(v)}} \meq \sum_{\mathsf{u\,:\,(u,v)}\myin A}\mathsf{f(u,v)}
+              \quad\mytext{and}\quad{\blue\mathsf{f^+(v)}} \meq \sum_{\mathsf{w\,:\,(v,w)}\myin A}\mathsf{f(v,w)}\]}
+\newcommand{\hallvnfb}{\\[-4mm]The {\dg strength} of $\bl\mathsf{f}$ is $\bl \mathsf{\blue|f|\meq f^+(s)-f^-(s)}$.}
+
+\newcommand{\hallvpa}{A {\dg cut} in $\bl D$ is a bipartition $\bl (X,Y)$ of $\bl V$
+  with $\bl {\blue\mathsf s}\myin X$ and $\bl {\blue\mathsf t}\myin Y$.}
+\newcommand{\hallvpb}{\\The {\dg capacity} of a cut $\bl(X,Y)$ is the sum\vspace{-1.5mm}
+  \[{\blue\mathsf{c}(X,Y)} \meq \sum_{\mathsf{u}\myin X,\,\mathsf{v}\myin Y\::\mathsf{(u,v)}\myin A} \mathsf{c(u,v)}\]}
+
+\newcommand{\hallvra}{{\darkgreen\sf Theorem}
+  \\For each flow $\bl \mathsf{f}$ and each cut {\blue $\bl (X,Y)$} on $\bl D$, we have $\bl|\mathsf{f}|\mleq \mathsf{c}(X,Y)$.}
+\newcommand{\hallvrav}{{\darkgreen\sf Theorem}
+  \\$\blue|\mathsf{f}|\mleq \mathsf{c}(X,Y)$.}
+
+\newcommand{\hallvrb}{Let $\bl (X,Y)$ be a partition of $\bl D$ and $\bl\mathsf{f}$ be a flow on $\bl D$, and define\vspace{-1mm}
+  \[{\blue\mathsf{f}(X,Y)} \meq \sum_{\mathsf{u}\myin X,\,\mathsf{v}\myin Y\::\mathsf{(u,v)}\myin A} \mathsf{f(u,v)}\]}
+
+\newcommand{\hallvrc}{{\darkgreen\sf Theorem}
+  \\If $\bl(X,Y)$ is a cut of $\bl D$, then $\bl|\mathsf{f}|\meq \mathsf{f}(X,Y)-\mathsf{f}(Y,X)$.}
+
+\newcommand{\hallvpfiiia}{\\[3mm]\proof}
+\newcommand{\hallvpfiiib}{\\By definition, $\bl \mathsf{f^+(v)-f^-(v)}=\mathsf0$ for all $\bl \mathsf{v}\myin X-\{\mathsf{s}\}$. }
+\newcommand{\hallvpfiiic}[4]{Therefore,\vspace{-1mm}
+  \begin{align*}\bl
+         \mathsf{|f|}
+   &\meq \mathsf{f^+(s)} - \mathsf{f^-(s)}\\\bl
+   &\hspace{1.2mm}{#1{\meq\sum_{\mathsf{u}\myin X}\mathsf{f^+(u)} - \sum_{\mathsf{v}\myin X}\mathsf{f^-(v)}}}\\\bl
+   &\:\,{#2{\meq\sum_{\mathsf{u}\myin X}\sum_{\mathsf{v:(u,v)}\myin A}\mathsf{f(u,v)}
+        -\sum_{\mathsf{v}\myin X}\sum_{\mathsf{u:(u,v)}\myin A}\mathsf{f(u,v)}}}\\\bl
+   &\:\,{#3{\meq\sum_{\mathsf{u},\mathsf{v}\myin X:\atop\mathsf{(u,v)}\myin A}\mathsf{f(u,v)}
+        +\sum_{\mathsf{u}\myin X,\mathsf{v}\myin Y:\atop\mathsf{(u,v)}\myin A}\mathsf{f(u,v)}
+        -\sum_{\mathsf{v},\mathsf{u}\myin X:\atop\mathsf{(u,v)}\myin A}\mathsf{f(u,v)}
+        -\sum_{\mathsf{v}\myin X,\mathsf{u}\myin Y:\atop\mathsf{(u,v)}\myin A}\mathsf{f(u,v)}}}\\\bl
+   &\:\,{#4{\meq\mathsf{f}(X,Y)-\mathsf{f}(Y,X)\qquad\black\square}}\\[-8mm]
+  \end{align*}}
+
+\newcommand{\hallvpfiva}{\\[3mm]\proof}
+\newcommand{\hallvpfivb}{\\$\bl|\mathsf{f}|= \mathsf{f}(X,Y)-\mathsf{f}(Y,X)\mleq\mathsf{f}(X,Y)\mleq\mathsf{c}(X,Y)$.\qed}
+
+\newcommand{\hallvrd}{{\darkgreen Corollary}
+  \\$\blue|\mathsf{f}|\meq \mathsf{f^-(t)-f^+(t)}$.}
+
+\newcommand{\hallvpfva}{\\[3mm]\proof}
+\newcommand{\hallvpfvb}{\\$\bl|\mathsf{f}|\meq \mathsf{f}(V-\{t\},\{t\})-\mathsf{f}(\{t\},V-\{t\}) \meq \mathsf{f^-(t)}-\mathsf{f^+(t)}$.\qed}
+
+\newcommand{\hallvre}{Let $\bl\mathsf{f}$ be a flow on the network $\bl {\blue D} \meq (V,A)$. }
+
+\newcommand{\hallvrf}{\\An {\dg augmenting path} $\bl P$ for $\bl\mathsf{f}$ is
+  a sequence of vertices $\bl {\blue\mathsf{v_0,v_1,\ldots,v_n}}\myin V$ for which either
+  \\[2mm]\mybullet $\bl e \meq (\mathsf{v_i},\mathsf{v_{i+1}})\myin A$ and $\bl {\blue\alpha_i} \meq \mathsf{c}(e)-\mathsf{f}(e)\mgt 0$; or
+       \\\mybullet $\bl e \meq (\mathsf{v_{i+1}},\mathsf{v_i})\myin A$ and $\bl {\blue\alpha_i} \meq \mathsf{f}(e)\mgt 0$.}
+
+\newcommand{\hallvrg}{Define $\bl {\blue\alpha} \meq \min\{\alpha_i\}$ and let $\bl\mathsf{f}\oplus P$ denote
+  the function given on $\bl A$ by \vspace{-1mm}
+  \[\blue(\mathsf{f}\oplus P)(e) \meq \begin{cases}
+      \mathsf{f}(e)+\alpha & \:\mytext{if }\: e \meq (\mathsf{v_i},\mathsf{v_{i+1}})\myin A\\
+      \mathsf{f}(e)-\alpha & \:\mytext{if }\: e \meq (\mathsf{v_{i+1}},\mathsf{v_i})\myin A\end{cases}\]}
+
+\newcommand{\hallvrh}{{\darkgreen\sf Theorem}
+  \\If   $\bl\mathsf{f}$ has an augmenting path $\bl P$ from $\bl\mathsf{s}$ to $\bl\mathsf{t}$,
+  \\then $\bl\mathsf{f}\oplus P$ is a flow with $\bl|\mathsf{f}\oplus P|\mgt |\mathsf{f}|$.}
+
+\newcommand{\hallvpfvia}{\\[3mm]\proof}
+\newcommand{\hallvpfvib}{\hfill It is easy to check that $\bl \mathsf{f}\oplus P$ satisfies the two flow conditions.\\}
+\newcommand{\hallvpfvic}{Furthermore, $\bl |\mathsf{f}\oplus P|\meq|\mathsf{f}|+\alpha\mgt |\mathsf{f}|$ where $\bl \alpha$ is defined as above.\qed}
+
+\newcommand{\hallvrj}{{\darkgreen Corollary}
+  \\If $\bl\mathsf{f}$ is a maximal flow (i.e., has maximal strength $\bl |\mathsf{f}|$),
+  \\then there is no augmenting path for $\bl\mathsf{f}$ from $\bl\mathsf{s}$ to $\bl\mathsf{t}$.}
+
+\newcommand{\hallvsa}{{\darkgreen Max-Flow Min-Cut Theorem} {\gray (Ford and Fulkerson 1955)}
+  \\In each network, maximal flow strength {\dg equals} minimal cut capacity:
+  $\bl\max|\mathsf{f}|\meq\min\mathsf{c}(X,Y)$.}
+
+\newcommand{\hallvsaa}{\\[3mm]{\gray This theorem is also called the {\green Ford-Fulkerson Theorem}.}}
+
+\newcommand{\hallvpfviia}{\\[3mm]\proof\quad}
+\newcommand{\hallvpfviib}{Let any $\bl \mathsf{f}$ be a maximal flow in $\bl D$.}
+\newcommand{\hallvpfviic}{\\Let $\bl S$ be all vertices reachable by
+  an augmenting path for $\bl \mathsf{f}$ starting in $\bl \mathsf{s}$. }
+\newcommand{\hallvpfviid}{\\By the previous corollary, $\bl \mathsf{f}$ has no augmenting path from $\bl \mathsf{s}$ to $\bl \mathsf{t}$.}
+\newcommand{\hallvpfviie}{\\Thus, $\bl \mathsf{t}\myin T$ where $\bl T\meq V-S$, so $\bl (S,T)$ is a cut. }
+\newcommand{\hallvpfviif}{Let $\bl \mathsf{u}\myin S$ and $\bl \mathsf{v}\myin T$.}
+\newcommand{\hallvpfviig}{\\Suppose that $\bl e\meq(\mathsf{u},\mathsf{v})\myin A$.}
+\newcommand{\hallvpfviih}{\\Since $\bl \mathsf{v}$ cannot extend any augmenting path ending in $\bl \mathsf{u}$,
+  $\bl \mathsf{f}(e)\meq\mathsf{c}(e)$. }
+\newcommand{\hallvpfviij}{\\Suppose then that $\bl e \meq (\mathsf{v},\mathsf{u})\myin A$. }
+\newcommand{\hallvpfviik}{\\Since $\bl \mathsf{v}$ cannot extend any augmenting path ending in $\bl \mathsf{u}$,
+  $\bl \mathsf{f}(e)\meq0$. }
+\newcommand{\hallvpfviim}{\\Hence, by a previous theorem,\vspace{-1mm}
+  \[\bl  |\mathsf{f}|
+    \meq \mathsf{f}(S,T)-\mathsf{f}(T,S)
+    \meq \hspace{-2mm}\sum_{\mathsf{u}\myin S,\mathsf{v}\myin T\::\atop\mathsf{(u,v)}\myin A} \hspace{-3mm}\mathsf{f(u,v)}
+     -\hspace{-3mm}\sum_{\mathsf{u}\myin S,\mathsf{v}\myin T\::\atop\mathsf{(v,u)}\myin A} \hspace{-3mm}\mathsf{f(u,v)}
+    \meq \hspace{-3mm}\sum_{\mathsf{u}\myin S,\mathsf{v}\myin T\::\atop\mathsf{(u,v)}\myin A} \hspace{-3mm}\mathsf{c(u,v)}
+    \meq \mathsf{c}(S,T)\]}
+\newcommand{\hallvpfviimv}{\\Hence, by a previous theorem, $\bl |\mathsf{f}| \meq \cdots \meq \mathsf{c}(S,T)$.
+  \\Hence, $\bl \min \mathsf{c}(X,Y)\mleq \mathsf{c}(S,T)\meq|\mathsf{f}|$. }
+\newcommand{\hallvpfviin}{\\[-4mm]Hence, $\bl \min \mathsf{c}(X,Y)\mleq \mathsf{c}(S,T)\mleq |\mathsf{f}|$. }
+\newcommand{\hallvpfviip}{\\However, we have previously shown that $\bl |\mathsf{f}|\mleq \mathsf{c}(X,Y)$ for any cut~$\bl (X,Y)$. }
+\newcommand{\hallvpfviiq}{\\Thus, $\bl |\mathsf{f}|\meq \min \mathsf{c}(X,Y)$.\qed}
+
+\newcommand{\hallvtb}[1]{{\dg\sc Ford-Fulkerson Algorithm}#1}
+\newcommand{\hallvtba}{\\[1mm]\mybullet Set $\bl \mathsf{f} \meq \mathsf{0}$.}
+\newcommand{\hallvtbb}{\\\mybullet Search for an augmenting path $\bl P$ for $\bl \mathsf{f}$ from $\bl\mathsf{s}$ to $\bl\mathsf{t}$.}
+\newcommand{\hallvtbc}{\\\mybullet Replace $\bl \mathsf{f}$ by $\bl \mathsf{f}\oplus P$.}
+\newcommand{\hallvtbd}{\\\mybullet Continue until there is no augmenting path.}
+\newcommand{\hallvtbe}{\\\mybullet Then $\bl \mathsf{f}$ is a maximal flow.}
+\newcommand{\hallvtbav}{\\[1mm]\mystep Set $\bl\mathsf{f} \meq \mathsf{0}$.}
+\newcommand{\hallvtbbv}{\\\mystep Search for an augmenting path $\bl P$ for $\bl\mathsf{f}$ from $\bl\mathsf{s}$ to $\bl\mathsf{t}$.}
+\newcommand{\hallvtbcv}{\\\mystep Replace $\bl\mathsf{f}$ by $\bl\mathsf{f}\oplus P$.}
+\newcommand{\hallvtbdv}{\\\mystep Continue until there is no augmenting path.}
+\newcommand{\hallvtbev}{\\\mystep Then $\bl\mathsf{f}$ is a maximal flow.}
+
+\newcommand{\hallvtc}{{\darkgreen\sf Theorem}
+  \\Each network with all-integer capacities has integer-valued maximal flow.}
+
+\newcommand{\hallvpfviiia}{\\[3mm]\proof\quad}
+\newcommand{\hallvpfviiib}{Starting with the zero flow $\bl \mathsf{f \meq 0}$,
+  \\augment $\bl \mathsf{f}$ with augmenting paths from $\bl \mathsf{s}$ to $\bl \mathsf{t}$,
+  until $\bl \mathsf{f}$ is a maximal flow.}
+\newcommand{\hallvpfviiic}{\\At each step, the values $\bl \mathsf{f}(e)$ change by one of the integers $\bl 0,\pm\alpha$.\qed}
+
+\newcommand{\hallvneba}{
+  \rput(-1.02,-.05){\blue0}\rput(-1.02,1.55){\blue0}\rput(  .25, .75){\blue0}
+  \rput(  .75,1.75){\blue0}\rput(  .75,-.25){\blue0}\rput( 1.25, .75){\blue0}
+  \rput( 2.52,-.05){\blue0}\rput( 2.52,1.55){\blue0}}
+\newcommand{\hallvnebab}{{\psset{linecolor=blue,fillstyle=none}\ncline{-> }{c}{d}\ncline{-> }{b}{c}
+  \ncarc[arcangleA=30,arcangleB=30]{-> }{s}{b}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{d}{t}
+  \psset{linecolor=blue,fillcolor=lightblue}
+  \rput(-1.5,.75){\mydot}\rput(0,1.5){\mydot}\rput(1.5,1.5){\mydot}\rput(1.5,0){\mydot}\rput(3,.75){\mydot}}}
+\newcommand{\hallvnebac}{\rput[l](-2,-1.1){${\blue\alpha} \meq   \min \{\mathsf{{\darkgray3}-{\blue0}},\mathsf{{\darkgray6}-{\blue0}},\mathsf{{\darkgray1}-{\blue0}},\mathsf{{\darkgray3}-{\blue0}}\} \meq \blue\mathsf{1}$}}
+\newcommand{\hallvnebb}{
+  \rput(-1.02,-.05){\blue0}\rput(-1.02,1.55){\blue1}\rput(  .25, .75){\blue0}
+  \rput(  .75,1.75){\blue1}\rput(  .75,-.25){\blue0}\rput( 1.25, .75){\blue1}
+  \rput( 2.52,-.05){\blue1}\rput( 2.52,1.55){\blue0}}
+\newcommand{\hallvnebbb}{{\psset{linecolor=blue,fillstyle=none}
+  \ncarc[arcangleA=-30,arcangleB=-30]{-> }{s}{a}\ncarc[arcangleA= 30,arcangleB= 30]{-> }{c}{t}
+  \ncline{-> }{a}{d}\ncline{-> }{c}{d}\psset{linecolor=blue,fillcolor=lightblue}
+  \rput(-1.5,.75){\mydot}\rput(0,0){\mydot}\rput(1.5,1.5){\mydot}\rput(1.5,0){\mydot}\rput(3,.75){\mydot}}}
+\newcommand{\hallvnebbc}{\rput[l](-2,-1.1){${\blue\alpha} \meq   \min \{\mathsf{{\darkgray4}-{\blue0}},\mathsf{{\darkgray1}-{\blue0}},\mathsf{\blue1},\mathsf{{\darkgray3}-{\blue0}}\} \meq \blue\mathsf{1}$}}
+\newcommand{\hallvnebc}{
+  \rput(-1.02,-.05){\blue1}\rput(-1.02,1.55){\blue1}\rput(  .25, .75){\blue0}
+  \rput(  .75,1.75){\blue1}\rput(  .75,-.25){\blue1}\rput( 1.25, .75){\blue0}
+  \rput( 2.52,-.05){\blue1}\rput( 2.52,1.55){\blue1}}
+\newcommand{\hallvnebcb}{{\psset{linecolor=blue,fillstyle=none}
+  \ncarc[arcangleA=-30,arcangleB=-30]{-> }{s}{a}\ncarc[arcangleA= 30,arcangleB= 30]{-> }{c}{t}
+  \ncline{-> }{a}{b}\ncline{-> }{b}{c}\psset{linecolor=blue,fillcolor=lightgray}
+  \rput(-1.5,.75){\mydot}\rput(0,0){\mydot}\rput(0,1.5){\mydot}\rput(1.5,1.5){\mydot}\rput(3,.75){\mydot}}}
+\newcommand{\hallvnebcc}{\rput[l](-2,-1.1){${\blue\alpha} \meq   \min \{\mathsf{{\darkgray4}-{\blue1}},\mathsf{{\darkgray3}-{\blue0}},\mathsf{{\darkgray6}-{\blue1}},\mathsf{{\darkgray3}-{\blue1}}\} \meq \blue\mathsf{2}$}}
+\newcommand{\hallvnebd}{
+  \rput(-1.02,-.05){\blue3}\rput(-1.02,1.55){\blue1}\rput(  .25, .75){\blue2}
+  \rput(  .75,1.75){\blue3}\rput(  .75,-.25){\blue1}\rput( 1.25, .75){\blue0}
+  \rput( 2.52,-.05){\blue1}\rput( 2.52,1.55){\blue3}}
+\newcommand{\hallvnebdb}{{\psset{linecolor=blue,fillstyle=none}\ncline{-> }{c}{d}\ncline{-> }{b}{c}
+  \ncarc[arcangleA=30,arcangleB=30]{-> }{s}{b}\ncarc[arcangleA=-30,arcangleB=-30]{-> }{d}{t}
+  \psset{linecolor=blue,fillcolor=lightblue}
+  \rput(-1.5,.75){\mydot}\rput(0,1.5){\mydot}\rput(1.5,1.5){\mydot}\rput(1.5,0){\mydot}\rput(3,.75){\mydot}}}
+\newcommand{\hallvnebdc}{\rput[l](-2,-1.1){${\blue\alpha} \meq   \min \{\mathsf{{\darkgray3}-{\blue1}},\mathsf{{\darkgray6}-{\blue3}},\mathsf{{\darkgray1}-{\blue0}},\mathsf{{\darkgray3}-{\blue1}}\} \meq \blue\mathsf{1}$}}
+\newcommand{\hallvnebe}{
+  \rput(-1.02,-.05){\blue3}\rput(-1.02,1.55){\blue2}\rput(  .25, .75){\blue2}
+  \rput(  .75,1.75){\blue4}\rput(  .75,-.25){\blue1}\rput( 1.25, .75){\blue1}
+  \rput( 2.52,-.05){\blue2}\rput( 2.52,1.55){\blue3}}
+
+\newcommand{\halliiae}{{\darkgreen K\"onig's Theorem} {\gray (1916)}
+   \\The maximal size $\bl M$ of a partial transversal in a {\bl(0,1)}-matrix $\bl N$ {\dg equals}
+   \\the minimal number $\bl m$ of lines needed to cover all {\bl1}-entries of $\bl N$.}
+
+
+\newcommand{\hallvpfixa}{\\[3mm]\proof\quad}
+\newcommand{\hallvpfixb}{\\Let $\bl R$ and $\bl C$ be the row and column indices of $\bl N$. }
+\newcommand{\hallvpfixc}{\\Define network $\bl D=(V,A)$
+  where $\bl V \meq R\cup C \cup\{\mathsf{s},\mathsf{t}\}$ and $\bl A \meq S\cup B\cup T$ for
+  $\bl S \meq \{\mathsf{s}\}\times R$,
+  $\bl B \meq \{(i,j)\myin R\times C:n_{ij}\meq 1\}$, and
+  $\bl T \meq C\times \{\mathsf{t}\}$,
+  with capacities $\bl \mathsf{c}(e) \meq M+1$ if $\bl e\myin B$ and $\bl \mathsf{c}(e) \meq 1$ otherwise. }
+\newcommand{\hallvpfixcv}{Define the network $\bl D \meq (V,A)$ where $\bl V \meq R\cup C \cup\{\mathsf{s},\mathsf{t}\}$ and $\bl A \meq S\cup B\cup T$ for
+  \begin{align}
+    S &= \{(\mathsf{s},\mathsf{i})\::i\myin R\}\\
+    B &= \{(\mathsf{i},\mathsf{j})\myin R\times C\::n_{ij}=1\}\\
+    T &= \{(\mathsf{j},\mathsf{t})\::j\myin C\}\end{align}with capacities\[
+    \mathsf{c}(e) \meq \begin{cases} 1  & \:\mytext{if }\, e \meq (\mathsf{s},\mathsf{i}) \textsf{ or } (\mathsf{j},\mathsf{t}) \textsf{ for some }i,j\myin R\cup C\\
+                                 M+1 & \:\mytext{if }\, e \meq (\mathsf{i},\mathsf{j}) \textsf{ for some }\mathsf{i},\mathsf{j}\myin R\cup C\end{cases}\]}
+\newcommand{\hallvpfixd}{\\Then there is a maximal flow $\bl \mathsf{f}$ with $\bl \mathsf{f}(e)\myin \{0,1\}$ for all edges $\bl e\myin A$.}
+\newcommand{\hallvpfixe}{\\Therefore, the arcs $\bl e\myin B$ with positive flow ($\bl\mathsf{f}(e)\meq1$) are
+  vertex-disjoint and correspond to a partial transversal of $\bl A$.}
+\newcommand{\hallvpfixf}{\\Hence, by the {\dg Max-Flow Min-Cut Theorem}, $\bl M\mgeq \min \mathsf{c}(X,Y)$. }
+\newcommand{\hallvpfixg}{\\Let $\bl (X,Y)$ be a minimal edge cut. }
+\newcommand{\hallvpfixh}{Since $\bl \mathsf{c}(X,Y)\meq\max|\mathsf{f}|\mlt M+1$,
+  \\no edge of $\bl B$ is cut by $\bl (X,Y)$}
+\newcommand{\hallvpfixj}{, so $\bl \mathsf{c}(X,Y)\meq|U|$,
+  \\where $\bl U \meq (R\cap Y)\cup (C\cap X)$ is a set of vertices touching all edges of~$\bl B$.}
+\newcommand{\hallvpfixk}{\\Thus, $\bl U$ corresponds in $\bl N$ to a set of lines covering all {\bl1}-entries. }
+\newcommand{\hallvpfixm}[1]{\\Hence, $\bl m\mleq |U| \meq \mathsf{c}(X,Y)\mleq M$.
+ {#1{Since $\bl m\mgeq M$, we have equality.\qed}}\vspace*{-12mm}}
+
+
+
+\begin{document}
+\sf\coursetitle
+\newpage\lecturetitle
+\newpage\lecturetitlev
+\newpage\hallivra
+\newpage\hallivra\hallivrb
+\newpage\hallivra\hallivrb\hallivrc
+\newpage\hallivra\hallivrb\hallivrc\hallivrd
+\newpage\hallivra\hallivrb\hallivrc\hallivrd\hallivre{\hallivrea}
+\newpage\hallivra\hallivrb\hallivrf
+\newpage\hallivra\hallivrb\hallivrf\hallivrg
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{}{}}
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}\hallivrh
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{}}\hallivrh\hallivrj
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}}\hallivrh\hallivrj
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{\bhg}}\hallivrh\hallivrj\hallivrk
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivreca}{\hallivrecb}\hallivrecc{\bhg}}\hallivrh\hallivrj\hallivrk\hallivrm
+\newpage\hallivra\hallivrb\hallivrf\hallivrg\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}\hallivrecc{\bhg}}\hallivrh\hallivrj\hallivrk\hallivrm
+\newpage\hallivrgv\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}}\hallivrh\hallivrj\hallivrm
+\newpage\hallivrgv\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}}\hallivrh\hallivrj\hallivrm\lb\hallib
+\newpage\hallivrgv\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}}\hallivrh\hallivrj\hallivrm\lb\hallib\hallivrw
+\newpage\hallivrgv\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}}\hallivrh\hallivrj\hallivrm\lb\hallib\hallivrw\hallivrwa
+\newpage\hallivrgv\hallivre{\hallivrec{\hallivrecd}{\hallivrecb}}\hallivrh\hallivrj\hallivrm\lb\hallivrn\blb\hallivrp
+\newpage\hallia{\halliaa}
+\newpage\hallivrqv\hallivre{\hallivreb{}{}}
+\newpage\hallivrqv\hallivre{\hallivreb{}{}}\hallivrr
+\newpage\hallivrqv\hallivre{\hallivreb{}{\bhg}}\hallivrr
+\newpage\hallivrqv\hallivre{\hallivreb{}{\bhg}}\hallivrr\hallivrs
+\newpage\hallivrqv\hallivre{\hallivreb{}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivrqv\hallivre{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt
+\newpage\hallivrqv\hallivre{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx
+\newpage\hallivrqv\hallivre{\hallivreb{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+\newpage\hallivrqv\hallivre{\hallivred{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry % Not repeated line
+\newpage\hallivrqv\hallivre{\hallivred{\hallivreba}{\bhg}}\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz
+%\newpage\hallivrqv\hexagonpic\hallivrr\hallivrs\hallivrt\hallivrx\hallivry
+%\newpage\hallivrqv\hexagonpic\hallivrr\hallivrs\hallivrt\hallivrx\hallivry\hallivrz
+\newpage\hallva\hallvaa{\hallvaaa{}}
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaa}}
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaa}}\hallvab
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaab}}\hallvab
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaab}}\hallvab\hallvac
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaac}}\hallvab\hallvac % Not repeated line
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaac}}\hallvab\hallvac\hallvad
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaac}}\hallvab\hallvac\hallvad\lb\hallvae
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaad}}\hallvab\hallvac\hallvad\lb\hallvae % Not repeated line
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaad}}\hallvab\hallvac\hallvad\lb\hallvae\hallvpfia
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaad}}\hallvab\hallvac\hallvad\lb\hallvae\hallvpfia\hallvpfib
+\newpage\hallva\hallvaa{\hallvaaa{\hallvaaaav\hallvaaad}}\hallvab\hallvac\hallvad\lb\hallvae\hallvpfia\hallvpfib\hallvpfic
+\newpage\hallva\hallvab\hallvac\lb\hallvae
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif\hallvpfiig
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif\hallvpfiig\hallvpfiih
+\newpage\hallva\hallvab\hallvac\lb\hallvae\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif\hallvpfiig\hallvpfiih\hallvpfiij
+\newpage\hallva\hallvab\hallvac\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif\hallvpfiig\hallvpfiih\hallvpfiij\hallvpfiik
+\newpage\hallva\hallvab\hallvac\lb\hallvaf\hallvpfiia\hallvpfiib\hallvpfiic\hallvpfiid\hallvpfiie\hallvpfiif\hallvpfiig\hallvpfiih\hallvpfiij\hallvpfiik\hallvpfiim
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagd \hallvage }
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagd \hallvage }\hallvb{\hallvba{}}
+\newpage\hallvag{\hallvagav\hallvagb \hallvagc \hallvagd \hallvage }\hallvb{\hallvba{}}
+\newpage\hallvag{\hallvaga \hallvagbv\hallvagc \hallvagd \hallvage }\hallvb{\hallvba{}}
+\newpage\hallvag{\hallvaga \hallvagbv\hallvagc \hallvagd \hallvage }\hallvb{\hallvba{\hallvbaa}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagcv\hallvagd \hallvage }\hallvb{\hallvba{\hallvbaa}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagcv\hallvagd \hallvage }\hallvb{\hallvba{\hallvbab}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagdv\hallvage }\hallvb{\hallvba{\hallvbab}}
+\newpage\hallvag{\hallvaga \hallvagbv\hallvagc \hallvagd \hallvage }\hallvb{\hallvba{\hallvbab}}
+\newpage\hallvag{\hallvaga \hallvagbv\hallvagc \hallvagd \hallvage }\hallvb{\hallvba{\hallvbac}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagcv\hallvagd \hallvage }\hallvb{\hallvba{\hallvbac}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagcv\hallvagd \hallvage }\hallvb{\hallvba{\hallvbad}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagdv\hallvage }\hallvb{\hallvba{\hallvbad}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagd \hallvagev}\hallvb{\hallvba{\hallvbad}}
+\newpage\hallvag{\hallvaga \hallvagb \hallvagc \hallvagd \hallvagev}\hallvb{\hallvba{\hallvbad}}\hallvah
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakh }
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{}}
+\newpage\hallvaj\lb\hallvak{\hallvakav\hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakbv\hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakbv\hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaa}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakcv\hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaa}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaa}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmab}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmab}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmab}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmac}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmad}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakgv\hallvakh }\hallvm{\hallvma{\hallvmad}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmada}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakgv\hallvakh }\hallvm{\hallvma{\hallvmae{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakcv\hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{\ph}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{\ph}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmae{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaf}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmafa{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakgv\hallvakh }\hallvm{\hallvma{\hallvmafa{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmafa{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmafa{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmafa{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmafa{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmag}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaga}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakgv\hallvakh }\hallvm{\hallvma{\hallvmaga}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaga}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmagb}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakfv\hallvakg \hallvakh }\hallvm{\hallvma{\hallvmah{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakgv\hallvakh }\hallvm{\hallvma{\hallvmah{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakcv\hallvakd \hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmah{}{\ph}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakdv\hallvake \hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmah{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmah{\ph}{}}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmaj}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvakev\hallvakf \hallvakg \hallvakh }\hallvm{\hallvma{\hallvmak}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakhv}\hallvm{\hallvma{\hallvmak}}
+\newpage\hallvaj\lb\hallvak{\hallvaka \hallvakb \hallvakc \hallvakd \hallvake \hallvakf \hallvakg \hallvakhv}\hallvm{\hallvmav{\hallvmakv}}
+\newpage\hallvna
+\newpage\hallvna\hallvnb
+\newpage\hallvna\hallvnb\hallvnc
+\newpage\hallvna\hallvnb\hallvnc\hallvnca
+\newpage\hallvna\hallvnb\hallvnc\hallvnca\hallvncb
+\newpage\hallvna\hallvnb\hallvnc\hallvnca\hallvncb\hallvnd
+\newpage\hallvna\\\hallvnd\hallvne
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{}
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{}\hallvnf\hallvnfa
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{\hallvneaa}\hallvnf\hallvnfa
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{\hallvneaa}\hallvnf\hallvnfa\hallvnfb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{\hallvneaa\hallvneab{\ph}}\hallvnf\hallvnfa\hallvnfb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{\hallvneaa\hallvneab{}}\hallvnf\hallvnfa\hallvnfb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{}
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{}{}\hallvpa
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead}\hallvpa
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead}\hallvpa\hallvpb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead\hallvneae{\ph}{\ph}{\ph}}\hallvpa\hallvpb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead\hallvneae{}{\ph}{\ph}}\hallvpa\hallvpb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead\hallvneae{}{}{\ph}}\hallvpa\hallvpb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead\hallvneae{}{}{}}\hallvpa\hallvpb
+\newpage\hallvna\\\hallvnd\hallvne\hallvnea{\hallvneac}{\hallvnead\hallvneae{}{}{}}\hallvpa\hallvpb\hallvra
+\newpage\hallvrb
+\newpage\hallvrb\\[-5mm]\hallvrc
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib\hallvpfiiic{\ph}{\ph}{\ph}{\ph}
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib\hallvpfiiic{}{\ph}{\ph}{\ph}
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib\hallvpfiiic{}{}{\ph}{\ph}
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib\hallvpfiiic{}{}{}{\ph}
+\newpage\hallvrb\\[-5mm]\hallvrc\hallvpfiiia\hallvpfiiib\hallvpfiiic{}{}{}{}
+\newpage\hallvrb\\[-5mm]\hallvrc
+\newpage\hallvrb\\[-5mm]\hallvrc\lb\hallvrav
+\newpage\hallvrb\\[-5mm]\hallvrc\lb\hallvrav\hallvpfiva
+\newpage\hallvrb\\[-5mm]\hallvrc\blb\hallvrav\hallvpfiva\hallvpfivb
+\newpage\hallvrb\\[-5mm]\hallvrc\blb\hallvrav
+\newpage\hallvrb\\[-5mm]\hallvrc\blb\hallvrav\blb\hallvrd
+\newpage\hallvrb\\[-5mm]\hallvrc\blb\hallvrav\blb\hallvrd\hallvpfva
+\newpage\hallvrb\\[-5mm]\hallvrc\blb\hallvrav\blb\hallvrd\hallvpfva\hallvpfvb
+\newpage\hallvre
+\newpage\hallvre\hallvrf
+\newpage\hallvre\hallvrf\blb\hallvrg
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh\hallvpfvia
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh\hallvpfvia\hallvpfvib
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh\hallvpfvia\hallvpfvib\hallvpfvic
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh
+\newpage\hallvre\hallvrf\blb\hallvrg\hallvrh\lb\hallvrj
+\newpage\hallvsa
+\newpage\hallvsa\hallvsaa
+\newpage\hallvsa\hallvpfviia
+\newpage\hallvsa\hallvpfviia\hallvpfviib
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik\hallvpfviim
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik\hallvpfviim\hallvpfviin
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik\hallvpfviimv
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik\hallvpfviimv\hallvpfviip
+\newpage\hallvsa\hallvpfviia\hallvpfviib\hallvpfviic\hallvpfviid\hallvpfviie\hallvpfviif\hallvpfviig\hallvpfviih\hallvpfviij\hallvpfviik\hallvpfviimv\hallvpfviip\hallvpfviiq
+\newpage\hallvsa
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbbv\hallvtbcv\hallvtbdv\hallvtbev}
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbbv\hallvtbcv\hallvtbdv\hallvtbev}\blb\hallvtc
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbbv\hallvtbcv\hallvtbdv\hallvtbev}\blb\hallvtc\hallvpfviiia
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbbv\hallvtbcv\hallvtbdv\hallvtbev}\blb\hallvtc\hallvpfviiia\hallvpfviiib
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbbv\hallvtbcv\hallvtbdv\hallvtbev}\blb\hallvtc\hallvpfviiia\hallvpfviiib\hallvpfviiic
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbd \hallvtbe }
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{}
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbb \hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{}
+\newpage\hallvsa\blb\hallvtb{\hallvtbav\hallvtbb \hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvneba}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvneba}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvneba\hallvnebab}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvneba\hallvnebab\hallvnebac}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvneba\hallvnebab\hallvnebac}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb\hallvnebab\hallvnebac}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbdv\hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb\hallvnebab}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb\hallvnebbb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb\hallvnebbb\hallvnebbc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebb\hallvnebbb\hallvnebbc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc\hallvnebbb\hallvnebbc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbdv\hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc\hallvnebbb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc\hallvnebcb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc\hallvnebcb\hallvnebcc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebc\hallvnebcb\hallvnebcc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd\hallvnebcb\hallvnebcc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbdv\hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd\hallvnebcb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd\hallvnebdb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbbv\hallvtbc \hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd\hallvnebdb\hallvnebdc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebd\hallvnebdb\hallvnebdc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbcv\hallvtbd \hallvtbe }\\[1mm]\hallvneav{}{\hallvnebe\hallvnebdb\hallvnebdc}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbdv\hallvtbe }\\[1mm]\hallvneav{}{\hallvnebe\hallvnebdb}
+\newpage\hallvsa\blb\hallvtb{\hallvtba \hallvtbb \hallvtbc \hallvtbd \hallvtbev}\\[1mm]\hallvneav{}{\hallvnebe}
+\newpage\hallvsa
+\newpage\hallvsa\blb\halliiae
+\newpage\hallvsa\blb\halliiae\hallvpfixa
+\newpage\hallvsa\blb\halliiae\hallvpfixa\hallvpfixb
+\newpage\hallvsa\blb\halliiae\hallvpfixa\hallvpfixb\hallvpfixc
+\newpage\hallvsa\blb\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd
+\newpage\hallvsa\blb\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe
+\newpage\hallvsa\blb\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg\hallvpfixh
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg\hallvpfixh\hallvpfixj
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg\hallvpfixh\hallvpfixj\hallvpfixk
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg\hallvpfixh\hallvpfixj\hallvpfixk\hallvpfixm{\ph}
+\newpage\halliiae\hallvpfixa\hallvpfixb\hallvpfixc\hallvpfixd\hallvpfixe\hallvpfixf\hallvpfixg\hallvpfixh\hallvpfixj\hallvpfixk\hallvpfixm{}
+
+
+\end{document}
+

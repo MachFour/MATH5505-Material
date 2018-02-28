@@ -1,0 +1,727 @@
+%  OK Talk, no detailed slides: 4CT - Birkhoff's chromatic polynomial - Whitney's work, evolving from graph theory to linear algebra
+%  OK Example
+%  OK Matroid def: independent sets - examples
+%  OK Matroid def: bases - examples
+%  OK Matroid def: circuits - examples
+%  OK Equivalences
+%  OK Rank - example - equivalence
+%  OK (State) Many other definitions and types of matroids
+%  OK Cycle matroids
+%  OK (State) Edmonds' Partition Theorem
+%  OK Wei-type duality for graphs and matroids
+%  OK Matching Theory overview
+%  OK References
+
+
+\include{mydefinitionsmatchings}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\end{center}}
+
+\newcommand{\lecturetitleviii}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part B: Graph Algorithms}\\[3mm]
+  \darkgreen Lecture 8: Matroids\end{center}}
+
+\newcommand{\lectviiia}{\mypicture{}\\[18mm]
+  {\darkgreen Theorem} {\gray (Birkhoff 1912)}\\[2mm]
+  The number of ways to colour a map~$\blue M$ in~$\blue \lambda$ colours is $\bl P(M;\lambda)$
+  \\for some fixed polynomial $\bl P(M;x)$.%, the {\em{\blue chromatic polynomial}} of~$\bl M$.
+  }
+
+\newcommand{\lectviiib}[1]{\mypicture{
+  \rput(3.05,-1.5){\large\darkgreen matrix}
+  \rput(9  ,-1.5){\large\darkgreen matroid}
+  \rput(6.5,-5){\begin{pspicture}(0,0)(10,6.5)#1\end{pspicture}}}}
+\newcommand{\lectviiiba}[1]{\mypicture{
+  \rput(6.5,-5.5){\begin{pspicture}(0,0)(10,6.5)#1\end{pspicture}}}}
+\newcommand{\lectviiibav}[1]{\mypicture{
+  \rput(6.5,-6.5){\begin{pspicture}(0,0)(10,6.5)#1\end{pspicture}}}}
+
+\newcommand{\lectviiibi}[7]{\rput(1.5,4){
+  \mymatrixa{{\darkgray{#6{\rput(.5,3.75){$1$}\rput(1.5,3.75){$2$}
+              \rput(2.5,3.75){$3$}\rput(3.5,3.75){$4$}\rput(4.5,3.75){$5$}}}#7
+    \rput(.5,2.5){{#1{1}}}\rput(1.5,2.5){{#2{0}}}\rput(2.5,2.5){{#3{1}}}\rput(3.5,2.5){{#4{0}}}\rput(4.5,2.5){{#5{0}}}
+    \rput(.5,1.5){{#1{0}}}\rput(1.5,1.5){{#2{1}}}\rput(2.5,1.5){{#3{1}}}\rput(3.5,1.5){{#4{0}}}\rput(4.5,1.5){{#5{0}}}
+    \rput(.5, .5){{#1{0}}}\rput(1.5, .5){{#2{0}}}\rput(2.5, .5){{#3{0}}}\rput(3.5, .5){{#4{1}}}\rput(4.5, .5){{#5{1}}}}}}}
+
+\newcommand{\lectviiibia}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0](0,0)(1,3)}
+\newcommand{\lectviiibib}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0](1,0)(2,3)}
+\newcommand{\lectviiibic}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0](2,0)(3,3)}
+\newcommand{\lectviiibid}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0](3,0)(4,3)}
+\newcommand{\lectviiibie}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0](4,0)(5,3)}
+
+\newcommand{\lectviiibii}[2]{\rput(7.6,5.2){Independent sets \,$\darkgreen\mathcal{I}$}#1
+  \rput(7.6,4.5){$\emptyset\:\:\:\: 1\:\:\: 2\:\:\: 3\:\:\: 4\:\:\: 5$}
+  \rput(7.6,4){$12\:\: 13\:\: 14\:\: 15\:\: 23\:\: 24\:\: 25\:\: 34\:\: 35$}
+  \rput(7.6,3.5){${#2{124}}\:\: 125\:\: 134\:\: 135\:\: 234\:\: 235$}}
+
+\newcommand{\lectviiibiia}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0,shadow=false](5.19,3.25)(5.98,3.75)}
+
+\newcommand{\lectviiibiii}{\rput(7.6,5.2){Maximal independent sets \,$\darkgreen\mathcal{B}${\halfgray ases}}
+  \rput(7.6,4.5){\halfgray$\emptyset\:\:\:\: 1\:\:\: 2\:\:\: 3\:\:\: 4\:\:\: 5$}
+  \rput(7.6,4  ){\halfgray$12\:\: 13\:\: 14\:\: 15\:\: 23\:\: 24\:\: 25\:\: 34\:\: 35$}
+  \rput(7.6,3.5){$124\:\: 125\:\: 134\:\: 135\:\: 234\:\: 235$}}
+
+\newcommand{\lectviiibiv}[3]{\rput(7.6,5.2){Minimally {\sffamily\slshape dependent} sets \,$\darkgreen\mathcal{C}$\hspace*{.05mm}{\halfgray ircuits}}#1
+  \rput(7.6,4){${#2{123}}\:\:\: {#3{45}}$}}
+
+\newcommand{\lectviiibiva}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0,shadow=false](6.86,3.75)(7.65,4.25)}
+\newcommand{\lectviiibivb}{\psframe[linecolor=green,fillcolor=green,linewidth=.03,fillstyle=solid,framearc=0,shadow=false](7.75,3.725)(8.35,4.25)}
+
+\newcommand{\lectviiibv}[4]{\rput(6.35,5.5){Rank\:\,$\blue r$}
+  \rput[l](5,4.3){$\bl r({\darkgray#1{\{3,4\}}})  $\bl }\rput[l](7.05,4.3){$\meq \,{#3{2}}$}
+  \rput[l](5,3.7){$\bl r({\darkgray#2{\{3,4,5\}}})$}\rput[l](7.05,3.7){$\meq \,{#4{2}}$}}
+
+\newcommand{\lectviiica}{Let $\bl E$ be a finite set and let $\bl\mathcal{I}\msubseteq\mathcal{P}(E)$ be a family of subsets of $\bl E$.}
+\newcommand{\lectviiicb}{\\The tuple $\bl(E,\mathcal{I})$ is a {\dg matroid} if and only if
+  \\[.1mm](I1) \: $\bl \emptyset\myin \mathcal{I}$;
+  \\[.5mm](I2) \: If $\bl A\myin \mathcal{I}$   and $\bl B\msubseteq A$, then $\bl B\myin \mathcal{I}$;
+  \\[.5mm](I3) \: If $\bl A,B\myin \mathcal{I}$ and $\bl |A|\mlt |B|$,
+    then $\bl A\cup\{a\}\myin \mathcal{I}$ for some $\bl a\myin B-A$.}
+
+\newcommand{\lectviiicexia}{{\darkgreen Example}}
+\newcommand{\lectviiicexib}{\\A matroid arising from a matrix as shown is a {\dg vector matroid}.}
+
+\newcommand{\lectviiicexiia}{{\darkgreen Example}}
+\newcommand{\lectviiicexiib}{\\{\dg Uniform matroid}\, $\bl U_{r,n} \meq (E,\mathcal{I})$
+  has $\bl |E|\meq n$ and $\bl \mathcal{I} \meq \{A\msubseteq E : |A|\mleq r\}$.}
+
+\newcommand{\lectviiicexiiia}{{\darkgreen Example}}
+\newcommand{\lectviiicexiiib}{\\Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a family of subsets of $\bl E$.}
+\newcommand{\lectviiicexiiic}{\\The partial matchings $\bl\mathcal{I}$ of $\bl \mathcal{A}$ form
+  the {\dg transversal matroid} $\bl(E,\mathcal{I})$.}
+\newcommand{\lectviiicexiiid}{\\(See {\darkgreen Matching Theory Lecture 1}.)}
+
+\newcommand{\lectviiicexiva}{{\darkgreen Example}}
+\newcommand{\lectviiicexivb}{\\Let $\bl E$ be the edges of a graph $\bl G$ and let $\bl\mathcal{I}$ be the family of forests of $\bl G$.
+    \mypicture{\rput(-9,-1.4){\pspicture(0,0)(0,0)\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+      linecolor=gray,shadow=false,fillstyle=solid}
+    \psarc[fillstyle=none](0,0){.5}{45}{315}\psline(.35,.35)(.7,0)\psline(.35,-.35)(.7,0)
+    \psarc[fillstyle=none](1.3,-.6){.84}{45}{135}\psarc[fillstyle=none](1.3, .6){.84}{225}{315}
+    \rput(.7,0){\mydot}\rput(1.9,0){\mydot}
+    \rput(-.25,.434){\mydot}\rput(-.25,-.434){\mydot}
+%    \rput(-.7,0   ){$1$}\rput( .5, .55){$2$}\rput( .5,-.55){$3$}
+%    \rput(1.3, .5 ){$5$}\rput(1.3,-.5 ){$4$}
+  \endpspicture}}}
+\newcommand{\lectviiicexivc}{\\Then $\bl M(G) \meq (E,\mathcal{I})$ is the {\dg cycle matroid} of $\bl G$.}
+\newcommand{\lectviiicexivd}{\\[14mm](We shall shortly show that these structures are indeed matroids.)}
+
+
+\newcommand{\lectviiida}{Let $\bl E$ be a finite set and let $\bl\mathcal{B}\msubseteq\mathcal{P}(E)$ be a family of subsets of $\bl E$.}
+\newcommand{\lectviiidb}{\\The tuple $\bl(E,\mathcal{B})$ is a {\dg matroid} if and only if
+  \\[.1mm](B1) \: $\bl \mathcal{B}\neq\emptyset$;
+  \\[.5mm](B2) \: If $\bl B_1,B_2\myin \mathcal{B}$ and $\bl x\myin B_1-B_2$,\\
+  \hspace*{10.6mm} then $\bl (B_1-x)\cup \{y\}\myin \mathcal{B}$ for some $\bl y\myin B_2-B_1$.}
+
+\newcommand{\lectviiidexia}{{\darkgreen Example}}
+\newcommand{\lectviiidexib}{\\A matroid arising from a matrix as shown is a {\dg vector matroid}.}
+
+\newcommand{\lectviiidexiia}{{\darkgreen Example}}
+\newcommand{\lectviiidexiib}{\\{\dg Uniform matroid}\, $\bl U_{r,n} \meq (E,\mathcal{B})$
+  has $\bl |E|\meq n$ and $\bl \mathcal{B} \meq \{A\msubseteq E : |A| \meq r\}$.}
+
+\newcommand{\lectviiidexiiia}{{\darkgreen Example}}
+\newcommand{\lectviiidexiiib}{\\Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a family of subsets of $\bl E$.}
+\newcommand{\lectviiidexiiic}{\\The maximal partial matchings $\bl\mathcal{B}$ form
+  the {\dg transversal matroid} $\bl(E,\mathcal{B})$.}
+
+\newcommand{\lectviiidexiva}{{\darkgreen Example}}
+\newcommand{\lectviiidexivb}{\\Let $\bl E$ be the edges of a graph $\bl G$ and let $\bl\mathcal{B}$ be the spanning forests of $\bl G$.
+    \mypicture{\rput(-9,-1.4){\pspicture(0,0)(0,0)\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+      linecolor=gray,shadow=false,fillstyle=solid}
+    \psarc[fillstyle=none](0,0){.5}{45}{315}\psline(.35,.35)(.7,0)\psline(.35,-.35)(.7,0)
+    \psarc[fillstyle=none](1.3,-.6){.84}{45}{135}\psarc[fillstyle=none](1.3, .6){.84}{225}{315}
+    \rput(.7,0){\mydot}\rput(1.9,0){\mydot}
+    \rput(-.25,.434){\mydot}\rput(-.25,-.434){\mydot}
+%    \rput(-.7,0   ){$1$}\rput( .5, .55){$2$}\rput( .5,-.55){$3$}
+%    \rput(1.3, .5 ){$5$}\rput(1.3,-.5 ){$4$}
+  \endpspicture}}}
+\newcommand{\lectviiidexivc}{\\Then $\bl M(G) \meq (E,\mathcal{B})$ is the {\dg cycle matroid} of $\bl G$.}
+
+
+\newcommand{\lectviiiea}{Let $\bl E$ be a finite set and let $\bl\mathcal{C}\msubseteq\mathcal{P}(E)$ be a family of subsets of $\bl E$.}
+\newcommand{\lectviiieb}{\\The tuple $\bl(E,\mathcal{C})$ is a {\dg matroid} if and only if
+  \\[.1mm](C1) \: $\bl \emptyset\notin\mathcal{C}$;
+  \\[.5mm](C2) \: If $\bl C_1,C_2\myin \mathcal{C}$, then $\bl C_1\not\msubset C_2$;
+  \\[.5mm](C3) \: If $\bl C_1,C_2\myin \mathcal{C}$ are distinct and $\bl e\myin C_1\cap C_2$,\\
+  \hspace*{11.4mm}then $\bl C\msubseteq (C_1\cup C_2) - e$ for some $\bl C\myin \mathcal{C}$.}
+
+\newcommand{\lectviiieexia}{{\darkgreen Example}}
+\newcommand{\lectviiieexib}{\\A matroid arising from a matrix as shown is a {\dg vector matroid}.}
+
+\newcommand{\lectviiieexiia}{{\darkgreen Example}}
+\newcommand{\lectviiieexiib}{\\{\dg Uniform matroid}\, $\bl U_{r,n} \meq (E,\mathcal{C})$
+  has $\bl |E|\!\meq\!n$ and $\bl \mathcal{C} \meq \{A\!\msubseteq\! E : |A| \!=\! r\hspace*{-.4mm}+\hspace*{-.7mm}1\}$.}
+
+\newcommand{\lectviiieexiva}{{\darkgreen Example}}
+\newcommand{\lectviiieexivb}{\\Let $\bl E$ be the edges of a graph $\bl G$ and let $\bl\mathcal{C}$ be the cycle edge sets of $\bl G$.
+    \mypicture{\rput(-9,-1.4){\pspicture(0,0)(0,0)\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+      linecolor=gray,shadow=false,fillstyle=solid}
+    \psarc[fillstyle=none](0,0){.5}{45}{315}\psline(.35,.35)(.7,0)\psline(.35,-.35)(.7,0)
+    \psarc[fillstyle=none](1.3,-.6){.84}{45}{135}\psarc[fillstyle=none](1.3, .6){.84}{225}{315}
+    \rput(.7,0){\mydot}\rput(1.9,0){\mydot}
+    \rput(-.25,.434){\mydot}\rput(-.25,-.434){\mydot}
+%    \rput(-.7,0   ){$1$}\rput( .5, .55){$2$}\rput( .5,-.55){$3$}
+%    \rput(1.3, .5 ){$5$}\rput(1.3,-.5 ){$4$}
+  \endpspicture}}}
+\newcommand{\lectviiieexivc}{\\Then $\bl M(G) \meq (E,\mathcal{C})$ is the {\dg cycle matroid} of $\bl G$.}
+
+\newcommand{\lectviiifa}{Let $\bl E$ be a finite set and
+  let $\bl\mathcal{I},\mathcal{B},\mathcal{C}\msubseteq\mathcal{P}(E)$ be a families of subsets of~$\bl E$.}
+
+\newcommand{\lectviiiga}{{\darkgreen Theorem}}
+\newcommand{\lectviiigb}{\\The sets of axioms (I1-3), (B1-2), and (C1-3) are equivalent.}
+\newcommand{\lectviiigc}[1]{\\In particular, if
+  \\[.75mm]\mybullet if $\bl (E,\mathcal{I})$ is a matroid, then its\\
+    \hspace*{6.6mm}{\dg bases} $\bl \mathcal{B}$,
+      the maximal members of $\bl \mathcal{I}$, satisfy (B1-2)\\
+    \hspace*{6.6mm}{\dg circuits} $\bl \mathcal{C}$,
+      the minimal subsets not in {$\bl\mathcal{I}$}, satisfy (C1-3)#1}
+\newcommand{\lectviiigca}{\\[.6mm]\mybullet if $\bl (E,\mathcal{B})$ is a matroid, then its\\
+    \hspace*{6.6mm}{\dg independent sets} $\bl \mathcal{I}$,
+      the subsets of $\bl \mathcal{B}$'s members, satisfy (I1-3)\\
+    \hspace*{6.6mm}{\dg circuits} $\bl \mathcal{C}$,
+      the minimal non-subsets of $\bl \mathcal{B}$'s members, satisfy (C1-3)}
+\newcommand{\lectviiigcb}{\\[.6mm]\mybullet if $\bl (E,\mathcal{C})$ is a matroid, then its\\
+    \hspace*{6.6mm}{\dg independent sets} $\bl \mathcal{I}$,
+      the proper subsets of $\bl \mathcal{C}$'s members, satisfy (I1-3)\\
+    \hspace*{6.6mm}{\dg bases} $\bl \mathcal{B}$,
+      the maximal proper subsets of $\bl \mathcal{C}$'s members, satisfy (B1-2).}
+
+\newcommand{\lectviiigpfa}{\proof\quad}
+\newcommand{\lectviiigpfb}{We will merely prove that (C3) follows from (I1-3).}
+\newcommand{\lectviiigpfc}{\\Let $\bl (E,\mathcal{I})$ be a matroid and let $\bl \mathcal{C}$ be the minimal subsets not in $\bl \mathcal{I}$.}
+\newcommand{\lectviiigpfd}{\\Suppose that $\bl C_1,C_2\myin \mathcal{C}$ are distinct and that $\bl e\myin C_1\cap C_2$.}
+\newcommand{\lectviiigpfe}{\mypicture{
+  \rput(-4.882,-5.45){  (C3) \: If $\bl C_1,C_2\myin \mathcal{C}$ are distinct and $\bl e\myin C_1\cap C_2$,}
+  \rput(-4.882,-5.95){\hspace*{11mm}then $\bl C\msubseteq (C_1\cup C_2) - e$ for some $\bl C\myin \mathcal{C}$.}}}
+\newcommand{\lectviiigpff}{\\Assume that $\bl (C_1\cup C_2) - e\myin \mathcal{I}$.}
+\newcommand{\lectviiigpfg}{\\By construction, $\bl C_2-C_1\mneq\emptyset$, so we may choose some $\bl f\myin C_2-C_1$.}
+\newcommand{\lectviiigpfh}{\\Now, $\bl C_2$ is minimally not in $\bl \mathcal{I}$, so $\bl C_2-f\myin \mathcal{I}$.}
+\newcommand{\lectviiigpfj}{\\Choose $\bl I\myin \mathcal{I}$ to be maximal so that $\bl C_2-f\msubseteq I\msubseteq C_1\cup C_2$.}
+\newcommand{\lectviiigpfk}{\\Note that  $\bl C_2\mnsubseteq I$; therefore, $\bl f\mnotin I$.}
+\newcommand{\lectviiigpfl}{\\Similarly, $\bl C_1\mnsubseteq I$, so we may choose some $\bl g\myin C_1-I$.}
+\newcommand{\lectviiigpfm}{\\Since $\bl f\mynotin C_1$, the elements $\bl f$ and $\bl g$ are distinct}
+\newcommand{\lectviiigpfn}{, so\vspace*{-1mm}
+  \[\bl|I| \mleq |(C_1\cup C_2) - \{f,g\}| \meq |C_1\cup C_2| -2 \mlt  |(C_1\cup C_2) - e|\,.\]}
+\newcommand{\lectviiigpfo}{By (I3), $\bl I\cup\{a\}\myin \mathcal{I}$ for some $\bl a\myin (C_1\cup C_2) - e$ not in $\bl I$.}
+\newcommand{\lectviiigpfp}{\\However, this contradicts the maximality of $\bl I$.}
+\newcommand{\lectviiigpfq}{\\Hence, $\bl (C_1\cup C_2) - e$ is not in $\bl \mathcal{I}$ and thus contains some $\bl C\msubseteq\mathcal{C}$.\qed}
+
+\newcommand{\lectviiigd}{\\[4mm]{\darkgreen Exercise} \: Complete the proof of this theorem!}
+\newcommand{\lectviiige}{There are myriad other equivalent ways in which to define matroids,\\
+  for instance, by the {\dg rank function}\, $\bl r(A) \meq \max\{|I|\::\: I\msubseteq A,\,I\myin \mathcal{I}\}$.}
+
+\newcommand{\lectviiigf}{Let $\bl E$ be a finite set and let $\bl r:\mathcal{P}(E)\rightarrow\mathbb{N}_0$ be a function.}
+\newcommand{\lectviiigg}{\\The tuple $\bl(E,r)$ is a {\dg matroid} if and only if
+  \\[ 1mm](R1) \: If $\bl A\msubseteq E$, then $\bl 0\mleq r(A)\mleq |A|$.
+  \\[.5mm](R2) \: If $\bl A\msubseteq B\msubseteq E$, then $\bl r(A)\mleq r(B)$.
+  \\[.5mm](R3) \: If $\bl A,B\msubseteq E$, then $\bl r(A\cup B) + r(A\cap B)\mleq r(A)+r(B)$.}
+\newcommand{\lectviiigh}{\\[3mm](See {\darkgreen Matching Theory Lecture 4}).}
+
+\newcommand{\lectviiiha}{{\darkgreen Theorem}}
+\newcommand{\lectviiihb}{\\Let $\bl E$ be the edges of a graph $\bl G$ and let $\bl\mathcal{C}$ be the cycle edge sets of $\bl G$.
+    \mypicture{\rput(-7,-1.7){\pspicture(0,0)(0,0)\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+      linecolor=gray,shadow=false,fillstyle=solid}
+    \psline( 1,0)(0, .6)\psline( 1,0)(0,-.6)
+    \psline(-1,0)(0, .6)\psline(-1,0)(0,-.6)
+    \psline(0,.6)(0,-.6)
+    \rput( 1,0){\mydot}\rput(0, .6){\mydot}
+    \rput(-1,0){\mydot}\rput(0,-.6){\mydot}
+  \endpspicture}}}
+\newcommand{\lectviiihc}{\\Then $\bl M(G) \meq (E,\mathcal{C})$ is a matroid (the {\dg cycle matroid} of $\bl G$).}
+
+\newcommand{\lectviiihpfa}{\proof\quad}
+\newcommand{\lectviiihpfb}{The family $\bl \mathcal{C}$ trivially satisfies (C1) and (C2).}
+\newcommand{\lectviiihpfc}{\mypicture{
+  \rput(-4.882,-4.45){  (C3) \: If $\bl C_1,C_2\myin \mathcal{C}$ are distinct and $\bl e\myin C_1\cap C_2$,}
+  \rput(-4.882,-4.95){\hspace*{13.2mm}then $\bl C\msubseteq (C_1\cup C_2) - e$ for some $\bl C\myin \mathcal{C}$.}}}
+\newcommand{\lectviiihpfd}{\\Let $\bl C_1,C_2\myin \mathcal{C}$ be distinct circuits of $\bl G$ containing a shared edge~$\bl e$.}
+\newcommand{\lectviiihpfe}{\\Let $\bl P_1$ and $\bl P_2$ be the paths $\bl C_1-e$ and $\bl C_2-e$, respectively.}
+\newcommand{\lectviiihpff}{\\Since $\bl C_1$ and $\bl C_2$ are distinct, $\bl P_1$ and $\bl P_2$ must also be distinct.}
+\newcommand{\lectviiihpfg}{\\Now, $\bl P_1$ and $\bl P_2$ have the same endpoints (the vertices of $\bl e$),\\
+  so $\bl P_1\cup P_2$ is a closed walk containing a cycle.}
+\newcommand{\lectviiihpfh}{\\The edge set $\bl C$ of this cycle is contained in $\bl (C_1\cup C_2)-e$.\qed}
+
+\newcommand{\lectviiij}{Let $\bl G\meq (V,E)$ be an edge-weighted connected graph.}
+\newcommand{\lectviiija}{{\dg\sc Greedy Algorithm} {\gray (Kruskal 1956)}}
+\newcommand{\lectviiijb}{\\[1mm]\mybullet Set $\bl T =\emptyset$.}
+\newcommand{\lectviiijc}{\\\mybullet Let $\bl A$ be the edges in $\bl E-E(T)$ that form no cycle with edges~in~$\bl T$.}
+\newcommand{\lectviiijd}{\\\mybullet Choose an edge $\bl e$ from $\bl A$ that has smallest weight.}
+\newcommand{\lectviiije}{\\\mybullet Add $\bl e$ to $\bl T$.}
+\newcommand{\lectviiijf}{\\\mybullet Continue until $\bl T$ is a minimal spanning tree for $\bl G$.}
+
+\newcommand{\lectviiik}{Let $\bl M\meq (E,\mathcal{I})$ be a matroid with weights $\bl w(e)$ on each element $\bl e\myin E$.}
+\newcommand{\lectviiika}{{\dg\sc Greedy Algorithm For Matroids} {\gray (Borůvka 1926)}}
+\newcommand{\lectviiikb}{\\[1mm]\mybullet Set $\bl B =\emptyset$.}
+\newcommand{\lectviiikc}{\\\mybullet Let $\bl A$ be all elements $\bl e$ in $\bl E-B$ for which $\bl B\cup \{e\}\myin \mathcal{I}$.}
+\newcommand{\lectviiikd}{\\\mybullet Choose an edge $\bl e$ from $\bl A$ with smallest weight $\bl w(e)$.}
+\newcommand{\lectviiike}{\\\mybullet Add $\bl e$ to $\bl B$.}
+\newcommand{\lectviiikf}{\\\mybullet Continue until $\bl A \meq \emptyset$.}
+\newcommand{\lectviiikg}{\\\mybullet Then $\bl B$ is a minimally weighted basis for $\bl M$.}
+
+\newcommand{\lectviiikpfa}{\proof\quad}
+\newcommand{\lectviiikpfb}{By (I3), the algorithm will return a basis $\bl B \meq \{e_1,\ldots,e_r\}$.}
+\newcommand{\lectviiikpfc}{\\Assume that $\bl w(B') \mlt  w(B)$ for some basis $\bl B' \meq \{f_1,\ldots,f_r\}$ of $\bl M$.}
+\newcommand{\lectviiikpfd}{\\We may suppose that
+  $\bl w(e_1)\mleq \cdots\mleq w(e_r)$ and
+  $\bl w(f_1)\mleq \cdots\mleq w(f_r)$.}
+\newcommand{\lectviiikpfe}{\\Set $\bl i \meq \min \{ j : w(f_j) \mlt  w(e_j)\}$. }
+\newcommand{\lectviiikpff}{\\By (I3), there is some $\bl j\myin \{1,\ldots,i\}$
+  for which $\bl \{e_1,\ldots,e_{i-1}\}\cup\{f_j\}\myin \mathcal{I}$. }
+\newcommand{\lectviiikpfg}{\\Also, $\bl w(f_j)\mleq w(f_i) \mlt  w(e_i)$. }
+\newcommand{\lectviiikpfh}{However, this means that the algorithm would not have chosen $\bl e_i$
+  at the $\bl i$th step for $\bl B$, a contradiction. }
+\newcommand{\lectviiikpfj}{\\Thus, $\bl B$ is a basis with minimal weight.\qed}
+
+\newcommand{\lectviiim}{Let $\bl M\meq (E,r)$ be a matroid.}
+\newcommand{\lectviiima}{\\[3mm]{\darkgreen Edmonds' Matroid Partition Theorem} {\gray(1970)}
+  \\The set $\bl E$ can be partitioned into $\bl k$ independent sets
+  \\if and only if $\bl k\cdot r(A)\mgeq |A|$ for all $\bl A\msubseteq E$.}
+\newcommand{\lectviiimb}{\\[5mm]{\gray A special case of this result is {\green Edmonds' Tree Partition Theorem}.
+  \\Edmonds also gave an algorithm for finding such partitions.}}
+\newcommand{\lectviiimc}[1]{\\{\psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,fillstyle=solid,shadow=false,linearc=0}\pspicture(-3.6,-1)(5,2.5)
+  \rput(0,1){\pspicture(-.5,0)(2.5,1){\psset{fillstyle=none}
+  \pspolygon(0,1)(.951,.309)(.588,-.809)(-.588,-.809)(-.951,.309)
+  \pspolygon(0,1)(.588,-.809)(-.951,.309)(.951,.309)(-.588,-.809)#1}
+  \rput(0,1){\mydot}
+  \rput( .588,-.809){\mydot}\rput(-.951,.309){\mydot}
+  \rput(-.588,-.809){\mydot}\rput( .951,.309){\mydot}\endpspicture}\endpspicture}}
+\newcommand{\lectviiimca}{{\psset{linecolor=blue,linewidth=.04}
+  \psline(0,1)(-.951,.309)(-.588,-.809)(.588,-.809)\psline(-.588,-.809)(.951,.309)}}
+\newcommand{\lectviiimcb}{{\psset{linecolor=halfred,linewidth=.04}
+  \psline(-.951,.309)(.951,.309)(0,1)(-.588,-.809)\psline(0,1)(.588,-.809)}}
+\newcommand{\lectviiimcc}{{\psset{linecolor=green,linewidth=.04}
+  \psline(-.951,.309)(.588,-.809)(.951,.309)}}
+
+\newcommand{\lectviiin}{Let $\bl M\meq (E,r)$ be a matroid on $\bl n \meq |E|$ elements.}
+\newcommand{\lectviiina}{\\[2mm]For all $\bl A\msubseteq E$, define\vspace*{-2mm}
+  \[\blue r^*(A) :\meq |A| - r(E) + r(E-A)\vspace*{-6mm}\]}
+\newcommand{\lectviiinav}{\\For all $\bl A\msubseteq E$, define $\bl r^*(A) :\meq |A| - r(E) + r(E-A)$.}
+\newcommand{\lectviiinab}{\\[2mm]It is easy to show that $\bl M^*\mdef (E,r^*)$ is also a matroid {\gray (the {\green dual} of $M$)}.}
+\newcommand{\lectviiinb}{\\Also define, for $\bl k\black\meq r(E)$ and all $\bl i,j$,\vspace*{-3mm}
+  \[\begin{array}{rlrl}\blue
+      f_i   &\meq \max\{\,|A|: r(A)   \meq i\}\qquad\quad &\blue U \black &\meq \{f_0+1,\ldots,f_{k-1}+1\}\\\blue
+      f^*_j &\meq \max\{\,|A|: r^*(A) \meq j\}            &\blue V \black &\meq \{n-f^*_{n-k-1},\ldots,n-f^*_0\}
+    \end{array}\]}
+\newcommand{\lectviiinc}{{\darkgreen Theorem {\gray (Britz et al.~2012)}}\vspace*{-2mm}
+  \[\blue U\cup V \meq \{1,\ldots,n\}\qquad\mytext{and}\qquad
+          U\cap V \meq \emptyset\vspace*{-8mm}\]}
+
+\newcommand{\lectviiincpfa}{\proof\quad}
+\newcommand{\lectviiincpfb}{Assume that the theorem is false.}
+\newcommand{\lectviiincpfc}{\\Then $\bl f_i+1 \meq n-f^*_j$ for some $\bl i,j$.}
+\newcommand{\lectviiincpfd}{\\Choose $\bl A\msubseteq E$ so that $\bl |A| \meq f_j^*$ and $\bl r^*(A) \meq j$.}
+\newcommand{\lectviiincpfe}{\\Then $\bl |E-A| \meq n - |A| \meq n - f_j^* \meq f_i + 1$, so $\bl r(E-A)\mgeq i+1$.}
+\newcommand{\lectviiincpff}{\\By definition, $\bl -|A| + r^*(A) + r(E) \meq r(E-A)$;
+  \\therefore,\hspace*{2mm}            $\bl -f_j^*+j+k\mgeq i+1$.}
+\newcommand{\lectviiincpfg}{\\Similarly, $\bl n-f_i  +i-k\mgeq j+1$.}
+\newcommand{\lectviiincpfh}{\\Adding these inequalities gives $\bl 1=n-f_i-f_j^*\mgeq 2$, a contradiction.\qed\vspace*{-10mm}}
+
+\newcommand{\lectviiioa}{A {\dg cutset} of a graph is a set of edges that separate the graph.
+  \\A {\dg bond} is a minimal cutset.\\[6mm]}
+\newcommand{\lectviiiob}[5]{\pspicture(-3,-.75)(1,4)
+  \psset{unit=12mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+      linecolor=gray,shadow=false,fillstyle=none,dash=7pt 5pt}
+   \rput(1,1){\pspicture(0,0)(2,2)
+   {#1\psarc(1,1){1}{94}{176}}
+%   {\psset{fillstyle=solid}\rput(0,1){\mydot}\rput(1,2){\mydot}}
+   {#2\psarc(1,1){1}{4}{86}}
+   {#3\psarc(1,1){1}{184}{266}}
+   {#4\psline(.08,1)(1.92,1)}
+%   {\psset{fillstyle=solid}\rput(1,0){\mydot}\rput(2,1){\mydot}}
+   {#5\psarc(1,1){1}{274}{-4}}
+   {\psset{fillstyle=solid}\rput(0,1){\mydot}\rput(1,2){\mydot}}
+   {\psset{fillstyle=solid}\rput(1,0){\mydot}\rput(2,1){\mydot}}
+  \endpspicture}\endpspicture}
+\newcommand{\lectviiiocav}{\\\phantom{$\blue b_1 \meq$ \darkgray minimal size of a bond {\meq}}}
+\newcommand{\lectviiioca}{\\$\bl b_1\meq$ \darkgray minimal size of a bond {\meq}}
+\newcommand{\lectviiiocb}{\\$\bl b_1\meq$ \darkgray minimal size of a bond {\meq}\; {\blue2}}
+\newcommand{\lectviiiocc}{\\$\bl b_1\meq$ \darkgray minimal size of a bond {\meq}\; {\blue2}}
+\newcommand{\lectviiioda}{\\$\bl b_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct bonds {\meq}\;}
+\newcommand{\lectviiiodb}{\\$\bl b_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct bonds {\meq}\; {\blue4}}
+\newcommand{\lectviiiodc}{\\$\bl b_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct bonds {\meq}\; {\blue4}}
+\newcommand{\lectviiioea}{\\$\bl b_3\meq$ \darkgray min.\ \# edges in {\bl3} distinct bonds $\bl B_1,B_2,B_3$,\: $\bl B_3\nsubseteq B_1\cup B_2$\:\: {\meq}\; {\blue5}}
+\newcommand{\lectviiioeb}{\\$\bl b_3\meq$ \darkgray min.\ \# edges in {\bl3} distinct bonds $\bl B_1,B_2,B_3$,\: $\bl B_3\nsubseteq B_1\cup B_2$\:\: {\meq}\; {\blue5}}
+\newcommand{\lectviiiofa}{\\[2mm]$\bl c_1 \meq$ \darkgray minimal size of a cycle {\meq}\; }
+\newcommand{\lectviiiofb}{\\[2mm]$\bl c_1 \meq$ \darkgray minimal size of a cycle {\meq}\; {\blue3}}
+\newcommand{\lectviiiofc}{\\[2mm]$\bl c_1 \meq$ \darkgray minimal size of a cycle {\meq}\; {\blue3}}
+\newcommand{\lectviiioga}{\\$\bl c_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct cycles {\meq}\; }
+\newcommand{\lectviiiogb}{\\$\bl c_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct cycles {\meq}\; {\blue5}}
+\newcommand{\lectviiiogc}{\\$\bl c_2\meq$ \darkgray min.\ \# edges in {\bl2} distinct cycles {\meq}\; {\blue5}\black}
+\newcommand{\lectviiioha}{\\[4mm]\black Set $\bl U \:\meq \{ b_1,  b_2, b_3\} \meq \{2,4,5\}$
+                              \\ and $\bl V \:\meq \{5+1-c_2,5+1-c_1\} \meq \{1,3\}$.}
+\newcommand{\lectviiiohb}{\\[8mm]\myframe{(0,-.25)(8.5,.575)}
+  \mypicture{\rput[l](.3,.15){$\bl U\cup V\:\meq\: \{1,2,3,4,5\}$\:\:
+    and \:\:\:  $\bl U\cap V\:\meq\: \emptyset$}}}
+
+\newcommand{\lectviiip}{Let $\bl G$ be a graph on $\bl n$ edges.
+  \\Define
+  \begin{align*}\blue
+    k   &\meq \mytext{the number of edges in a spanning forest of~$\blue G$}\\[1mm]\blue
+    b_i &\meq \mytext{min. \# edges in $\bl i$ bonds,  none contained in the union of the others}\\\blue
+    c_j &\meq \mytext{min. \# edges in $\bl j$ cycles, none contained in the union of the others}\\[1mm]\blue
+    U   &\meq \{b_1,\ldots,b_k\}\\\blue
+    V   &\meq \{n+1-c_{n-k},\ldots,n+1-c_1\}\,.
+  \end{align*}
+  \\{\darkgreen Theorem {\gray (Britz 2007)}} \vspace*{-2mm}
+  \[\blue U\cup V \meq \{1,\ldots,n\}\qquad\mytext{and}\qquad
+          U\cap V \meq \emptyset\]}
+\newcommand{\lectviiiq}{{\gray This is a special case of the previous matroid duality theorem.}}
+
+\newcommand{\contents}{\pspicture(0,0)(0,0)\endpspicture\\[-8mm]
+  {{\sc\Large Matching Theory}\footnotesize\dg
+  \\[- .2mm] Hall's Marriage Theorem
+  \\[-1.6mm] Ore's theorems
+  \\[-1.6mm] K\"onig's Theorem
+  \\[-1.6mm] Dilworth's Theorem
+  \\[-1.6mm] K\"onig-Birkhoff-Neumann Theorem
+  \\[-1.6mm] Ryser's Theorem
+  \\[-1.6mm] Symmetric Chain Decomposition Algorithm
+  \\[-1.6mm] Sperner's Theorem
+  \\[-1.6mm] Rado's Theorem
+  \\[-1.6mm] The Ford-Fulkerson Theorem
+  \\[-1.6mm] Greene's Theorem
+  \\[-1.6mm] Tutte's 1-Factor Theorem
+  \\[-1.6mm] Alternating Path Algorithm
+  \\[-1.6mm] Max Flow - Min Cut Theorem
+  \\[-1.6mm] Ford-Fulkerson Algorithm
+  \\[-1.6mm] The Greedy Algorithm
+  \\[-1.6mm] Dijkstra's Algorithm
+  \\[-1.6mm] Euler Trail/Circuit Theorems
+  \\[-1.6mm] Euler Circuit Algorithm
+  \\[-1.6mm] Dirac's Theorem
+  \\[-1.6mm] Greedy Algorithm For Matroids
+  \\[-1.6mm] Edmonds' Matroid Partition Theorem
+  \\[-1.6mm] Matroid Duality Theorem}}
+
+\newcommand{\references}{{\dg References}\footnotesize
+  \\[2mm]M.~Aigner, {\sl\darkgreen Combinatorial Theory}, Springer-Verlag, New York, 1979.
+  \\[.1mm]    J.A.~Bondy and U.S.R.~Murty,
+  \\\myspace  {\sl\darkgreen Graph Theory with Applications}, Macmillan Press, New York, 1976.
+  \\[.1mm]    J.~Brandt, {\sl\dg Kombinatorik}, Aarhus University, lecture notes, 2001.
+  \\[.1mm]    T.~Britz, {\dg Higher support matroids}, {\sl Discrete Math.}~307 (2007), 2300--2308.
+  \\[.1mm]    T.~Britz, T.~Johnsen, D.~Mayhew, and K.~Shiromoto,
+  \\\myspace  {\darkgreen Wei-type duality theorems for matroids}, {\sl Des.\ Codes Cryptogr.}~62 (2012), 331--341.\hspace*{-12mm}
+  \\[.1mm]    L.R.~Ford, Jr.\ and D.R.~Fulkerson,
+  \\\myspace  {\sl\darkgreen Flows in Networks}, Princeton University Press, 1962.
+  \\[.1mm]    R.L.~Graham, M.~Gr\"otschel, and L.~Lov\'asz (eds.),
+  \\\myspace  {\sl\darkgreen Handbook of Combinatorics. I--II}, North-Holland, Amsterdam, 1995.
+  \\[.1mm]    J.H.~van Lint and R.M.~Wilson,
+  \\\myspace  {\sl\darkgreen A Course in Combinatorics}, Cambridge University Press, 1992.
+  \\[.1mm]    L.~Lov\'asz and M.D.~Plummer,
+  \\\myspace  {\sl\darkgreen Matching Theory}, Akad\'emiai Kiad\'o, North Holland, Budapest, 1986.
+  \\[.1mm]    R.~Rado, {\dg A theorem on independence relations},
+  \\\myspace  {\sl Quart.\ J.~Math., Oxford Ser.}, 13 (1942), 83--89.
+  \\[.1mm]    V.K.~Wei, {\dg Generalized Hamming weights for linear codes},
+  \\\myspace  {\sl IEEE Trans.\ Inform.\ Theory}~37 (1991), 1412--1418.\vspace*{-12mm}}
+
+
+\newcommand{\weid}[1]{\begin{center}\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,
+ linecolor=gray,framearc=.3,shadowcolor=offwhite,shadow=true,shadowsize=.125,
+ shadowangle=-45,dash=7pt 5pt}
+  \begin{pspicture}(0,0)(10,7.5)
+    \psset{fillcolor=white,shadow=false,fillstyle=solid,framearc=0}#1\bl
+  \end{pspicture}\end{center}}
+
+\newcommand{\weida}{\rput(4.35,7){\large\darkgreen linear code\ph{y}}
+  \rput(4.25,5.5){\psset{unit=4mm}
+  \mymatrixa{{\darkgray
+    \rput(.5,2.5){1}\rput(1.5,2.5){0}\rput(2.5,2.5){1}\rput(3.5,2.5){0}\rput(4.5,2.5){0}
+    \rput(.5,1.5){0}\rput(1.5,1.5){1}\rput(2.5,1.5){1}\rput(3.5,1.5){0}\rput(4.5,1.5){0}
+    \rput(.5, .5){0}\rput(1.5, .5){0}\rput(2.5, .5){0}\rput(3.5,.5){1}\rput(4.5, .5){1}}}}}
+
+\newcommand{\weidb}[1]{\rput{270}(11,1.5){\darkgreen subcodes}
+  \rput(-1,2.6){\psset{unit=2.75mm,linewidth=.03,linecolor=black,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}
+    {\pspicture(0,0)(0,0)\darkgray\scriptsize
+      \rput( 1,2){\myonecode{1}{0}{1}{0}{0}}
+      \rput( 7,2){\myonecode{0}{1}{1}{0}{0}}
+      \rput(13,2){\myonecode{0}{0}{0}{1}{1}}
+      \rput(19,2){\myonecode{1}{1}{0}{0}{0}}
+      \rput(25,2){\myonecode{1}{0}{1}{1}{1}}
+      \rput(31,2){\myonecode{0}{1}{1}{1}{1}}
+      \rput(37,2){\myonecode{1}{1}{0}{1}{1}}
+      \rput( 1,0){{#1{\dg 2}}}
+      \rput( 7,0){{#1{\dg 2}}}
+      \rput(13,0){{#1{\dg 2}}}
+      \rput(19,0){{#1{\dg 2}}}
+      \rput(25,0){{#1{\dg 4}}}
+      \rput(31,0){{#1{\dg 4}}}
+      \rput(37,0){{#1{\dg 4}}}\endpspicture}}}
+
+\newcommand{\weidc}[1]{\rput(-1,.8){\psset{unit=2.75mm,linewidth=.03,linecolor=black,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}
+    {\pspicture(0,0)(0,0)\darkgray\scriptsize
+      \rput( 1,2.5){\mytwocode{1}{0}{1}{0}{0}
+                        {\mtca{0}{1}{1}{0}{0}}}
+      \rput( 7,2.5){\mytwocode{1}{0}{1}{0}{0}
+                        {\mtca{0}{0}{0}{1}{1}}}
+      \rput(13,2.5){\mytwocode{1}{0}{1}{0}{0}
+                        {\mtca{0}{1}{1}{1}{1}}}
+      \rput(19,2.5){\mytwocode{1}{1}{0}{0}{0}
+                        {\mtca{0}{0}{0}{1}{1}}}
+      \rput(25,2.5){\mytwocode{1}{1}{0}{0}{0}
+                        {\mtca{1}{0}{1}{1}{1}}}
+      \rput(31,2.5){\mytwocode{0}{0}{0}{1}{1}
+                        {\mtca{0}{1}{1}{0}{0}}}
+      \rput(37,2.5){\mytwocode{0}{1}{1}{0}{0}
+                        {\mtca{1}{0}{1}{1}{1}}}
+      \rput( 1,0){{#1{\dg 3}}}
+      \rput( 7,0){{#1{\dg 4}}}
+      \rput(13,0){{#1{\dg 5}}}
+      \rput(19,0){{#1{\dg 4}}}
+      \rput(25,0){{#1{\dg 5}}}
+      \rput(31,0){{#1{\dg 4}}}
+      \rput(37,0){{#1{\dg 5}}}\endpspicture}}}
+
+\newcommand{\weidd}{\rput(-1,0){\psset{unit=2.75mm,linewidth=.03,linecolor=black,fillstyle=solid,fillcolor=offwhite,shadow=false,framearc=0}
+    {\pspicture(0,0)(0,0)\darkgray\scriptsize
+        \rput(19,-1){\pspicture(0,0)(5,3)\psframe(0,0)(5,3){\darkgray
+    \rput(.5,2.5){1}\rput(1.5,2.5){0}\rput(2.5,2.5){1}\rput(3.5,2.5){0}\rput(4.5,2.5){0}
+    \rput(.5,1.5){0}\rput(1.5,1.5){1}\rput(2.5,1.5){1}\rput(3.5,1.5){0}\rput(4.5,1.5){0}
+    \rput(.5, .5){0}\rput(1.5, .5){0}\rput(2.5, .5){0}\rput(3.5, .5){1}\rput(4.5, .5){1}}
+    \endpspicture}\rput(19,-4){{\dg 5}}\endpspicture}}}
+
+\newcommand{\hiwea}[4]{\rput(8.4,7){\large\dg higher weights}
+  \rput(7,5.1){\psset{unit=4mm}
+  \rput[l](0,2.1){$\dg d_1\black = {#1{2}}$}
+  \rput[l](0,1  ){$\dg d_2\black = {#2{3}}$}
+  \rput[l](0,-.1){$\dg d_3\black = {#3{5}}$}
+  \rput[l](4,2.1){${#4{\dg d_1^\perp\black = 2}}$}
+  \rput[l](4,1  ){${#4{\dg d_2^\perp\black = 5}}$}}}
+
+\newcommand{\weide}{
+   \rput[l](0 ,4  ){$\dg U$}
+   \rput[l](.6,4  ){$= \{d_1,\ldots,d_k\}$}
+   \rput[l](0 ,3.5){$\dg V$}
+   \rput[l](.6,3.5){$= \{n+1-d^\perp_{n-k-1},\ldots,n+1-d^\perp_1\}$}}
+
+\newcommand{\weidea}{
+   \rput[l](3.3,4){$=\,\{2,3,5\}$}
+   \rput[l](7.2,3.5){$=\,\{1,4\}$}}
+
+\newcommand{\weideb}{\rput[l](0,2){{\pspicture(0,0)(5,1.5)
+  \psset{unit=4mm,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45,linewidth=.03,linecolor=gray,fillcolor=offwhite,shadowsize=.2,framearc=.3}
+  \myframe{(0,-.95)(10,.95)}\rput[l](1.5,.65){{\darkgreen Wei's Duality Theorem {\gray (Wei 1991)}}}
+  \rput[l](1.5,-.95){${\dg U\cup V} = \{1,\ldots,n\}$\:\: and\:\:
+                    ${\dg U\cap V} = \emptyset$}
+  \endpspicture}}}
+
+
+\begin{document}
+\sf\coursetitle
+\np\lecturetitle
+\newpage\lecturetitleviii
+\newpage\includegraphics[width=\linewidth,height=\textheight,angle=180]{Australia.eps}
+\newpage\includegraphics[width=\linewidth,height=\textheight,angle=180]{Australia2.eps}
+\newpage\lectviiia
+\newpage\begin{center}\rput(0,-6.8){\includegraphics[height=1.3\textheight,angle=180]{PageFrom_whitney35.eps}}\end{center}
+\newpage\lectviiib{}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{\ph}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}
+\newpage\lectviiib{\lectviiibi{\wh}{\wh}{}{\wh}{}{}{\lectviiibia\lectviiibib\lectviiibid}\lectviiibii{\lectviiibiia}{\wh}}
+\newpage\lectviiib{\lectviiibi{\wh}{\wh}{\wh}{}{}{}{\lectviiibia\lectviiibib\lectviiibic}\lectviiibii{}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{\wh}{\wh}{}{\lectviiibid\lectviiibie}\lectviiibii{}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{}{}\lectviiibiii}
+\newpage\lectviiib{\lectviiibi{}{}{}{}{}{}{}\lectviiibiv{}{}{}}
+\newpage\lectviiib{\lectviiibi{\wh}{\wh}{\wh}{}{}{}{\lectviiibia\lectviiibib\lectviiibic}\lectviiibiv{\lectviiibiva}{\wh}{}}
+\newpage\lectviiib{\lectviiibi{}{}{}{\wh}{\wh}{}{\lectviiibid\lectviiibie}\lectviiibiv{\lectviiibivb}{}{\wh}}
+%\newpage\lectviiib{\lectviiibi{}{}{}{\wh}{\wh}{}{\lectviiibid\lectviiibie}\lectviiibiv{\lectviiibivb}{}{\wh}\lectviiibva}
+%\newpage\lectviiib{\lectviiibi{}{}{}{\wh}{\wh}{}{\lectviiibid\lectviiibie}\lectviiibiv{\lectviiibivb}{}{\wh}\lectviiibvi}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}\lectviiica
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}\lectviiica\lectviiicb
+\newpage\lectviiica\lectviiicb
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia\lectviiicexiib
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia\lectviiicexiib\\[5mm]\lectviiicexiiia
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia\lectviiicexiib\\[5mm]\lectviiicexiiia\lectviiicexiiib
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia\lectviiicexiib\\[5mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic
+\newpage\lectviiica\lectviiicb\\[5mm]\lectviiicexia\lectviiicexib\\[5mm]\lectviiicexiia\lectviiicexiib\\[5mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid
+\newpage\lectviiicexia\lectviiicexib\\[4mm]\lectviiicexiia\lectviiicexiib\\[4mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid
+\newpage\lectviiicexia\lectviiicexib\\[4mm]\lectviiicexiia\lectviiicexiib\\[4mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid\\[4mm]\lectviiicexiva
+\newpage\lectviiicexia\lectviiicexib\\[4mm]\lectviiicexiia\lectviiicexiib\\[4mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid\\[4mm]\lectviiicexiva\lectviiicexivb
+\newpage\lectviiicexia\lectviiicexib\\[4mm]\lectviiicexiia\lectviiicexiib\\[4mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid\\[4mm]\lectviiicexiva\lectviiicexivb\lectviiicexivc
+\newpage\lectviiicexia\lectviiicexib\\[4mm]\lectviiicexiia\lectviiicexiib\\[4mm]\lectviiicexiiia\lectviiicexiiib\lectviiicexiiic\lectviiicexiiid\\[4mm]\lectviiicexiva\lectviiicexivb\lectviiicexivc\lectviiicexivd
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibii{}{}}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiii}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiii}\lectviiida
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiii}\lectviiida\lectviiidb
+\newpage\lectviiida\lectviiidb
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib\\[5mm]\lectviiidexiia
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib\\[5mm]\lectviiidexiia\lectviiidexiib
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib\\[5mm]\lectviiidexiia\lectviiidexiib\\[5mm]\lectviiidexiiia
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib\\[5mm]\lectviiidexiia\lectviiidexiib\\[5mm]\lectviiidexiiia\lectviiidexiiib
+\newpage\lectviiida\lectviiidb\\[5mm]\lectviiidexia\lectviiidexib\\[5mm]\lectviiidexiia\lectviiidexiib\\[5mm]\lectviiidexiiia\lectviiidexiiib\lectviiidexiiic
+\newpage\lectviiidexia\lectviiidexib\\[4mm]\lectviiidexiia\lectviiidexiib\\[4mm]\lectviiidexiiia\lectviiidexiiib\lectviiidexiiic
+\newpage\lectviiidexia\lectviiidexib\\[4mm]\lectviiidexiia\lectviiidexiib\\[4mm]\lectviiidexiiia\lectviiidexiiib\lectviiidexiiic\\[4mm]\lectviiidexiva
+\newpage\lectviiidexia\lectviiidexib\\[4mm]\lectviiidexiia\lectviiidexiib\\[4mm]\lectviiidexiiia\lectviiidexiiib\lectviiidexiiic\\[4mm]\lectviiidexiva\lectviiidexivb
+\newpage\lectviiidexia\lectviiidexib\\[4mm]\lectviiidexiia\lectviiidexiib\\[4mm]\lectviiidexiiia\lectviiidexiiib\lectviiidexiiic\\[4mm]\lectviiidexiva\lectviiidexivb\lectviiidexivc
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiii}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiv{}{}{}}
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiv{}{}{}}\lectviiiea
+\newpage\lectviiiba{\lectviiibi{}{}{}{}{}{}{}\lectviiibiv{}{}{}}\lectviiiea\lectviiieb
+\newpage\lectviiiea\lectviiieb
+\newpage\lectviiiea\lectviiieb\\[5mm]\lectviiieexia
+\newpage\lectviiiea\lectviiieb\\[5mm]\lectviiieexia\lectviiieexib
+\newpage\lectviiiea\lectviiieb\\[5mm]\lectviiieexia\lectviiieexib\\[5mm]\lectviiieexiia
+\newpage\lectviiiea\lectviiieb\\[5mm]\lectviiieexia\lectviiieexib\\[5mm]\lectviiieexiia\lectviiieexiib
+\newpage\lectviiiea\lectviiieb\\[3mm]\lectviiieexia\lectviiieexib\\[3mm]\lectviiieexiia\lectviiieexiib\\[3mm]\lectviiieexiva
+\newpage\lectviiiea\lectviiieb\\[3mm]\lectviiieexia\lectviiieexib\\[3mm]\lectviiieexiia\lectviiieexiib\\[3mm]\lectviiieexiva\lectviiieexivb
+\newpage\lectviiiea\lectviiieb\\[3mm]\lectviiieexia\lectviiieexib\\[3mm]\lectviiieexiia\lectviiieexiib\\[3mm]\lectviiieexiva\lectviiieexivb\lectviiieexivc
+\newpage\lectviiifa
+\newpage\lectviiifa\vspace*{5mm}\lectviiicb
+\newpage\lectviiifa\vspace*{5mm}\lectviiicb\vspace*{4mm}\lectviiidb
+\newpage\lectviiifa\vspace*{5mm}\lectviiicb\vspace*{4mm}\lectviiidb\vspace*{4mm}\lectviiieb
+\newpage\lectviiiga
+\newpage\lectviiiga\lectviiigb
+\newpage\lectviiiga\lectviiigb\lectviiigc{}
+\newpage\lectviiiga\lectviiigb\lectviiigc{\lectviiigca}
+\newpage\lectviiiga\lectviiigb\lectviiigc{\lectviiigca\lectviiigcb}
+\newpage\lectviiiga\lectviiigb
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff\lectviiigpfg
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff\lectviiigpfg\lectviiigpfh
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpfe\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl\lectviiigpfm
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl\lectviiigpfm\lectviiigpfn
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl\lectviiigpfm\lectviiigpfn\lectviiigpfo
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl\lectviiigpfm\lectviiigpfn\lectviiigpfo\lectviiigpfp
+\newpage\lectviiiga\lectviiigb\\[2mm]\lectviiigpfa\lectviiigpfb\lectviiigpfc\lectviiigpfd\lectviiigpff\lectviiigpfg\lectviiigpfh\lectviiigpfj\lectviiigpfk\lectviiigpfl\lectviiigpfm\lectviiigpfn\lectviiigpfo\lectviiigpfp\lectviiigpfq
+\newpage\lectviiiga\lectviiigb\lectviiigc{\lectviiigca\lectviiigcb}
+\newpage\lectviiiga\lectviiigb\lectviiigc{\lectviiigca\lectviiigcb}\lectviiigd
+\newpage\lectviiiga\lectviiigb\lectviiigc{\lectviiigca\lectviiigcb}\lectviiigd\\[4mm]\lectviiige
+\newpage\lectviiigf
+\newpage\lectviiigf\lectviiigg
+\newpage\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiibav{\lectviiibi{}{}{}{}{}{}{}\lectviiibv{}{}{\ph}{\ph}}\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiibav{\lectviiibi{}{}{\wh}{\wh}{}{}{\lectviiibic\lectviiibid}\lectviiibv{\dg}{}{\ph}{\ph}}\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiibav{\lectviiibi{}{}{\wh}{\wh}{}{}{\lectviiibic\lectviiibid}\lectviiibv{\dg}{}{}{\ph}}\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiibav{\lectviiibi{}{}{\wh}{\wh}{\wh}{}{\lectviiibic\lectviiibid\lectviiibie}\lectviiibv{}{\dg}{}{\ph}}\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiibav{\lectviiibi{}{}{\wh}{\wh}{\wh}{}{\lectviiibic\lectviiibid\lectviiibie}\lectviiibv{}{\dg}{}{}}\lectviiigf\lectviiigg\lectviiigh
+\newpage\lectviiiha
+\newpage\lectviiiha\lectviiihb
+\newpage\lectviiiha\lectviiihb\lectviiihc
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc\lectviiihpfd
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc\lectviiihpfd\lectviiihpfe
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc\lectviiihpfd\lectviiihpfe\lectviiihpff
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc\lectviiihpfd\lectviiihpfe\lectviiihpff\lectviiihpfg
+\newpage\lectviiiha\lectviiihb\lectviiihc\\[22mm]\lectviiihpfa\lectviiihpfb\lectviiihpfc\lectviiihpfd\lectviiihpfe\lectviiihpff\lectviiihpfg\lectviiihpfh
+\newpage\lectviiij
+\newpage\lectviiij\\[3mm]\lectviiija\lectviiijb\lectviiijc\lectviiijd\lectviiije\lectviiijf
+\newpage\lectviiij\\[2.5mm]\lectviiija\lectviiijb\lectviiijc\lectviiijd\lectviiije\lectviiijf\\[4mm]\lectviiik
+\newpage\lectviiij\\[2.5mm]\lectviiija\lectviiijb\lectviiijc\lectviiijd\lectviiije\lectviiijf\\[4mm]\lectviiik\\[2.5mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd\lectviiikpfe
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd\lectviiikpfe\lectviiikpff
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd\lectviiikpfe\lectviiikpff\lectviiikpfg
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd\lectviiikpfe\lectviiikpff\lectviiikpfg\lectviiikpfh
+\newpage\lectviiik\\[3mm]\lectviiika\lectviiikb\lectviiikc\lectviiikd\lectviiike\lectviiikf\lectviiikg\\[2mm]\lectviiikpfa\lectviiikpfb\lectviiikpfc\lectviiikpfd\lectviiikpfe\lectviiikpff\lectviiikpfg\lectviiikpfh\lectviiikpfj
+\newpage\lectviiim
+\newpage\lectviiim\lectviiima
+\newpage\lectviiim\lectviiima\lectviiimb
+\newpage\lectviiim\lectviiima\lectviiimb\lectviiimc{}
+\newpage\lectviiim\lectviiima\lectviiimb\lectviiimc{\lectviiimca}
+\newpage\lectviiim\lectviiima\lectviiimb\lectviiimc{\lectviiimca\lectviiimcb}
+\newpage\lectviiim\lectviiima\lectviiimb\lectviiimc{\lectviiimca\lectviiimcb\lectviiimcc}
+\newpage\lectviiin
+\newpage\lectviiin\lectviiina
+\newpage\lectviiin\lectviiina\lectviiinab
+\newpage\lectviiin\lectviiina\lectviiinb
+\newpage\lectviiin\lectviiina\lectviiinb\lectviiinc
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc\lectviiincpfd
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc\lectviiincpfd\lectviiincpfe
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc\lectviiincpfd\lectviiincpfe\lectviiincpff
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc\lectviiincpfd\lectviiincpfe\lectviiincpff\lectviiincpfg
+\newpage\lectviiin\lectviiinav\lectviiinb\lectviiinc\\[3mm]\lectviiincpfa\lectviiincpfb\lectviiincpfc\lectviiincpfd\lectviiincpfe\lectviiincpff\lectviiincpfg\lectviiincpfh
+\newpage\lectviiioa\lectviiiob{}{}{}{}{}
+\newpage\lectviiioa\lectviiiob{}{\dl}{\dl}{\dl}{}
+\newpage\lectviiioa\lectviiiob{\dl}{\dl}{}{}{}
+\newpage\lectviiioa\lectviiiob{}{}{}{}{}
+%\newpage\lectviiiob{}{}{}{}{}
+\newpage\lectviiiob{}{}{}{}{}\lectviiioca
+\newpage\lectviiiob{\dl}{\dl}{}{}{}\lectviiiocb
+\newpage\lectviiiob{}{}{}{}{}\lectviiiocc\lectviiioda
+\newpage\lectviiiob{\dl}{\dl}{\dl}{\dl}{}\lectviiiocc\lectviiiodb
+\newpage\lectviiiob{\dl}{\dl}{\dl}{\dl}{\dl}\lectviiiocc\lectviiiodc\lectviiioea
+\newpage\lectviiiob{}{}{}{}{}\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofa
+\newpage\lectviiiob{\dl}{\dl}{}{\dl}{}\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofb
+\newpage\lectviiiob{}{}{}{}{}\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofc\lectviiioga
+\newpage\lectviiiob{\dl}{\dl}{\dl}{\dl}{\dl}{\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofc\lectviiiogb
+\newpage\lectviiiob{}{}{}{}{}\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofc\lectviiiogc\lectviiioha
+\newpage\lectviiiob{}{}{}{}{}\lectviiiocc\lectviiiodc\lectviiioeb\lectviiiofc\lectviiiogc\lectviiioha\lectviiiohb}
+\newpage\lectviiip
+\newpage\lectviiip\lectviiiq
+\newpage\weid{\weida}
+\newpage\weid{\weida\weidb{\ph}}
+\newpage\weid{\weida\weidb{}}
+\newpage\weid{\weida\weidb{}\weidc{\ph}}
+\newpage\weid{\weida\weidb{}\weidc{}}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd\hiwea{\ph}{\ph}{\ph}{\ph}}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd\hiwea{}{\ph}{\ph}{\ph}}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd\hiwea{}{}{\ph}{\ph}}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd\hiwea{}{}{}{\ph}}
+\newpage\weid{\weida\weidb{}\weidc{}\weidd\hiwea{}{}{}{}}
+\newpage\weid{\weida\hiwea{}{}{}{}}
+\newpage\weid{\weida\hiwea{}{}{}{}\weide}
+\newpage\weid{\weida\hiwea{}{}{}{}\weide\weidea}
+\newpage\weid{\weida\hiwea{}{}{}{}\weide\weidea\weideb}
+
+
+
+
+
+
+%\include{Poset_ideals_dual}   %   2 min  Ideals
+%\include{Wei_Poset_DM}        %   2 min  Demi-matroids poset Wei
+%\include{Wei_Poset}           %   2 min  Poset Wei
+
+
+\newpage\contents
+\newpage\references
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,499 @@
+%  Lecture 3: Polya Counting
+%
+%  Example: Rubiks cube
+%  Example: Escher/tiling
+%  Example: Bracelet
+%
+%
+
+\include{mydefinitionspc}
+%\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipdfm]{graphicx}
+%\usepackage{bmpsize}
+
+\newcommand{\courseoverview}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace Extremal Set Theory}}
+
+\newcommand{\courseoverviewEC}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace\lightgray Ramsey Theory}\\[1mm]
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace           Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Combinatorics}}
+
+%\newcommand{\courseoverviewECii}{\vphantom{ }\vspace{10mm}
+%  {\dg\large Overview}\\[4mm]
+%  {\sc\myspace Ramsey Theory}\\[1mm]
+%  {\sc\myspace\myspace\footnotesize The Pigeonhole Principle}\\
+%  {\sc\myspace\myspace\footnotesize Ramsey's Theorem}\\ % Examples, Theorem, proof, example, variations
+%  {\sc\myspace\myspace\footnotesize Arithmetic Progressions}\\ % Van der Waerden's Theorem, The Hales-Jewett Theorem, other extensions
+%  {\sc\myspace\myspace\footnotesize Equations}\\ % Schur's Theorem, Rado's Theorem, Folkman's Theorem, Hindman's Theorem
+%  {\sc\myspace\myspace\footnotesize Graphs and Geometry}\\ % The Gallai-Witt Theorem, Spaces?, Roth's Theorem and Szemeredi's Theorem? Euclidean Ramsey Theory; Graph Ramsey Theory
+%  {\sc\myspace\myspace\footnotesize Applications}\\[1mm] % Triangles or something in the plane, Turan's Theorem? Other stuff?
+%  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+%  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+%  {\sc\myspace\lightgray Extremal Combinatorics}}
+
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Enumerative Combinatorics}\\[3mm]
+  \darkgreen Lecture 3: P\'olya Counting\end{center}}
+
+\newcommand{\cube}[3]{{\psset{unit=4mm,fillstyle=solid,linewidth=.05,linecolor=darkgray,linearc=.05,shadow=false}
+  \pspicture(0,0)(10,4)
+    \rput{  0}(0,0){\cubeface{#1}}
+    \rput{120}(0,0){\cubeface{#2}}
+    \rput{240}(0,0){\cubeface{#3}}
+  \endpspicture}}
+
+\newcommand{\cubeface}[1]{\pspicture(0,0)(0,0)
+      \multirput(0,.5)(-0.866,.5){3}{#1%
+        \pspicture(0,0)(0,0)
+          \multirput(0,0)(0.866,.5){3}{%
+            \psdiamond(0,0)(.842,.475)}\endpspicture}\endpspicture}
+
+\newcommand{\cubaa}{\psset{fillcolor=offwhite}}
+\newcommand{\cubab}{\psset{fillcolor=gray}}
+\newcommand{\cubac}{\psset{fillcolor=halfgray}}
+
+\newcommand{\pcexaa}{\problem}
+\newcommand{\pcexab}{\\How many configurations does Rubik's cube have?
+\begin{center}
+  \cube{\cubaa}{\cubab}{\cubac}
+\end{center}}
+
+\newcommand{\pcexba}{\problem}
+\newcommand{\pcexbb}{\\In how many configurations can we tile a surface?}
+\newcommand{\pcexbc}{\\M.C.~Escher visited P\'olya in 1922 and several times hence,
+  \\to learn about tilings and symmetry.
+  \begin{center}
+%    \includegraphics[angle=180]{LW327-MC-Escher-Reptiles-19431.jpg}
+    \includegraphics[scale=.35,natwidth=600,natheight=531,angle=0]{LW327-MC-Escher-Reptiles-19431.PNG}\vspace*{-10mm}\hspace*{10mm}
+  \end{center}}
+\newcommand{\pcexbd}{\\[6mm]{\darkgray A quote by P\'olya about von Neumann:
+  %\begin{fquote}[G.~P\'olya][The Polya Picture Album/Encounters of a Mathematician, Birkh\"{a}user, p.~154][1987]
+  {\footnotesize\begin{fquote}[G.~P\'olya][{\darkgray The P\'olya Picture Album}, {\sf\darkgray Birkh\"{a}user, p.~154}][1987]
+    {[John von Neumann]} is the only student of mine I was ever intimidated by.
+    He was so quick.  There was a seminar for advanced students in Z\"urich that\\
+    I was teaching and von Neumann was in the class.
+    I came to a certain theorem, and I said it is not proved and it may be difficult.
+    Von Neumann didn't say anything but after five minutes he raised his hand.
+    When I called on him he went to the blackboard and proceeded to write down the proof.\\
+    After that I was afraid of von Neumann.
+  \end{fquote}}}}
+\newcommand{\pcexbe}{\\[2mm]In 1986, Mike Hirschorn from our School discovered together with a group of high school students
+  the tiling that is now known as the {\dg Hirshhorn tiling}:\vspace*{2mm}
+  \begin{center}
+    \includegraphics[width=60mm,height=60mm,angle=0,trim=0 0 0 0]{Aqua_sun_2layers.eps}\vspace*{-10mm}\hspace*{10mm}
+  \end{center}}
+
+\newcommand{\pcexca}{\problem}
+\newcommand{\pcexcb}{\\We are making bracelets with 6 beads
+  that are each white \whitebead\ or black \blackbead\,.\\
+  How many different types of bracelets can we make?}
+
+\newcommand{\whitebead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkgray,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=white](0,0){.16}\endpspicture}
+\newcommand{\blackbead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkgray,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=gray   ](0,0){.16}\endpspicture}
+\newcommand{\graybead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkgray,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=halfgray](0,0){.16}\endpspicture}
+\newcommand{\redbead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkred,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=red](0,0){.16}\endpspicture}
+\newcommand{\bluebead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkblue,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=blue](0,0){.16}\endpspicture}
+\newcommand{\greenbead}{\pspicture(-.175,-.175)(.2,.2)\pscircle[linecolor=darkgreen,linewidth=.5pt,fillstyle=solid,shadow=false,fillcolor=green](0,0){.16}\endpspicture}
+
+\newcommand{\bt}[6]{\begin{pspicture}(-.478,-.303)(.478,.303)\psset{linecolor=darkgray,fillstyle=solid,shadow=false,fillcolor=white}
+  {#1\pscircle(  .35 ,0    ){.175}}
+  {#2\pscircle( 0.175,0.303){.175}}
+  {#3\pscircle(-0.175,0.303){.175}}
+  {#4\pscircle(-0.35 ,0    ){.175}}
+  {#5\pscircle(-0.175,-.303){.175}}
+  {#6\pscircle( 0.175,-.303){.175}}\end{pspicture}}
+
+\newcommand{\bw}{\psset{fillcolor=offwhite}}
+\newcommand{\bb}{\psset{fillcolor=gray}}
+
+\newcommand{\pcexcc}[3]{\begin{center}#3\pspicture[linewidth=.5pt](0,0)(12,11.3)#2%
+  \rput(0,10.5){\bt{}{}{}{}{}{}}   \rput(1.5 ,10.5){\bt{\bb}{}{}{}{}{}}\rput(3,10.5){\bt{}{\bb}{}{}{}{}}\rput(4.5,10.5){\bt{}{}{\bb}{}{}{}}
+  \rput(6,10.5){\bt{}{}{}{\bb}{}{}}\rput(7.5,10.5){\bt{}{}{}{}{\bb}{}}\rput(9,10.5){\bt{}{}{}{}{}{\bb}}\rput(10.5,10.5){\bt{\bb}{\bb}{}{}{}{}}
+  \rput(0, 9  ){\bt{}{\bb}{\bb}{}{}{}}\rput(1.5,9){\bt{}{}{\bb}{\bb}{}{}}\rput(3,9){\bt{}{}{}{\bb}{\bb}{}}\rput(4.5,9){\bt{}{}{}{}{\bb}{\bb}}
+  \rput(6, 9  ){\bt{\bb}{}{}{}{}{\bb}}\rput(7.5,9){\bt{\bb}{}{\bb}{}{}{}}\rput(9,9){\bt{}{\bb}{}{\bb}{}{}}\rput(10.5,9){\bt{}{}{\bb}{}{\bb}{}}
+  \rput(0, 7.5){\bt{}{}{}{\bb}{}{\bb}}\rput(1.5,7.5){\bt{\bb}{}{}{}{\bb}{}}\rput(3,7.5){\bt{}{\bb}{}{}{}{\bb}{}}\rput(4.5,7.5){\bt{\bb}{}{}{\bb}{}{}}
+  \rput(6, 7.5){\bt{}{\bb}{}{}{\bb}{}}\rput(7.5,7.5){\bt{}{}{\bb}{}{}{\bb}}\rput(9,7.5){\bt{\bb}{\bb}{\bb}{}{}{}}\rput(10.5,7.5){\bt{}{\bb}{\bb}{\bb}{}{}}
+  \rput(0, 6  ){\bt{}{}{\bb}{\bb}{\bb}{}}\rput(1.5,6){\bt{}{}{}{\bb}{\bb}{\bb}}\rput(3,6){\bt{\bb}{}{}{}{\bb}{\bb}}\rput(4.5,6){\bt{\bb}{\bb}{}{}{}{\bb}}
+  \rput(6, 6  ){\bt{\bb}{\bb}{}{\bb}{}{}}\rput(7.5,6){\bt{}{\bb}{\bb}{}{\bb}{}}\rput(9,6){\bt{}{}{\bb}{\bb}{}{\bb}}\rput(10.5,6){\bt{\bb}{}{}{\bb}{\bb}{}}
+  \rput(0, 4.5){\bt{}{\bb}{}{}{\bb}{\bb}}\rput(1.5,4.5){\bt{\bb}{}{}{\bb}{}{\bb}}\rput(3,4.5){\bt{\bb}{\bb}{}{}{\bb}{}}\rput(4.5,4.5){\bt{}{\bb}{\bb}{}{}{\bb}}
+  \rput(6, 4.5){\bt{\bb}{}{\bb}{\bb}{}{}}\rput(7.5,4.5){\bt{}{\bb}{}{\bb}{\bb}{}}\rput(9,4.5){\bt{}{}{\bb}{}{\bb}{\bb}}\rput(10.5,4.5){\bt{\bb}{}{}{\bb}{}{\bb}}
+  \rput(0, 3  ){\bt{\bb}{}{\bb}{}{\bb}{}}\rput(1.5,3){\bt{}{\bb}{}{\bb}{}{\bb}{}}\rput(3,3){\bt{\bb}{\bb}{\bb}{\bb}{}{}}\rput(4.5,3){\bt{}{\bb}{\bb}{\bb}{\bb}{}}
+  \rput(6, 3  ){\bt{}{}{\bb}{\bb}{\bb}{\bb}}\rput(7.5,3){\bt{\bb}{}{}{\bb}{\bb}{\bb}}\rput(9,3){\bt{\bb}{\bb}{}{}{\bb}{\bb}}\rput(10.5,3){\bt{\bb}{\bb}{\bb}{}{}{\bb}}
+  \rput(0, 1.5){\bt{\bb}{\bb}{\bb}{}{\bb}{}}\rput(1.5,1.5){\bt{}{\bb}{\bb}{\bb}{}{\bb}}\rput(3,1.5){\bt{\bb}{}{\bb}{\bb}{\bb}{}}\rput(4.5,1.5){\bt{}{\bb}{}{\bb}{\bb}{\bb}}
+  \rput(6, 1.5){\bt{\bb}{}{\bb}{}{\bb}{\bb}{\bb}}\rput(7.5,1.5){\bt{\bb}{\bb}{}{\bb}{}{\bb}}\rput(9,1.5){\bt{\bb}{\bb}{}{\bb}{\bb}{}}\rput(10.5,1.5){\bt{}{\bb}{\bb}{}{\bb}{\bb}}
+  \rput(0, 0  ){\bt{\bb}{}{\bb}{\bb}{}{\bb}}\rput(1.5,0){\bt{\bb}{\bb}{\bb}{\bb}{\bb}{}}\rput(3,0){\bt{}{\bb}{\bb}{\bb}{\bb}{\bb}}\rput(4.5,0){\bt{\bb}{}{\bb}{\bb}{\bb}{\bb}}
+  \rput(6, 0  ){\bt{\bb}{\bb}{}{\bb}{\bb}{\bb}}\rput(7.5,0){\bt{\bb}{\bb}{\bb}{}{\bb}{\bb}}\rput(9,0){\bt{\bb}{\bb}{\bb}{\bb}{}{\bb}}\rput(10.5,0){\bt{\bb}{\bb}{\bb}{\bb}{\bb}{\bb}}
+  \psset{linecolor=white,fillcolor=white,opacity=0.75,fillstyle=solid,shadow=false}#1\endpspicture\end{center}}
+
+\newcommand{\pcexcca}{\rput{-90}(14.5,5.25){\begin{tabular}{rl}Ignoring &\hspace*{-3mm}{\dg rotations}\\[-1mm]\ph{and }&\hspace*{-3mm}\ph{{\dg reflections}}\end{tabular}}
+  \psframe(2.4,9.9)( 9.6,11.1)
+  \psframe(-.6,8.4)( 6.6, 9.6)
+  \psframe(8.4,8.4)(11.1, 9.6)
+  \psframe(-.6,6.9)( 3.6, 8.1)
+  \psframe(5.4,6.9)( 8.1, 8.1)
+  \psframe(9.9,6.9)(11.1, 8.1)
+  \psframe(-.6,5.4)( 5.1, 6.6)
+  \psframe(6.9,5.4)(11.1, 6.6)
+  \psframe(-.6,3.9)( 2.1, 5.1)
+  \psframe(3.9,3.9)(11.1, 5.1)
+  \psframe( .9,2.4)( 2.1, 3.6)
+  \psframe(3.9,2.4)(11.1, 3.6)
+  \psframe( .9, .9)( 8.1, 2.4)
+  \psframe(9.9, .9)(11.1, 2.4)
+  \psframe(-.6,-.6)(  .6,  .6)
+  \psframe(2.4,-.6)( 9.6,  .6)}
+
+\newcommand{\pcexccb}{\rput{-90}(14.5,5.25){\begin{tabular}{rl}Ignoring &\hspace*{-3mm}{\dg rotations}\\[-1mm]and &\hspace*{-3mm}{\dg reflections}\end{tabular}}
+  \psframe(2.4,3.9)( 3.6, 5.1)}
+
+\newcommand{\burna}{{\dg Burnside's Lemma} {\gray (Cauchy 1845, Frobenius 1887)}
+\\The number of orbits of a permutation group $\bl G$ acting on a set $\bl X$ is\vspace*{-2mm}
+\[\bl
+  \frac{1}{|G|}\sum_{g\in G}\phi(g)\vspace*{-3mm}
+\]
+where $\bl\phi(g)\mdef |\{x\myin X\,:\,g(x)\meq x\}|$ is the number of {\dg fixed points} of $\bl g$.}
+
+\newcommand{\burnaexia}{\\[3mm]\example}
+\newcommand{\burnaexib}{\\Here, $\bl G\meq D_{6}$, the {\dg dihedral group} of rotations and reflections on a hexagon.\hspace*{-3mm}\vspace*{-1mm}
+  {\psset{unit=4mm}\pcexcc{}{\psset{linewidth=.3pt}}{\hspace*{50mm}}}\vspace*{-4mm}}
+\newcommand{\burnaexiba}{\\Here, $\bl G\meq D_{6}$, the {\dg dihedral group} of rotations and reflections on a hexagon.\hspace*{-3mm}\vspace*{-1mm}
+  {\psset{unit=4mm}\pcexcc{\pcexcca\pcexccb}{\psset{linewidth=.3pt}}{\hspace*{50mm}}}\vspace*{-4mm}}
+\newcommand{\burnaexibb}{\\Here, $\bl G\meq D_{6}$, the {\dg dihedral group} of rotations and reflections on a hexagon.\hspace*{-3mm}\vspace*{-1mm}
+  {\psset{unit=4mm}\pcexcc{\pcexcca\pcexccb\pcexccc}{\psset{linewidth=.3pt}}{\hspace*{50mm}}}\vspace*{-4mm}}
+\newcommand{\burnaexibc}{\\Here, $\bl G\meq D_{6}$, the {\dg dihedral group} of rotations and reflections on a hexagon.\hspace*{-3mm}}
+\newcommand{\pcexccc}{\rput[l](-15.85,6.05){\begin{minipage}[t]{0.485\textwidth}
+    The orbits of $\bl G$ are\\the bracelet equivalence classes\\that we wish to count.
+  \end{minipage}}}
+\newcommand{\burnaexic}{\\The orbits of $\bl G$ are the bracelet equivalence classes that we wish to count.}
+\newcommand{\burnaexid}{\\The group $\bl G$ is generated by a $\bl 60^\circ$ rotation $\bl r$ and a reflection~$\bl s$.}
+\newcommand{\burnaexie}{\\Each bracelet $\bl x\myin X$ is a fixed point of the identity $\bl e\myin G$, so
+  $\bl \phi(e)\meq 64$.}
+\newcommand{\burnaexif}{\\For $\bl g\mdef r,r^{-1}$, the fixed points of $\bl g$ are {\psset{unit=4mm,linewidth=.3pt}\bt{}{}{}{}{}{}}
+                                                                          and {\psset{unit=4mm,linewidth=.3pt}\bt{\bb}{\bb}{\bb}{\bb}{\bb}{\bb}}}
+\newcommand{\burnaexig}{, so $\bl\phi(g)\meq 2$.}
+\newcommand{\burnaexih}{\\We can continue to find all of the values $\bl\phi(g)$; they are\vspace*{-1mm}
+  \[\bl
+    64\,,2\,,2\,, 4\,,4\,,8\,,16\,,8\,,16\,,8\,,16\,,8\black\,.\vspace*{-1mm}
+  \]}
+\newcommand{\burnaexij}[2]{By {\dg Burnside's Lemma}, the number of orbits and thus bracelets is\vspace*{-1mm}
+  \[\bl
+         \frac{1}{|G|}\sum_{g\in G}\phi(g)\vspace*{-1mm}
+    \;{  {\meq \frac{1}{12}\bigl(64\!+\!2\!+\!2\!+\!4\!+\!4\!+\!8\!+\!16\!+\!8\!+\!16\!+\!8\!+\!16\!+\!8\bigr)}}
+    \;{#1{\meq \frac{156}{12}}}
+    \;{#2{\meq 13.}}
+  \]}
+
+\newcommand{\burnaexiia}{\\[3mm]\example}
+\newcommand{\burnaexiib}{\\Now simply consider bead strings of length 2, in three colours: \redbead, \greenbead, \bluebead\,.}
+\newcommand{\burnaexiic}{\\The group $\bl G$ is here just $\bl\{e,s\}$ where $\bl s$ swaps the beads.}
+\newcommand{\burnaexiid}[2]{\\Then\vspace*{-2mm}\[\bl
+  \phi(e)\meq\,{#1{\bl 9}}\qquad\mytext{and}\qquad
+  \phi(s)\meq\,{#2{\bl 3}}\black\,.\]}
+\newcommand{\burnaexiie}[1]{By {\dg Burnside's Lemma}, the number of these bead strings is\vspace*{-1mm}
+  \[\bl
+         \frac{1}{|G|}\sum_{g\in G}\phi(g)\vspace*{-1mm}
+    \;{  {\meq \frac{1}{2}(9+3)}}
+    \;{#1{\meq 6}}\vspace*{-2mm}
+  \]}
+\newcommand{\burnaexiif}{namely\vspace*{-1mm}\[
+  \redbead  \redbead  \quad
+  \redbead  \greenbead\quad
+  \redbead  \bluebead \quad
+  \greenbead\greenbead\quad
+  \greenbead\bluebead \quad
+  \bluebead \bluebead \vspace*{-1mm}\]}
+
+\newcommand{\burnaexiiia}{\\[3mm]\example}
+\newcommand{\burnaexiiib}{\\Now consider beads strings of length 3, in white and black: \whitebead, \blackbead\,.}
+\newcommand{\burnaexiiic}{\\The group $\bl G$ is again just $\bl\{e,s\}$ where $\bl s$ swaps the order of the beads.}
+\newcommand{\burnaexiiid}[2]{\\Then\vspace*{-2mm}\[\bl
+  \phi(e)\meq\,{#1{\bl 8}}\qquad\mytext{and}\qquad
+  \phi(s)\meq\,{#2{\bl 4}}\black\,.\]}
+\newcommand{\burnaexiiie}[1]{By {\dg Burnside's Lemma}, the number of these bead strings is\vspace*{-1mm}
+  \[\bl
+         \frac{1}{|G|}\sum_{g\in G}\phi(g)\vspace*{-1mm}
+    \;{  {\meq \frac{1}{2}(8+4)}}
+    \;{#1{\meq 6}}\vspace*{-2mm}
+  \]}
+\newcommand{\burnaexiiif}{namely\vspace*{-1mm}\[
+  \whitebead\whitebead\whitebead\quad
+  \whitebead\blackbead\whitebead\quad
+  \whitebead\whitebead\blackbead\quad
+  \whitebead\blackbead\blackbead\quad
+  \blackbead\whitebead\blackbead\quad
+  \blackbead\blackbead\blackbead\vspace*{-1mm}\]}
+
+\newcommand{\burnaexiva}{\\[3mm]\exercise}
+\newcommand{\burnaexivb}{\\Determine the number of bead strings of length $\bl n$ using beads in $\bl r$ colours.}
+
+\newcommand{\burnapfia}{\\[3mm]\proof}
+\newcommand{\burnapfib}{\\For each $\bl x\myin X$,
+let $\bl O_x\meq \{g(x)     : g\myin G\}$
+and $\bl S_x\meq \{g\myin G : g(x)\meq x\}$
+be the orbit and stabiliser of~$\bl x$.
+Let $\bl \mathcal{O}$ be the set of orbits of $\bl G$.}
+\newcommand{\burnapfic}{\\By the {\dg Orbit-Stabiliser Theorem}, $\bl |G|\meq |S_x||O_x|$.}
+\newcommand{\burnapfid}[9]{\\Hence,\vspace*{-3mm}
+\begin{align*}\bl
+  |\mathcal{O}|
+       &\meq \sum_{O\in\mathcal{O}} 1
+  \;{#1{\meq \sum_{O\in\mathcal{O}} \frac{|O|}{|O|}}}
+  \;{#2{\meq \sum_{O\in\mathcal{O}} \sum_{x\in O}\frac{1}{|O|}}}
+  \;{#3{\meq \sum_{x\in X} \sum_{\substack{O\in\mathcal{O}:\\O = O_x}} \frac{1}{|O|}}}
+  \;{#4{\meq \sum_{x\in X} \frac{1}{|O_x|}}}\\
+ &\;{#5{\meq \frac{1}{|G|} \sum_{x\in X} |S_x|}}
+  \;{#6{\meq \frac{1}{|G|} \sum_{x\in X} \sum_{\substack{g\in G :\\g(x) = x}} \hspace*{-1mm} 1}}
+  \;{#7{\meq \frac{1}{|G|} \sum_{g\in G} \sum_{\substack{x\in X :\\g(x) = x}} \hspace*{-1mm} 1}}
+  \;{#8{\meq \frac{1}{|G|} \sum_{g\in G} \phi(g)\black\,.\;\Box}}\\[-7mm]
+\end{align*}}
+
+
+\newcommand{\polyaa}{Let $\bl A$ be a set and $\bl B$ be a set of colours, both finite.}
+\newcommand{\polyab}{\\Let $\bl G$ be a group of permutations acting on $\bl A$.}
+\newcommand{\polyac}{\\Let $\bl G$ act on $\bl B^A$, the $\bl B$-colourings of $\bl A$,
+  by\vspace*{-1mm}
+  \[\bl \sigma(f)\mdef f(\sigma^{-1}(x))\vspace*{-1mm}\]}
+
+\newcommand{\polyaexaa}{\example}
+\newcommand{\polyaexab}{\\Consider again the bracelet problem.}
+\newcommand{\polyaexac}{\\[2mm]Here, we could let\\[1mm]%
+    \mybullet $\bl A$ be the set of uncoloured beads \graybead\ in the bracelet {\psset{unit=4mm,linewidth=.3pt}\bt{\bw}{\bw}{\bw}{\bw}{\bw}{\bw}}
+  \\\mybullet $\bl B$ be the set of colours \whitebead\ and \blackbead
+  \\\mybullet $\bl B^A$ be the bracelet colourings, i.e., the coloured bracelets
+  \\\mybullet $\bl G$ be the dihedral group acting on $\bl A$}
+\newcommand{\polyaexad}{\\[1mm]As before, the orbits of $\bl G$ count the different bracelets.}
+
+\newcommand{\cycinda}{Let $\bl\pi$ be a permutation.}
+\newcommand{\cycindb}{\\The {\dg cycle decomposition} of $\bl\pi$ is
+  the unique product of cycles $\bl\pi\meq \sigma_1\cdots\sigma_n$.}
+
+\newcommand{\cycindc}{\\The {\dg type} of $\bl\pi$ is the formal product $\bl 1^{z_1}2^{z_2}\cdots$
+  with $\bl z_i \meq |\{j : |\sigma_j| \meq i\}|$.\hspace*{-2mm}}
+
+\newcommand{\cycindaexa}{\\[4mm]\example}
+\newcommand{\cycindaexb}{\\[-1.5mm]
+  The permutation $\bl \pi \meq
+  \nicematrix{1&2&3&4&5&6&7&8\\
+              3&5&4&1&6&2&8&7}$
+  has {\dg cycle decomposition}
+  \[\bl
+         \pi
+    \meq \nicematrix{7&8\\
+                     8&7}
+         \nicematrix{1&3&4\\
+                     3&4&1}
+         \nicematrix{2&5&6\\
+                     5&6&2}
+  \]}
+\newcommand{\cycindaexc}{and thus has {\dg type} $\bl 2^1 3^2$.}
+
+\newcommand{\cycindd}{\\[3mm]The {\dg cycle index} of a permutation group $\bl G$ is the polynomial
+  \[\bl
+    Z_G(X_1,\ldots,X_n) \mdef \frac{1}{|G|} \sum_{\sigma\in G} X_1^{z_1(\sigma)}\cdots X_n^{z_n(\sigma)}
+  \]}
+
+\newcommand{\polyaba}{\theorem}
+\newcommand{\polyabb}{\\Let $\bl c_k(G)$ be the number of permutations in $\bl G$ with exactly $\bl k$ cycles.
+  \\Then the number of orbits of $\bl G$ on $\bl B^A$ is \vspace*{-2mm}
+  \[\bl
+  \frac{1}{|G|}\sum_{k=1}^\infty c_k(G) |B|^k\,.\]}
+
+\newcommand{\polyabpfa}{\proof}
+\newcommand{\polyabpfb}{\\A fixed point of $\bl\sigma\myin G$ is a colouring $\bl f\myin B^A$ for which $\bl \sigma(f)\meq f$;
+ \\that is $\bl f(a)\meq f(\sigma^{-1}(a))$ for all $\bl a\myin A$.}
+\newcommand{\polyabpfc}{\\Hence, $\bl f$ is constant on each cycle $\bl\sigma_i$ of $\bl\sigma$.}
+\newcommand{\polyabpfd}{\\Conversely, if $\bl f$ is constant on each cycle~$\bl\sigma_i$,
+then $\bl f$ is a fixed point for~$\bl\sigma$.}
+\newcommand{\polyabpfe}{\\Hence if $\bl \sigma$ has $\bl k$ cycles,
+then the number of fixed points for $\bl\sigma$ is $\bl|B|^k$.}
+\newcommand{\polyabpff}[2]{\\By {\dg Burnside's Lemma}, the number of orbits is thus\vspace*{-2mm}
+\[\bl
+       \frac{1}{|G|} \sum_{\sigma\in G} \phi(x)
+  \meq \frac{1}{|G|} \sum_{k=1}^\infty\hspace*{-5mm}\sum_{\substack{\sigma\in G:\\\text{$\sigma$ has $k$ cycles}}} \hspace*{-5mm}\phi(\sigma)
+  \;{#1{\meq \frac{1}{|G|} \sum_{k=1}^\infty\hspace*{-5mm}\sum_{\substack{\sigma\in G:\\\text{$\sigma$ has $k$ cycles}}} \hspace*{-5mm}|B|^k}}
+  \;{#2{\meq \frac{1}{|G|} \sum_{k=1}^\infty c_k(G) |B|^k\black\,.\quad\vspace*{-8mm}}}
+\]{#2{\qed}}}
+
+\newcommand{\cycinddexaia}{\example}
+\newcommand{\cycinddexaib}{\\Let $\bl G$ be the cyclic group $\bl C_n$.}
+\newcommand{\cycinddexaic}{\\For each divisor $\bl d|n$, there are $\bl \phi(d)$ permutations of order $\bl d$,
+ \\and each of these has $\bl \frac{n}{d}$ cycles of length $\bl d$.}
+\newcommand{\cycinddexaid}{\\ Thus, the {\dg cycle index} of $\bl C_n$ is
+   \[\bl
+    Z_G(X_1,\ldots,X_n) \meq \frac{1}{n} \sum_{d|n} \phi(d) X_d^{n/d}\,.
+   \]}
+
+\newcommand{\polyabc}{This may be re-expressed as follows:}
+\newcommand{\polyabav}{\\[4mm]{\dg P\'olya's Theorem} {\gray(simple)}}
+\newcommand{\polyabavv}{{\dg P\'olya's Theorem} {\gray(simple)}}
+\newcommand{\polyabbv}{\\The number of orbits of $\bl G$ on $\bl B^A$ is \vspace*{-2mm}
+  \[\bl
+    Z_G(|B|,\ldots,|B|) \meq \frac{1}{|G|} \sum_{\sigma\in G} |B|^{z_1(\sigma)+\cdots+z_n(\sigma)}
+  \]}
+\newcommand{\polyabba}{{\gray This result can be generalised significantly.}}
+
+\newcommand{\polyacexaia}{\example}
+\newcommand{\polyacexaib}{\\Consider bracelets with $\bl n$ beads in $\bl b$ colours
+  \\identical under rotational symmetry but distinct under reflections.}
+%\newcommand{\polyacexaib}{\\Consider bracelets with $\bl n$ black or white beads,
+%  \\identical under rotational symmetry but distinct under reflections.}
+\newcommand{\polyacexaic}{\\Then $\bl G$ is the cyclic group $\bl C_n$ and $\bl |B|\meq b$.}
+\newcommand{\polyacexaid}{\\By {\dg P\'olya's Theorem}, the number of distinct bracelets with $\bl n$ beads is\vspace*{-2mm}
+   \[\bl
+    Z_G(b,\ldots,b) \meq \frac{1}{n} \sum_{d|n} \phi(d) b^{n/d}\,.\vspace*{-2mm}
+   \]}
+\newcommand{\polyacexaie}{For $\bl n\meq 6$ black or white beads ($\bl b\meq 2$), we have {\bl 14} distinct bracelets.}
+\newcommand{\polyacexaiev}[1]{For $\bl n\meq 6$,\vspace*{-3mm}
+  \begin{align*}\bl
+                Z_G(b,\ldots,b)
+    &\;{  {\meq \frac{1}{6} \bigl(\phi(1) b^{6/1}+\phi(2) b^{6/2}+\phi(3) b^{6/3}+\phi(6) b^{6/6}\bigr)}}\\
+    &\;{#1{\meq \frac{1}{6} \bigl(b^6 + b^3 + 2 b^{2} + 2b\bigr)}}\\[-15mm]
+  \end{align*}}
+\newcommand{\polyacexaieva}{For instance, the number of bracelets with $\bl 6$ beads in $\bl b\meq 3$ colours is \vspace*{-2mm}
+  \[\bl
+    \frac{1}{6} \bigl(3^6 + 3^3 + 2\cdot3^{2} + 2\cdot3\bigr)
+    \meq 130\black\,.\vspace*{-1mm}\]}
+\newcommand{\polyacexaievb}{As we have seen, the number of bracelets with $\bl 6$ beads in $\bl b\meq 2$ colours~is\vspace*{-2mm}
+  \[\bl
+    \frac{1}{6} \bigl(2^6 + 2^3 + 2\cdot2^{2} + 2\cdot2\bigr)
+    \meq 14\black\,.\vspace*{-1mm}\]}
+
+\newcommand{\polyacexaif}{\vspace*{-1mm}
+  {\psset{unit=4mm}\pcexcc{}{\psset{linewidth=.3pt}}{\hspace*{-0mm}}}\vspace*{-4mm}}
+\newcommand{\polyacexaig}{\vspace*{-1mm}
+  {\psset{unit=4mm}\pcexcc{\pcexcca}{\psset{linewidth=.3pt}}{\hspace*{-0mm}}}\vspace*{-4mm}}
+
+
+
+
+\begin{document}
+\sf\coursetitle
+%\np\courseoverview
+%\np\courseoverviewPC
+\np\lecturetitle
+\np\lecturetitlei
+\np\pcexaa
+\np\pcexaa\pcexab
+\np\pcexba
+\np\pcexba\pcexbb
+\np\pcexba\pcexbb\pcexbc
+\np\pcexba\pcexbb\pcexbd
+\np\pcexba\pcexbb\pcexbe
+\np\pcexca
+\np\pcexca\pcexcb
+\np\pcexca\pcexcb\pcexcc{}{}{}
+\np\pcexca\pcexcb\pcexcc{\pcexcca}{}{}
+\np\pcexca\pcexcb\pcexcc{\pcexcca\pcexccb}{}{}
+\np\burna
+\np\burna\burnaexia
+\np\burna\burnaexia\burnaexib
+\np\burna\burnaexia\burnaexiba
+\np\burna\burnaexia\burnaexibb
+\np\burna\burnaexia\burnaexibc
+\np\burna\burnaexia\burnaexibc\burnaexic
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexid
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexid\burnaexie
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexid\burnaexie\burnaexif
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexid\burnaexie\burnaexif\burnaexig
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexid\burnaexie\burnaexif\burnaexig\burnaexih
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexih
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexih\burnaexij{\ph}{\ph}
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexih\burnaexij{}{\ph}
+\np\burna\burnaexia\burnaexibc\burnaexic\burnaexih\burnaexij{}{}
+\np\burna\burnaexiia
+\np\burna\burnaexiia\burnaexiib
+\np\burna\burnaexiia\burnaexiib\burnaexiic
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{\ph}{\ph}
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{}{\ph}
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{}{}
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{}{}\burnaexiie{\ph}
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{}{}\burnaexiie{}
+\np\burna\burnaexiia\burnaexiib\burnaexiic\burnaexiid{}{}\burnaexiie{}\burnaexiif
+\np\burna\burnaexiiia
+\np\burna\burnaexiiia\burnaexiiib
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{\ph}{\ph}
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{}{\ph}
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{}{}
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{}{}\burnaexiiie{\ph}
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{}{}\burnaexiiie{}
+\np\burna\burnaexiiia\burnaexiiib\burnaexiiic\burnaexiiid{}{}\burnaexiiie{}\burnaexiiif
+\np\burna
+\np\burna\burnaexiva
+\np\burna\burnaexiva\burnaexivb
+\np\burna
+\np\burna\burnapfia
+\np\burna\burnapfia\burnapfib
+\np\burna\burnapfia\burnapfib\burnapfic
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{\ph}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{}{\ph}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{}{}{\ph}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{}{}{}{\ph}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{}{}{}{}{\ph}
+\np\burna\burnapfia\burnapfib\burnapfic\burnapfid{}{}{}{}{}{}{}{}
+\np\polyaa
+\np\polyaa\polyab
+\np\polyaa\polyab\polyac
+\np\polyaa\polyab\polyac\polyaexaa
+\np\polyaa\polyab\polyac\polyaexaa\polyaexab
+\np\polyaa\polyab\polyac\polyaexaa\polyaexab\polyaexac
+\np\polyaa\polyab\polyac\polyaexaa\polyaexab\polyaexac\polyaexad
+\np\cycinda
+\np\cycinda\cycindb
+\np\cycinda\cycindb\cycindc
+\np\cycinda\cycindb\cycindc\cycindaexa
+\np\cycinda\cycindb\cycindc\cycindaexa\cycindaexb
+\np\cycinda\cycindb\cycindc\cycindaexa\cycindaexb\cycindaexc
+\np\cycinda\cycindb\cycindc\cycindaexa\cycindaexb\cycindaexc\cycindd
+\np\cycinda\cycindb\cycindc\cycindd
+\np\cycinda\cycindb\cycindc\cycindd\cycinddexaia
+\np\cycinda\cycindb\cycindc\cycindd\cycinddexaia\cycinddexaib
+\np\cycinda\cycindb\cycindc\cycindd\cycinddexaia\cycinddexaib\cycinddexaic
+\np\cycinda\cycindb\cycindc\cycindd\cycinddexaia\cycinddexaib\cycinddexaic\cycinddexaid
+\np\polyaba
+\np\polyaba\polyabb
+\np\polyaba\polyabb\polyabpfa
+\np\polyaba\polyabb\polyabpfa\polyabpfb
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc\polyabpfd
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc\polyabpfd\polyabpfe
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc\polyabpfd\polyabpfe\polyabpff{\ph}{\ph}
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc\polyabpfd\polyabpfe\polyabpff{}{\ph}
+\np\polyaba\polyabb\polyabpfa\polyabpfb\polyabpfc\polyabpfd\polyabpfe\polyabpff{}{}
+\np\polyaba\polyabb
+\np\polyaba\polyabb\polyabc
+\np\polyaba\polyabb\polyabc\polyabav
+\np\polyaba\polyabb\polyabc\polyabav\polyabbv
+\np\polyaba\polyabb\polyabc\polyabav\polyabbv\polyabba
+\np\polyabavv\polyabbv
+\np\polyabavv\polyabbv\polyacexaia
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid\polyacexaiev{\ph}
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid\polyacexaiev{}
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid\polyacexaieva
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid\polyacexaievb
+\np\polyabavv\polyabbv\polyacexaia\polyacexaib\polyacexaic\polyacexaid\polyacexaie
+\np\polyacexaia\polyacexaib\polyacexaid\polyacexaie\polyacexaif
+\np\polyacexaia\polyacexaib\polyacexaid\polyacexaie\polyacexaig
+
+%\np\contents
+%\np\contents\references
+
+\end{document}

@@ -1,0 +1,536 @@
+%%  MATH5505 Ramsey Theory Lecture 1: Introduction
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+\include{mydefinitionsramsey}
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\coursetitlei}{\vspace{5mm}\begin{center}{\Huge\green \itshape Welcome\,!}\end{center}}
+
+\newcommand{\formal}{\vphantom{ }\vspace{10mm}{\ec\large Formalities}}
+\newcommand{\formala}{\\[4mm]\myspace  Course authority: {\ec Thomas Britz}}
+\newcommand{\formalb}{\\[1mm]\myspace  Email: {\ec\tt britz@unsw.edu.au}}
+\newcommand{\formalc}{\\[1mm]\myspace  Please email me if you have any questions or comments!}
+\newcommand{\formald}{\\[1mm]\myspace  Office hours: Thursday 11-12 or just drop by! (Room RC-5111)}
+\newcommand{\formale}{\\[1mm]\myspace  Check {\ec Moodle} for {\ec course notes}, {\ec lecture slides}, and {\ec Assignments}.}
+\newcommand{\formalf}{\\[1mm]\myspace  Join the {\ec Facebook group} to easily find and share information.}
+
+
+\newcommand{\courseoverview}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace Matching Theory}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace Extremal Set Theory}}
+
+\newcommand{\courseoverviewalt}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory \gray (3 Weeks)}\\[1mm]
+  {\sc\myspace Matching Theory \gray (5 Weeks)}\\[1mm]
+  {\sc\myspace Enumerative Combinatorics\gray (2 Week)}\\[1mm]
+  {\sc\myspace Extremal Set Theory \gray (2 Weeks)}}
+
+\newcommand{\courseoverviewramseyi}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+\newcommand{\courseoverviewramseyii}{\vphantom{ }\vspace{10mm}
+  {\dg\large Overview}\\[4mm]
+  {\sc\myspace Ramsey Theory}\\[1mm]
+  {\sc\myspace\myspace\footnotesize The Pigeonhole Principle}\\
+  {\sc\myspace\myspace\footnotesize Ramsey's Theorem}\\ % Examples, Theorem, proof, example, variations
+  {\sc\myspace\myspace\footnotesize Arithmetic Progressions}\\ % Van der Waerden's Theorem, The Hales-Jewett Theorem, other extensions
+  {\sc\myspace\myspace\footnotesize Equations}\\ % Schur's Theorem, Rado's Theorem, Folkman's Theorem, Hindman's Theorem
+  {\sc\myspace\myspace\footnotesize Graphs and Geometry}\\ % The Gallai-Witt Theorem, Spaces?, Roth's Theorem and Szemeredi's Theorem? Euclidean Ramsey Theory; Graph Ramsey Theory
+  {\sc\myspace\myspace\footnotesize Applications}\\[1mm] % Triangles or something in the plane, Turan's Theorem? Other stuff?
+  {\sc\myspace\lightgray Matching Theory}\\[1mm]
+  {\sc\myspace\lightgray Enumerative Combinatorics}\\[1mm]
+  {\sc\myspace\lightgray Extremal Set Theory}}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 1: The Pigeonhole Principle\end{center}}
+
+%\psset{fillstyle=none}
+
+\newcommand{\aaia}{\vphantom{ }\vspace{15mm}\begin{center}
+  \begin{pspicture}(0,2.5)(10,2.5)
+    \rput( 0,2.5){\man}
+    \rput( 5,2.5){\woman}
+    \rput(10,2.5){\woman}
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\aaib}[1]{\vphantom{ }\vspace{15mm}\begin{center}
+  \begin{pspicture}(0,2.5)(12,2.5)
+    \rput( 0,0){\dicev}
+    \rput( 2,0){\diceiii}
+    \rput( 4,0){\dicei}
+    \rput( 6,0){\diceiv}
+    \rput( 8,0){\dicevi}
+    \rput(10,0){\diceii}
+    \rput(12,0){\diceiv}#1
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\aaiba}{{\psset{linecolor=darkgreen}\rput( 6,0){\diceframe}
+                    \rput(12,0){\diceframe}}}
+
+\newcommand{\pigeonthma}{{\dg The Pigeonhole Principle}
+  \\[1mm]If $\bl k+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least two pigeons.}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\pigeonthmstrong}{{\dg The Pigeonhole Principle} {\gray (strong)}
+  \\[1mm]If $\bl (n_1-1) +\cdots+(n_k-1) + 1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some $\bl i$th pigeonhole contains at least $\bl n_i$ pigeons.}
+
+\newcommand{\pigeonthmexaa}{\\[8mm]\example}
+\newcommand{\pigeonthmexab}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}\psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+\newcommand{\pigeonthmexaba}{\rput(0  ,0){\pigeon}}
+\newcommand{\pigeonthmexabb}{\rput(3.5,0){\pigeon}}
+\newcommand{\pigeonthmexabc}{\rput(7  ,0){\pigeon}}
+\newcommand{\pigeonthmexabd}{\rput(3.4,-4){$\begin{array}{rcl}\bl k &\meq&\bl 3\\\bl m &\meq&\bl 2\end{array}$}}
+\newcommand{\pigeonthmexabaii}{\rput(-0.25,0){\pigeon}\rput( .25,0){\pigeon}}
+\newcommand{\pigeonthmexabbii}{\rput( 3.25,0){\pigeon}\rput(3.75,0){\pigeon}}
+\newcommand{\pigeonthmexabcii}{\rput( 6.75,0){\pigeon}\rput(7.25,0){\pigeon}}
+\newcommand{\pigeonthmexabciii}{\rput(6.7 ,0){\pigeon}\rput(7   ,0){\pigeon}\rput(7.3,0){\pigeon}}
+
+\newcommand{\pigeonthmexba}{\\[8mm]\example}
+\newcommand{\pigeonthmexbb}[1]{\vspace*{-25mm}\aaib{#1}}
+\newcommand{\pigeonthmexbc}{\vspace*{20mm}\begin{center}$\bl k\;\meq\; 6$\\\begin{tabular}{rcl}\\
+   pigeons     & $\meq$ & dice values rolled\\
+   pigeonholes & $\meq$ & the six possible values\end{tabular}\end{center}}
+
+\newcommand{\pigeonthmexca}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexcb}{\\[1mm]Six distinct numbers are chosen from the numbers $\bl 0,\ldots,9$.
+  \\Show that at least two of the chosen numbers are consecutive.}
+\newcommand{\pigeonthmexcc}[1]{\vspace*{12mm}\begin{center}{\psset{unit=5mm,fillstyle=none,shadow=false}
+   \pspicture(-.5,-.5)(14,.5)\lightgray
+   \rput(0  ,0){0}\rput(1.5,0){1}\rput(3   ,0){2}\rput( 4.5,0){3}\rput( 6  ,0){4}
+   \rput(7.5,0){5}\rput(9  ,0){6}\rput(10.5,0){7}\rput(12  ,0){8}\rput(13.5,0){9}#1\endpspicture}\end{center}}
+\newcommand{\pigeonthmexcca}{\multiput(0,0)(3,0){5}{\psframe[linecolor=darkgreen](-0.5,-0.5)(2,.5)}}
+\newcommand{\pigeonthmexccb}{\darkgray
+   \rput(0,0){0}\rput(6,0){4}\rput(7.5,0){5}\rput(10.5,0){7}\rput(12,0){8}\rput(13.5,0){9}}
+
+\newcommand{\pigeonthmexga}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexgb}{\\[1mm]$\bl n+1$ distinct numbers are chosen from the numbers $\bl 1,\ldots,2n$.
+  \\Show that at least two of the chosen numbers are coprime.}
+
+\newcommand{\pigeonthmexha}{\\[8mm]\theorem}
+\newcommand{\pigeonthmexhb}{\\[1mm]There are infinitely many primes.}
+\newcommand{\pigeonthmexhc}{\\[2mm]\proof {\gray(Mixon 2012)}}
+\newcommand{\pigeonthmexhd}{\\Assume that there is a finite number of primes, $\bl p_1,\ldots,p_N$.}
+\newcommand{\pigeonthmexhe}{\\Choose some integer $\bl K$ such that $\bl 2^K\mgt(K+1)^N$.}
+\newcommand{\pigeonthmexhf}{\\There are $\bl 2^K$ numbers (``pigeons") in the set $\bl S\meq \{1,\ldots,2^K\}$}
+\newcommand{\pigeonthmexhg}[4]{\\with at most $\bl (K+1)^N$ factorisations $\bl p_1^{k_1}\cdots p_N^{k_N}$ (``pigeonholes")
+  since\vspace*{-.1mm}
+  \[\bl
+    K\meq  \log_2 2^K \;{#1{
+     \mgeq \log_2 p_1^{k_1}\cdots p_N^{k_N}}}\;{#2{
+     \meq  \sum k_i \log_2 p_i}}\;{#3{
+     \mgeq \sum k_i }}\;{#4{
+     \mgeq \max_i k_i\,\black.}}\vspace*{-4mm}
+  \]}
+\newcommand{\pigeonthmexhh}{\\By the {\dg Pigeonhole Principle},
+  two numbers in $\bl S$ have identical factorisation.}
+\newcommand{\pigeonthmexhj}{\\They must then be equal, a contradiction.\qed\vspace*{-8mm}}
+
+\newcommand{\pigeonthmexda}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexdb}{\\[1mm]$\bl 19$ points are drawn in a square with side lengths~$\bl 1$.\\
+  \\[-6mm]Show that at least $\bl 3$ points lie in a circle with radius less than~$\bl\dfrac{1}{4}$.}
+\newcommand{\pigeonthmexdc}[2]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(10,6.5)\psset{shadow=false,shadow=false,fillstyle=solid,framearc=0}
+    #1\psframe[linecolor=darkgreen,fillstyle=none](0,0)(6,6)#2
+  \end{pspicture}\vspace*{-10mm}
+  \end{center}}
+\newcommand{\pigeonthmexdca}{\psset{linecolor=darkgray}
+  \qdisk(1.03,0.81){.1}\qdisk(0.94,2.86){.1}\qdisk(3.14,2.39){.1}\qdisk(3.28,3.51){.1}
+  \qdisk(1.62,3.73){.1}\qdisk(1.23,1.02){.1}\qdisk(3.54,2.74){.1}\qdisk(5.03,2.23){.1}
+  \qdisk(2.65,5.08){.1}\qdisk(3.19,5.31){.1}\qdisk(2.9,0.51){.1}\qdisk(5.46,4.19){.1}
+  \qdisk(2.54,4.14){.1}\qdisk(4.36,2.63){.1}\qdisk(5.0,5.35){.1}\qdisk(0.65,1.77){.1}
+  \qdisk(3.49,0.92){.1}\qdisk(3.37,4.36){.1}\qdisk(1.03,4.2){.1}}
+\newcommand{\pigeonthmexdcb}{\psset{linecolor=lightgray}
+  \psline(2,0   )(2,6   )
+  \psline(4,0   )(4,6   )
+  \psline(0   ,2)(6   ,2)
+  \psline(0   ,4)(6   ,4)}
+\newcommand{\pigeonthmexdcc}{\pscircle[linecolor=darkgray,fillstyle=none](1,1){1.414}
+  \rput[l](7.25,5.5){{\gray The circle has radius}}
+  \rput[l](7.35,4){$\lightblue \dfrac{1}{3\sqrt{2}}\gray\approx\lightblue 0.236 \gray< \lightblue \dfrac{1}{4}$\,.}}
+\newcommand{\pigeonthmexdcd}{\rput[l](7.25,1.5){{\black Can this result be improved?}}}
+\newcommand{\pigeonthmexdce}{\rput[l](7.25, .5){{\black Can you generalise it?}}}
+
+\newcommand{\halliiihe}{\\[8mm]{\dg The Erd\H{o}s-Szekeres Theorem} {\gray (1935)}
+  \\Each sequence $\bl a_1,\ldots,a_{n^2\!+\!1}$ of $\blue n^2\!+\!1$ distinct integers has
+  \\a subsequence with $\blue n+1$ elements that is either increasing or decreasing.}
+
+\newcommand{\halliiihf}{\\[3mm]{\dg\example}
+  \\Consider the following sequence of $\blue n^2\!+\!1$ integers where $\blue n\meq\textsf{3}$:}
+\newcommand{\halliiihfa}{\\{\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)
+   \rput(0,0){7}\rput(1,0){8}\rput(2,0){9}\rput(3,0){4}\rput(4,0){5}
+   \rput(5,0){6}\rput(6,0){1}\rput(7,0){2}\rput(8,0){3}\rput(9,0){0}\endpspicture}}
+\newcommand{\halliiihfaa}{\\{\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(-.5,-.5)(.5,.5)\psframe(2.5,-.5)(3.5,.5)\psframe(5.5,-.5)(6.5,.5)\psframe(8.5,-.5)(9.5,.5)
+   \rput(1,0){8}\rput(2,0){9}\rput(4,0){5}\rput(5,0){6}\rput(7,0){2}\rput(8,0){3}
+   {\darkred\rput(0,0){7}\rput(3,0){4}\rput(6,0){1}\rput(9,0){0}}\endpspicture}}
+\newcommand{\halliiihfb}{\\There is no increasing subsequence of size $\blue n+1\meq\textsf{4}$.}
+\newcommand{\halliiihfc}{\\However, there is a decreasing subsequence of size $\blue n+1\meq\textsf{4}$.}
+
+\newcommand{\halliiihepfa}{\\[2mm]\proof}
+\newcommand{\halliiihepfb}{\\Suppose that no increasing subsequence has $\bl n+1$ terms.}
+\newcommand{\halliiihepfc}{\\Let $\bl n_i$ be the longest length of an increasing subsequence starting in $\bl a_i$.}
+\newcommand{\halliiihepfd}{\\and note that $\bl n_i$ can only be one of the values $\bl 1,\ldots,n$ (``pigeonholes'').}
+\newcommand{\halliiihepfe}{\\By the {\dg Pigeonhole Principle}, there are at least $\bl n+1$ identical $\bl n_i$ values.}
+\newcommand{\halliiihepff}{\\Suppose that $\bl n_i\meq n_j$ for some $\bl i\mlt j$. }
+\newcommand{\halliiihepfg}{Then $\bl a_i\black\not<\bl a_j$, so $\bl a_i\mgt a_j$.}
+\newcommand{\halliiihepfh}{\\We therefore have a decreasing subsequence of at least $\bl n+1$ $\bl a_i$s.\qed}
+
+\newcommand{\halliiiheexa}{\\[3mm]{\dg\exercise}}
+\newcommand{\halliiiheexb}{\\[0mm]Can you generalise this theorem?\vspace*{-8mm}}
+
+\newcommand{\pigeonthmexea}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexeav}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexeb}{\\Let $\bl C$ be a binary code of length $\bl n\meq 6$ and minimum distance $\bl d\meq 3$.
+  \\Use the {\dg Pigeonhole Principle} to show that $\bl C$ has at most $\bl 8$ codewords.}
+%\newcommand{\pigeonthmexec}[2]{\\[3mm]The {\dg Sphere Packing Bound} ({\dg MATH3411}) tells us that,
+%  for $\bl t\meq \frac{d-1}{2}\meq 1$,
+%  \[\bl
+%     |C| \mleq \Biggl\lfloor\frac{2^n}{\ds\sum_{i=0}^t\binom{n}{i}}\Biggr\rfloor
+%    \;{#1{\mleq \left\lfloor\frac{2^6}{1+6}\right\rfloor}} \;{#2{\meq 9}}\]}
+%\newcommand{\pigeonthmexecv}{\\[3mm]The {\dg Sphere Packing Bound} ({\dg MATH3411}) tells us that
+%  $\bl |C| \mleq 9$.}
+\newcommand{\pigeonthmexec}{\\[2mm]\proof}
+\newcommand{\pigeonthmexed}{\quad Assume that $\bl |C|\mgeq 9$.}
+\newcommand{\pigeonthmexee}{\\The codewords of $\bl C$ can end in one of the $\bl 4$ pairs:
+   \mypair{0}{0}\;
+   \mypair{0}{1}\;
+   \mypair{1}{0}\;
+   \mypair{1}{1}}
+\newcommand{\pigeonthmexef}{\\By the {\dg Pigeonhole Principle}, $\bl 3$ codewords $\bl c_i$ have same ending, say \mypair{0}{0}.}
+\newcommand{\pigeonthmexeg}{\\The minimum distance is $\bl 3$, so without loss of generality assume that\vspace*{-2.5mm}
+  \[\bl
+    \begin{array}{rcl}
+      c_1 &\meq& \mysixtuple{0}{0}{0}{0}{0}{0}\\
+      c_2 &\meq& \mysixtuple{1}{1}{1}{?}{0}{0}\\
+      c_3 &\meq& \mysixtuple{?}{?}{?}{?}{0}{0}
+    \end{array}\vspace*{-2.5mm}
+  \]}
+\newcommand{\pigeonthmexeh}{The first three bits of $\bl c_3$ must differ from at least two of those in~$\bl c_1$.}
+\newcommand{\pigeonthmexej}{\\But then the distance between $\bl c_2$ and $\bl c_3$ is at most $\bl 2$, a contradiction.\qed\vspace*{-8mm}}
+
+\newcommand{\pigeonthmexma}{\\[8mm]\example}
+\newcommand{\pigeonthmexmb}[1]{\vspace*{-1mm}\begin{center}
+  \begin{pspicture}(0,0)(8.125,2.5)\psset{linecolor=darkgreen,shadow=false}
+    \multiput(0,0)(3.5,0){3}{\psframe(-1.25,-1.25)( 1.25, 1.25)}
+    \rput[t](0  ,-2.5){$\bl n_1\meq 1$}
+    \rput[t](3.5,-2.5){$\bl n_2\meq 3$}
+    \rput[t](7  ,-2.5){$\bl n_3\meq 2$}
+    \psset{linecolor=darkgray}#1
+  \end{pspicture}
+  \end{center}}
+
+\newcommand{\pigeonthmexna}{\\[8mm]\exercise}
+\newcommand{\pigeonthmexnb}{\\[0mm]Can we cover this slightly mutilated chess board with dominoes
+   \pspicture(0,0)(1.5,1)\psset{unit=4mm,fillcolor=gray,linewidth=.03,linecolor=black,shadow=false,framearc=0,fillstyle=solid}
+     \psframe(0,-.2)(2,.8)\psline(1,-.2)(1,.8)\endpspicture?\vspace*{5mm}\begin{center}
+  {\psset{unit=4mm,linewidth=0,linecolor=white,fillstyle=solid,fillcolor=black,shadow=false,framearc=0}
+  \begin{pspicture}(0,0)(8,8)
+    \psframe[fillcolor=offwhite](0,0)(8,8)
+    \psframe[fillcolor=white](0,7)(1,8)
+    \psframe[fillcolor=white](7,0)(8,1)
+    \multiput(1,0)(2,0){3}{\psframe(0,0)(1,1)}
+    \multiput(0,1)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(1,2)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(0,3)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(1,4)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(0,5)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(1,6)(2,0){4}{\psframe(0,0)(1,1)}
+    \multiput(2,7)(2,0){3}{\psframe(0,0)(1,1)}
+    \psline[fillstyle=none,linecolor=black,linewidth=0.05](0,0)(0,7)(1,7)(1,8)(8,8)(8,1)(7,1)(7,0)(0,0)
+  \end{pspicture}}
+  \end{center}}
+
+\newcommand{\dirichleta}{\\[3mm]{\dg Dirichlet's Approximation Theorem} {\gray (1834)}}
+\newcommand{\dirichletb}{\\[-1mm]If $\bl\alpha\myin\mathbb{R}$ and $\bl N\myin\mathbb{N}$,
+  then $\bl p,q\myin\mathbb{N}$ exist so that $\bl q\!\leq\! N$ and
+  $\bl\ds \Bigl|\alpha - \frac{p}{q}\Bigr| \mlt \frac{1}{Nq}$\,.\hspace*{-6mm}}
+\newcommand{\dirichletc}{\\[2mm]{\gray Each real number can thus be approximated arbitrarily well by rationals.}}
+
+\newcommand{\dirichletpfa}{\\[2mm]\proof}
+\newcommand{\dirichletpfb}{\\Replace the latter inequality equivalently by
+  $\bl \bigl|q\alpha - p\bigr| \mlt \frac{1}{N}$.}
+\newcommand{\dirichletpfc}{\\Partition the unit interval $\bl[0,1)$ into $\bl N$ equal subintervals.
+  \begin{pspicture}(-1.5,.5)(8,.5)\psset{shadow=false}\psline(0,0)(4,0)\multirput(0,0)(.8,0){6}{\psline(0,-.2)(0,.2)}
+    \rput[t](0,-.5){{\gray0}}
+    \rput[t](4,-.5){{\gray1}}
+    \rput[u](3.6,1.4){$\bl\frac{1}{N}$}
+    \psline[linecolor=halfgray](3.2,.4)(3.2,.6)(4,.6)(4,.4)\psline[linecolor=halfgray](3.6,.6)(3.6,.8)\end{pspicture}}
+\newcommand{\dirichletpfd}{\\Define $\bl N+1$ residues
+  $\bl r_i\mdef i\alpha - \lfloor i\alpha\rfloor$ for $\bl i \meq 0,1,\ldots,N$.}
+\newcommand{\dirichletpfe}{\\These lie in the $\bl N$ subintervals.}
+\newcommand{\dirichletpff}{\\By the {\dg Pigeonhole Principle},
+  residues $\bl r_i$, $\bl r_j$ ($\bl i\!\mlt\!j$) lie in some subinterval.}
+%\newcommand{\dirichletpfg}{so $\bl |r_i-r_j|\mlt \frac{1}{N}$. }
+\newcommand{\dirichletpfg}{\\Set $\bl p\mdef \lfloor j\alpha\rfloor - \lfloor i\alpha\rfloor$
+                           and $\bl q\mdef j-i$. }
+\newcommand{\dirichletpfh}{\\Then $\bl 0\mlt q\mleq N$ }
+\newcommand{\dirichletpfj}[3]{and\vspace*{-2mm}
+  \begin{align*}\bl
+    |p-q\alpha|&\meq |\lfloor j\alpha\rfloor - \lfloor i\alpha\rfloor - (j-i)\alpha|\\[-2mm]
+    &\;{#1{\meq |i\alpha - \lfloor i\alpha\rfloor - (j\alpha - \lfloor j\alpha\rfloor)|}}
+    \;{#2{\meq |r_i-r_j|}}
+    \;{#3{\mlt \frac{1}{N}\,\black.\qquad\Box}}\\[-12mm]\end{align*}}
+
+
+
+\newcommand{\losslessa}{\\[4mm]\theorem}
+\newcommand{\losslessb}{\\Let $\bl f$ be a {\dg lossless digital data compression algorithm}.
+  \\If $\bl |f(B)|\mlt |B|$ for some data $\bl B$,
+  then $\bl |f(A)|\mgt |A|$ for some data $\bl A$.}
+\newcommand{\losslessc}{\\[2mm]{\gray In other words, no lossless compression algorithm works 100\%\ of the time.}}
+
+
+\newcommand{\losslesspfa}{\\[2mm]\proof}
+\newcommand{\losslesspfb}{\; Represent data as binary strings:
+  $\bl |A|$ is now the string length of~$\bl A$.}
+%  \\the size $\bl |A|$ of data $\bl A$ will be measured as the string length of $\bl A$.}
+\newcommand{\losslesspfc}{\\Suppose that $\bl |f(B)|\mlt |B|$ for at least one string $\bl B$
+  \\and assume that $\bl |f(A)|\mleq |A|$ for all strings $\bl A$.}
+\newcommand{\losslesspfd}{\\Let $\bl n$ be the smallest number with
+  $\bl |f(B')|\mlt |B'|\meq n$ for some string~$\bl B'$.}
+\newcommand{\losslesspfe}{\\Set $\bl m\mdef |f(B')| \,{\gray(<\!\lightblue n\gray)}$
+  and let $\bl\mathcal{F}$ be the set of strings $\bl B$ with $\bl |f(B)|\meq m$.}
+\newcommand{\losslesspff}{\\Each of the $\bl 2^m$ binary strings $\bl A$ of length $\bl m$
+  must obey $\bl |f(A)|\mgeq |A|\meq m$.}
+\newcommand{\losslesspfg}{\\But $\bl |f(A)|\mleq |A|$ by assumption,
+ so $\bl |f(A)|\meq |A|\meq m$ and
+ so $\bl A\myin\mathcal{F}$.}
+\newcommand{\losslesspfh}{\\Also, $\bl B'$ is also in $\bl \mathcal{F}$, so $\bl |\mathcal{F}|\mgeq 2^m+1$.}
+\newcommand{\losslesspfj}{\\By the {\dg Pigeonhole Principle},
+  some distinct $\bl B_1, B_2$ satisfy $\bl f(B_1)\meq f(B_2)$.}
+\newcommand{\losslesspfk}{\\But $\bl f$ is lossless and therefore injective, a contradiction.\qed\vspace*{-8mm}}
+
+\newcommand{\fermata}{\\[8mm]\theorem {\gray(Fermat 1640, Euler 1747)}}
+\newcommand{\fermatav}{\\[2mm]\theorem {\gray(Fermat 1640, Euler 1747)}}
+\newcommand{\fermatb}{\\Each prime $\bl p\mequiv 1\pmod 4$ can be written as a sum of squares $\bl p\meq x^2 + y^2$.}
+
+\newcommand{\fermatlema}{\\[4mm]\lemma}
+\newcommand{\fermatlemav}{\\[2mm]\lemma \; If $\bl p\mequiv 1\pmod 4$, then $\bl a^2\mequiv -1\pmod{p}$ for some $\bl a$.}
+\newcommand{\fermatlemb}{\\If $\bl p\mequiv 1\pmod 4$, then $\bl a^2\mequiv -1\pmod{p}$ for some $\bl a$.}
+
+\newcommand{\fermatlempfa}{\\[2mm]\proof }
+\newcommand{\fermatlempfb}{\\Suppose that $\bl p\mequiv 1\pmod 4$ and set $\bl a\mdef \big(\frac{p-1}{2}\big)!$\,.}
+\newcommand{\fermatlempfc}{\\Note that $\bl p-i\mequiv -i\pmod p$ and apply {\dg Wilson's Theorem}:}
+\newcommand{\fermatlempfd}[5]{\[\bl
+\begin{array}{rl}
+   a^2 \meq \bigl(\!\big(\frac{p-1}{2}\big)!\bigr)^2\!\!\!
+ &{#1{\mequiv \bigl(\!\big(\frac{p-1}{2}\big)!\bigr)^2(-1)^{\frac{p-1}{2}}\!\!\pmod{p}}}\\[1mm]
+ &{#2{\mequiv 1\times 2\times\cdots\times\!\big(\frac{p-1}{2}\big)\big(\!-\!\frac{p-1}{2}\big)\times\cdots\times(-2)(-1)\!\!\pmod{p}}}\\[1mm]
+ &{#3{\mequiv 1\times 2\times\cdots\times\!\big(\frac{p-1}{2}\big)\big(\frac{p+1}{2}\big)\!\times\cdots\times\!(p\!-\!2)(p\!-\!1)\!\!\pmod{p}}}\\[1mm]
+ &{#4{\mequiv (p-1)!\!\!\pmod{p}}}\\[1mm]
+ &{#5{\mequiv{\blue-1}\!\!\pmod{p}\,\black.\qquad\Box}}
+\end{array}
+\]}
+
+\newcommand{\fermatpfa}{\\[1mm]\proof }
+\newcommand{\fermatpfb}{\\By the lemma, we can find some $\bl a$ with $\bl a^2\mequiv -1\pmod{p}$.}
+\newcommand{\fermatpfc}{\\Now, consider the pairs of integers $\bl (x,y)$ with $\bl 0 \mleq x,y \mlt \sqrt{p}$.}
+\newcommand{\fermatpfd}{\\There are $\bl (\lfloor\sqrt{p}\rfloor+1)^2\mgt p$ such pairs
+                          and at most $\bl p$ values $\bl ax-y$ mod~$\bl p$.}
+\newcommand{\fermatpfe}{\\By the {\dg Pigeonhole Principle},
+  two distinct pairs $\bl(x_1,y_1)$ and $\bl(x_2,y_2)$ must satisfy $\bl ax_1-y_1 \mequiv ax_2-y_2 \pmod p$.}
+\newcommand{\fermatpff}{ Set $\bl x\mdef x_1-x_2$ and $\bl y\mdef y_1-y_2$.}
+\newcommand{\fermatpfg}{\\Then $\bl x^2+y^2\mequiv -a^2x^2+y^2\mequiv
+                         -(a(x_1 - x_2))^2 + (y_1-y_2)^2\mequiv0\pmod p$.}
+\newcommand{\fermatpfh}[1]{\\Since $\bl(x_1,y_1)$ and $\bl(x_2,y_2)$ are distinct and $\bl0 \mleq x_i,y_i \mlt\sqrt{p}$,
+                        \\we see that $\bl 0\mlt x^2+y^2 \mlt (\sqrt{p})^2 + (\sqrt{p})^2 \meq 2p$.
+                        \\{#1{Hence, $\bl x^2 + y^2 \meq p$.\qed\vspace*{-15mm}}}}
+
+
+
+\coursetitle
+\np\coursetitle\coursetitlei
+\np\formal
+\np\formal\formala
+\np\formal\formala\formalb\formalc
+\np\formal\formala\formalb\formalc\formald
+\np\formal\formala\formalb\formalc\formald\formale
+\np\formal\formala\formalb\formalc\formald\formale\formalf
+\np\courseoverview
+\np\courseoverviewalt
+\np\courseoverviewramseyi
+\np\courseoverviewramseyii
+\np\lecturetitle
+\np\lecturetitlei
+%\np\aaia
+%\np\aaib{}
+\np\pigeonthma
+\np\pigeonthma\pigeonthmexaa
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabc}
+\np\pigeonthma\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabb\pigeonthmexabcii}
+\np\pigeonthma\pigeonthmexba
+\np\pigeonthma\pigeonthmexba\pigeonthmexbb{}
+\np\pigeonthma\pigeonthmexba\pigeonthmexbb{}\pigeonthmexbc
+\np\pigeonthma\pigeonthmexba\pigeonthmexbb{\aaiba}\pigeonthmexbc
+\np\pigeonthma\pigeonthmexca
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb\pigeonthmexcc{}
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb\pigeonthmexcc{\pigeonthmexcca}
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb\pigeonthmexcc{\pigeonthmexcca\pigeonthmexccb}
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb\pigeonthmexga
+\np\pigeonthma\pigeonthmexca\pigeonthmexcb\pigeonthmexga\pigeonthmexgb
+\np\pigeonthma
+\np\pigeonthma\pigeonthmexna
+\np\pigeonthma\pigeonthmexna\pigeonthmexnb
+\np\pigeonthma
+\np\pigeonthma\pigeonthmexha
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{\ph}{\ph}{\ph}{\ph}
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{\ph}{\ph}{\ph}
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{}{\ph}{\ph}
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{}{}{\ph}
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{}{}{}
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{}{}{}\pigeonthmexhh
+\np\pigeonthma\pigeonthmexha\pigeonthmexhb\pigeonthmexhc\pigeonthmexhd\pigeonthmexhe\pigeonthmexhf\pigeonthmexhg{}{}{}{}\pigeonthmexhh\pigeonthmexhj
+\np\pigeonthma
+\np\pigeonthma\dirichleta
+\np\pigeonthma\dirichleta\dirichletb
+\np\pigeonthma\dirichleta\dirichletb\dirichletc
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{\ph}{\ph}{\ph}
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{\ph}{\ph}
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{}{\ph}
+\np\pigeonthma\dirichleta\dirichletb\dirichletpfa\dirichletpfb\dirichletpfc\dirichletpfd\dirichletpfe\dirichletpff\dirichletpfg\dirichletpfh\dirichletpfj{}{}{}
+\np\pigeonthma
+\np\pigeonthma\fermata
+\np\pigeonthma\fermata\fermatb
+\np\pigeonthma\fermata\fermatb\fermatlema
+\np\pigeonthma\fermata\fermatb\fermatlema\fermatlemb
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{\ph}{\ph}{\ph}{\ph}{\ph}
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{}{\ph}{\ph}{\ph}{\ph}
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{}{}{\ph}{\ph}{\ph}
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{}{}{}{\ph}{\ph}
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{}{}{}{}{\ph}
+\np\pigeonthma\fermatlema\fermatlemb\fermatlempfa\fermatlempfb\fermatlempfc\fermatlempfd{}{}{}{}{}
+\np\pigeonthma\fermatlemav\fermatav\fermatb
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd\fermatpfe
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd\fermatpfe\fermatpff
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd\fermatpfe\fermatpff\fermatpfg
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd\fermatpfe\fermatpff\fermatpfg\fermatpfh{\ph}
+\np\pigeonthma\fermatlemav\fermatav\fermatb\fermatpfa\fermatpfb\fermatpfc\fermatpfd\fermatpfe\fermatpff\fermatpfg\fermatpfh{}
+\np\pigeonthma
+\np\pigeonthma\losslessa
+\np\pigeonthma\losslessa\losslessb
+\np\pigeonthma\losslessa\losslessb\losslessc
+\np\pigeonthma\losslessa\losslessb\losslesspfa
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe\losslesspff
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe\losslesspff\losslesspfg
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe\losslesspff\losslesspfg\losslesspfh
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe\losslesspff\losslesspfg\losslesspfh\losslesspfj
+\np\pigeonthma\losslessa\losslessb\losslesspfa\losslesspfb\losslesspfc\losslesspfd\losslesspfe\losslesspff\losslesspfg\losslesspfh\losslesspfj\losslesspfk
+\np\pigeonthmplusa
+\np\pigeonthmplusa\pigeonthmexaa
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexaba\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabb\pigeonthmexabc\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabb\pigeonthmexabcii\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabbii\pigeonthmexabcii\pigeonthmexabd}
+\np\pigeonthmplusa\pigeonthmexaa\pigeonthmexab{\pigeonthmexabaii\pigeonthmexabbii\pigeonthmexabciii\pigeonthmexabd}
+\np\pigeonthmplusa
+\np\pigeonthmplusa\pigeonthmexda
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{}{}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{}{\pigeonthmexdca}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{\pigeonthmexdcb}{\pigeonthmexdca}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{\pigeonthmexdcb}{\pigeonthmexdca\pigeonthmexdcc}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{}{\pigeonthmexdca\pigeonthmexdcc}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{}{\pigeonthmexdca\pigeonthmexdcc\pigeonthmexdcd}
+\np\pigeonthmplusa\pigeonthmexda\pigeonthmexdb\pigeonthmexdc{}{\pigeonthmexdca\pigeonthmexdcc\pigeonthmexdcd\pigeonthmexdce}
+\np\pigeonthmplusa
+\np\pigeonthmplusa\halliiihe
+\np\pigeonthmplusa\halliiihe\halliiihf
+\np\pigeonthmplusa\halliiihe\halliiihf\halliiihfa
+\np\pigeonthmplusa\halliiihe\halliiihf\halliiihfa\halliiihfb
+\np\pigeonthmplusa\halliiihe\halliiihf\halliiihfa\halliiihfb\halliiihfc
+\np\pigeonthmplusa\halliiihe\halliiihf\halliiihfaa\halliiihfb\halliiihfc
+\np\pigeonthmplusa\halliiihe
+\np\pigeonthmplusa\halliiihe\halliiihepfa
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe\halliiihepff
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe\halliiihepff\halliiihepfg
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe\halliiihepff\halliiihepfg\halliiihepfh
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe\halliiihepff\halliiihepfg\halliiihepfh\halliiiheexa
+\np\pigeonthmplusa\halliiihe\halliiihepfa\halliiihepfb\halliiihepfc\halliiihepfd\halliiihepfe\halliiihepff\halliiihepfg\halliiihepfh\halliiiheexa\halliiiheexb
+\np\pigeonthmplusa
+\np\pigeonthmplusa\pigeonthmexea
+\np\pigeonthmplusa\pigeonthmexea\pigeonthmexeb
+\np\pigeonthmplusa\pigeonthmexea\pigeonthmexeb\pigeonthmexec
+\np\pigeonthmplusa\pigeonthmexea\pigeonthmexeb\pigeonthmexec\pigeonthmexed
+\np\pigeonthmplusa\pigeonthmexea\pigeonthmexeb\pigeonthmexec\pigeonthmexed\pigeonthmexee
+\np\pigeonthmplusa\pigeonthmexea\pigeonthmexeb\pigeonthmexec\pigeonthmexed\pigeonthmexee\pigeonthmexef
+\np\pigeonthmplusa\pigeonthmexeav\pigeonthmexeb\pigeonthmexec\pigeonthmexed\pigeonthmexee\pigeonthmexef\pigeonthmexeg
+\np\pigeonthmplusa\pigeonthmexeav\pigeonthmexeb\pigeonthmexec\pigeonthmexed\pigeonthmexee\pigeonthmexef\pigeonthmexeg\pigeonthmexeh
+\np\pigeonthmplusa\pigeonthmexeav\pigeonthmexeb\pigeonthmexec\pigeonthmexed\pigeonthmexee\pigeonthmexef\pigeonthmexeg\pigeonthmexeh\pigeonthmexej
+\np\pigeonthmstrong
+\np\pigeonthmstrong\pigeonthmexma
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabb}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabb\pigeonthmexabc}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexabbii\pigeonthmexabc}
+\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexaba\pigeonthmexabbii\pigeonthmexabc}
+%\np\pigeonthmstrong\pigeonthmexma\pigeonthmexmb{\pigeonthmexaba\pigeonthmexabbii\pigeonthmexabc}
+
+\end{document}
+
+

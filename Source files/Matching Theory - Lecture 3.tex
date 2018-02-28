@@ -1,0 +1,521 @@
+%   Lecture 3: Applications
+%
+%   OK Recap
+%   OK Birkhoff's Theorem
+%   OK Proof of Birkhoff's Theorem
+%   OK Latin squares
+%   OK Lemma + proof
+%   OK Mention Ryser's Theorem, {\dg Hall's Theorem}, Lindner, Evans etc.
+%   OK Symmetric Chain Decomposition
+%   OK Sperner's Theorem
+%   OK Increasing/decreasing sequences
+%
+
+\include{mydefinitionsmatchings}
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Max-Min Theorems}\end{center}}
+
+\newcommand{\lecturetitleiii}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Part A: Max-Min Theorems}\\[3mm]
+  \darkgreen Lecture 3: Applications\end{center}}
+
+\newcommand{\mymatrixc}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,
+  fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(3,3)\psframe(0,0)(3,3)
+  #1\psframe[linecolor=gray,fillcolor=offwhite,fillstyle=none](0,0)(3,3)\endpspicture}
+\newcommand{\mymatrixd}[1]{\psset{unit=4mm,linewidth=.03,linecolor=gray,fillstyle=solid,
+  fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(4,4)\psframe(0,0)(4,4)
+  #1\psframe[linecolor=gray,fillcolor=offwhite,fillstyle=none](0,0)(4,4)\endpspicture}
+\newcommand{\mymatrixe}[1]{\psset{unit=5mm,linewidth=.03,linecolor=gray,fillstyle=solid,
+  fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(4,4)\psframe(0,1)(4,4)
+  #1\psframe[linecolor=gray,fillcolor=offwhite,fillstyle=none](0,1)(4,4)\endpspicture}
+\newcommand{\mymatrixf}[1]{\psset{unit=5mm,linewidth=.03,linecolor=gray,fillstyle=solid,
+  fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(4,4)\psframe(0,0)(4,4)
+  #1\psframe[linecolor=gray,fillcolor=offwhite,fillstyle=none](0,0)(4,4)\endpspicture}
+\newcommand{\mymatrixg}[1]{\psset{unit=5mm,linewidth=.03,linecolor=gray,fillstyle=solid,
+  fillcolor=offwhite,shadow=false,framearc=0}\pspicture(0,0)(5,4)\psframe(0,1)(5,4)
+  #1\psframe[linecolor=gray,fillcolor=offwhite,fillstyle=none](0,1)(5,4)\endpspicture}
+
+\newcommand{\hallia}[1]{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psline(6.6,4.7)(2.9,6.7)\psline(6.9,4.7)(4.7,6.7)
+  \psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)#1
+  \endpspicture\end{center}}
+
+\newcommand{\halliav}{\begin{center}
+ \psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=green,linecolor=darkgreen,shadow=false}
+ \pspicture(0,3.25)(12.5,8.5)\multips(3,3.15)(2,0){4}{\woman}\multips(2,7)(2,0){4}{\man}
+  \put(10,7){\sadman}\psset{linecolor=lightgray}\psline(6.6,4.7)(2.9,6.7)
+  \psline(6.9,4.7)(4.7,6.7)\psline(3.3,4.7)(2.5,6.7)\psline(9.2,4.7)(8.5,6.7)\psset{linecolor= blue}
+  \psline(3.5,4.7)(4.2,6.7)\psline(4.8,4.7)(2.7,6.7)\psline(8.9,4.7)(6.7,6.7)
+  \endpspicture\end{center}}
+
+\newcommand{\halliaa}{\put(2.3,1.5){\pspicture(0,0)(20,4)
+  \psset{unit=.4,linecolor=gray,fillcolor=offwhite,shadow=true,shadowcolor=nearlywhite,shadowsize=.2,framearc=.3}
+  \psframe(0,-4)(20.6,1.5)\rput(10.2,.6){{\darkgreen The Marriage Theorem}}
+   \rput(10.6,-.8){The girls can each get a boy}
+  \rput(10.2,-1.95){\:\:{\small$\Updownarrow$}} % if and only if}}
+  \rput(10.6,-3.1){Each $\bl k$ girls together like at least $\bl k$ boys.}\endpspicture}}
+
+\newcommand{\hallib}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of sets. }
+\newcommand{\hallibv}{Let $\bl {\blue\mathcal{A}} \meq \{A_i\}_I$ be a finite family of subsets of a finite set $\bl E$. }
+\newcommand{\hallic}{\\A {\dg matching} of $\bl \mathcal{A}$ is
+  a set of distinct elements $\bl \{a_i\}_I$ with $\bl  a_i\myin A_i$ ($\bl\forall i\myin I$).}
+\newcommand{\halliea}{\\Set $\bl \mathcal{A}(J) \meq  \bigcup_{i\myin J} A_i$ for all $\bl  J\msubseteq I$.}
+
+
+\newcommand{\hallieb}{\\[4mm]{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl \mathcal{A}$ has a matching if and only if $\bl |\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliebv}{{\darkgreen The Marriage Theorem} \;{\gray (Frobenius 1917, Hall 1935)}\\
+  $\bl \mathcal{A}$ has a matching if and only if $\bl |\mathcal{A}(J)|\mgeq |J|$ for all $\bl J\msubseteq I$.}
+\newcommand{\halliec}{\\[3mm]{\gray Also called ``{\green Hall's Theorem}".}}
+
+\newcommand{\halliiaa}{Let $\bl A$ be a $\bl (0,1)$-matrix.}
+\newcommand{\halliiab}{\\A {\dg line} is a row or a column.}
+\newcommand{\halliiaba}{\mypicture{\rput(-2,-3){\mymatrixi{}{}}}}
+\newcommand{\halliiabb}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](0,2)(7,3)}{}}}}
+\newcommand{\halliiabc}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](1,0)(2,5)}{}}}}
+\newcommand{\halliiac}{\\A {\dg  partial transversal} is a set of $\bl 1$-entries with no common line.}
+%\newcommand{\halliiad}{\\The {\em\dg  term rank} of $\bl A$ is the maximal size of a partial transversal in $\bl A$.}
+
+\newcommand{\halliiaca}{\mypicture{\rput(-2,-3){\mymatrixi{}{}}}}
+\newcommand{\halliiacb}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}}}}}
+\newcommand{\halliiacc}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}\psframe(3,4)(4,5)\rput(3.5,4.5){\white1}}}}}
+\newcommand{\halliiacd}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(6,2)(7,3)\rput(6.5,2.5){\white1}\psframe(3,4)(4,5)\rput(3.5,4.5){\white1}
+  \psframe(5,0)(6,1)\rput(5.5, .5){\white1}}}}}
+\newcommand{\halliiace}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(0,2)(1,3)\psframe(3,1)(4,2)\psframe(5,4)(6,5)
+  \rput(.5,2.5){\white1}\rput(3.5,1.5){\white1}\rput(5.5,4.5){\white1}}}}}
+\newcommand{\halliiacf}{\mypicture{\rput(-2,-3){\mymatrixi{}{\psset{linecolor=gray,fillcolor=gray}
+  \psframe(0,2)(1,3)\rput(.5,2.5){\white1}\psframe(3,1)(4,2)\rput(3.5,1.5){\white1}
+  \psframe(5,4)(6,5)\rput(5.5,4.5){\white1}\rput[lb](8.5,3){Maximal size of a partial transversal $\bl \meq \blue 3$}}}}}
+\newcommand{\halliiacg}{\mypicture{\rput(-2,-3){\mymatrixi{\psframe[linecolor=halfgray,fillcolor=halfgray](0,2)(7,3)
+  \psframe[linecolor=halfgray,fillcolor=halfgray](3,0)(4,5)\psframe[linecolor=halfgray,fillcolor=halfgray](5,0)(6,4)}{
+  \psset{linecolor=gray,fillcolor=gray}\psframe(0,2)(1,3)\rput(.5,2.5){\white1}\psframe(3,1)(4,2)\rput(3.5,1.5){\white1}
+  \psframe(5,4)(6,5)\rput(5.5,4.5){\white1}
+  \rput[lb](8.5,3){Maximal size of a partial transversal $\bl \meq \blue 3$}
+  \rput[lb](8.5,1){Minimal number of lines to cover {\bl1}s $\bl \meq \blue 3$}}}}}
+
+\newcommand{\halliiae}{{\darkgreen K\"onig's Theorem} {\gray (1916)}\\
+   The maximal size $\bl M$ of a partial transversal in $\bl A$ {\dg equals}
+   \\the minimal number $\bl m$ of lines needed to cover all {\bl1}-entries of $\bl A$.}
+
+\newcommand{\halliiba}{\\[3mm]{\darkgreen\sf Theorem}
+  \\{\dg Hall's Theorem} and {\dg K\"onig's Theorem} are equivalent.}
+
+\newcommand{\halliica}{A {\dg  partially ordered set} or {\dg  poset} is a set $\bl P$ together with
+  a {\dg partial order} $\bl\mpreceq$ satisfying, for all $\bl x,y,z\myin P$,}
+\newcommand{\halliicav}{A {\dg  poset} $\bl P$ is a set with a {\dg partial order} $\bl\mpreceq$
+  satisfying, for all $\bl x,y,z\myin P$,}
+\newcommand{\halliicb}{\\[1mm]\begin{tabular}{cl}
+    ({\darkgreen R})                       & $\bl x\mpreceq x$\\
+    ({\darkgreen $\overline{\textsf{S}}$}) & If $\bl x\mpreceq y$ and $\bl y\mpreceq x$, then $\bl x\meq y$.\\
+    ({\darkgreen T})                       & If $\bl x\mpreceq y$ and $\bl y\mpreceq z$, then $\bl x\mpreceq z$.
+  \end{tabular}}
+\newcommand{\halliicba}{\\[3mm]\begin{tabular}{ccl}
+    ({\darkgreen R})                       & $\bl \meq $\bl  &{\darkgreen R}eflexive\\
+    ({\darkgreen $\overline{\textsf{S}}$}) & $\bl \meq $\bl  &{\darkgreen A}nti-{\darkgreen S}ymmetric\\
+    ({\darkgreen T})                       & $\bl \meq $\bl  &{\darkgreen T}ransitive
+  \end{tabular}}
+
+\newcommand{\halliicc}[1]{\mypicture{\rput(4.8,-4.2){\psset{unit=15mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45,dash=7pt 5pt}
+  \pspicture(-.7,1)(6,3.7)#1\endpspicture}}\\[-5.2mm]}
+
+\newcommand{\halliicd}{{\darkgreen Dilworth's Theorem} {\gray(1950)}\\
+  The minimal number $\bl m$ of disjoint chains covering a finite poset $\bl P$ {\dg equals}
+  \\the maximal size $\bl M$ of an antichain.}
+
+\newcommand{\halliice}{\\[3mm]{\dg Dual of Dilworth's Theorem} {\gray (Mirsky 1971)}\\
+  The minimal number $\bl m$ of disjoint antichains covering the poset $\bl P$ {\dg equals}\\
+  the maximal size $\bl M$ of a chain.}
+\newcommand{\halliicev}{{\dg Dual of Dilworth's Theorem} {\gray (Mirsky 1971)}\\
+  The minimal number $\bl m$ of disjoint antichains covering the poset $\bl P$ {\dg equals}\\
+  the maximal size $\bl M$ of a chain.}
+
+
+\newcommand{\halliicea}[1]{\\[3mm]{\psset{unit=10mm,dotscale=1.5,linewidth=.03,fillcolor=halfgray,
+  linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45}
+  \pspicture(-2,-.2)(6,3.45)\posetava#1\endpspicture}}
+
+\newcommand{\halliicf}{\\[3mm]Note that {\dg Dilworth's Theorem} is harder to prove than its dual!}
+\newcommand{\halliicg}{\\This means that chains and antichains are not completely interchangeable.}
+
+\newcommand{\halliida}{{\darkgreen\sf Theorem}
+  \\{\dg Hall's Theorem}, {\dg K\"onig's Theorem} and {\dg Dilworth's Theorem} are equivalent.}
+
+
+\newcommand{\halliiia}{Let $\bl {\blue M}\mdef (m_{ij})$ be a real $\bl n\times n$ matrix.}
+\newcommand{\halliiiaa}{\\A {\dg transversal} of $\bl M$ is $\bl n$ nonzero entries with no common line.}
+\newcommand{\halliiiab}{\\A {\dg permutation matrix} is a square $\bl(0,1)$-matrix with one {\bl 1}-entry in each~line.}
+
+\newcommand{\halliiib}{{\dg The Birkhoff-Neumann Theorem} {\gray(1946, 1953)}
+  \\The line sums of $\bl M$ all equal $\bl t$ if and only if, for permutation matrices~$\bl P_i$,\vspace{-1mm}
+  \[\bl M \meq \sum c_iP_i \qquad \mytext{where}\qquad \sum c_i \meq \blue t\,\black.\]}
+
+ \newcommand{\halliiiba}{{\darkgreen Example}\\\psset{unit=4mm}\pspicture(-5.6,0)(22,2.5)
+  \rput(0,0){\mymatrixc{{\darkgray\rput(.5,2.5){-1}\rput(1.5,2.5){4}\rput(2.5,2.5){1}\rput(.5,1.5){3}
+    \rput(1.5,1.5){1}\rput(2.5,1.5){0}\rput(.5,.5){2}\rput(1.5,.5){-1}\rput(2.5,.5){3}}}}
+  \rput(3.5,0){$=\:\:-$}\rput(6.5,0){\mymatrixc{{\darkgray\rput(.5,2.5){1}\rput(1.5,2.5){0}
+    \rput(.5,1.5){0}\multirput(.5,.5)(1,1){3}{0}\rput(2.5,1.5){1}\rput(1.5,.5){1}\rput(2.5,.5){0}}}}
+  \rput(8.7,0){+}\rput(11,0){\mymatrixc{{\darkgray\rput(.5,2.5){0}\rput(1.5,2.5){0}\rput(.5,1.5){0}
+    \rput(2.5,1.5){0}\multirput(.5,.5)(1,1){3}{1}\rput(1.5,.5){0}\rput(2.5,.5){0}}}}
+  \rput(13.5,0){+\:{\darkgray3}}\rput(16,0){\mymatrixc{{\darkgray\rput(.5,2.5){0}\rput(1.5,2.5){1}
+    \rput(.5,1.5){1}\rput(2.5,1.5){0}\multirput(.5,.5)(1,1){3}{0}\rput(1.5,.5){0}\rput(2.5,.5){1}}}}
+  \rput(18.2,0){+}\rput(20.5,0){\mymatrixc{{\darkgray\rput(.5,1.5){0}\rput(.5,.5){1}\rput(1.5,2.5){1}
+    \multirput(.5,2.5)(1,-1){3}{0}\rput(1.5,.5){0}\rput(2.5,1.5){1}\rput(2.5,2.5){0}}}}\endpspicture}
+
+\newcommand{\halliiipfia}{\proof}
+\newcommand{\halliiipfib}{\\If $\bl M \meq \sum c_iP_i$ with $\bl \sum c_i\meq t$,
+  then all the line sums of $\bl M$ equal~$\bl t$. }
+\newcommand{\halliiipfibv}{Thus, suppose that $\bl M\mgeq 0$ and each line sum equals $\bl t\mgt 0$. }
+\newcommand{\halliiipfibvv}{We use induction on the number of nonzero entries in~$\bl M$.
+  \\Define $\bl \mathcal{A}\meq \{A_i\}_I$ where $\bl A_i \meq \{j\::\:m_{ij}\mgt 0\}$ and $\bl I\meq\{1,\dots,n\}$.}
+\newcommand{\halliiipfic}{\\Therefore, suppose that each line sum of $\bl M$ equals $\bl t$.}
+\newcommand{\halliiipfid}{\\If $\bl M$ has negative entries, then let $\bl a \meq \min m_{ij}$ and let $\bl M'= M + |a|J_n$
+  where $\bl J_n$ is all-1 $\bl n\times n$ matrix. }
+\newcommand{\halliiipfie}{\\Then each entry of $\bl M'$ is nonnegative and each line sum equals $\bl t+|a|n$. }
+\newcommand{\halliiipfif}{\\Since $\bl |a|J_n$ is a weighted sum of permutation matrices,
+  we can assume, without loss of generality, that $\bl M$ is nonnegative.}
+\newcommand{\halliiipfig}{\\If $\bl t=0$, then $\bl M \meq 0\times P$ for any permutation matrix $\bl P$, so assume $\bl t\mgt 0$.}
+\newcommand{\halliiipfih}{\\We use induction on the number of nonzero entries in~$\bl M$.}
+\newcommand{\halliiipfij}{\\Define $\bl \mathcal{A}\meq\{A_i\}_I$
+  where $\bl A_i \meq \{j\::\:m_{ij}\mgt 0\}$ and $\bl I\meq\{1,\dots,n\}$.}
+\newcommand{\halliiipfik}{\\Consider any subset $\bl J\msubseteq I$. }
+\newcommand{\halliiipfim}{Then\vspace{-1.5mm}
+  \[\bl|\mathcal{A}(J)|t \meq \sum_{j\myin\mathcal{A}(J)}\sum_{i\myin I} m_{ij}
+      \mgeq \sum_{j\myin\mathcal{A}(J)}\sum_{i\myin J}m_{ij}
+      \mgeq  \sum_{i\myin J}\sum_{j\myin A_i}m_{ij}
+      \meq  \sum_{i\myin J}t
+      \meq  |J|t\,\black.\]}
+\newcommand{\halliiipfin}{\\[-3mm]Hence, $\bl |\mathcal{A}(J)|\mgeq |J|$. }
+\newcommand{\halliiipfio}{By {\dg Hall's Theorem}, $\bl \mathcal{A}$ has a matching,
+  corresponding to a transversal $\bl T$ of $\bl M$ and represented by a permutation matrix~$\bl P$. }
+\newcommand{\halliiipfip}{\\Let $\bl c\mgt 0$ be the minimal value of the entries $\bl T$. }
+\newcommand{\halliiipfiq}{\\Then $\bl M' \meq M-cP$ has all line sums equal to $\bl t-c\mgeq 0$; }
+\newcommand{\halliiipfir}{\\also, $\bl M'$ has fewer nonzero entries than~$\bl M$.}
+\newcommand{\halliiipfis}{\\By induction, $\bl M'=\sum c_iP_i$ for permutation matrices $\bl P_i$ and $\bl \sum c_i \meq t-c$. }
+\newcommand{\halliiipfit}{\\Adding $\bl P$ to $\bl M'$ gives $\bl M \meq cP+\sum c_iP_i$. \qed}
+
+\newcommand{\halliiic}{{\darkgreen Corollary}
+  \\$\bl M$ is doubly stochastic (i.e., all line sums equal {\bl1}) if and only if
+  \\$\bl M \meq \sum c_iP_i$ for permutation matrices~$\bl P_i$ and $\bl \sum c_i \meq 1$.}
+
+\newcommand{\halliiid}{{\darkgreen\sf Theorem} {\gray(K\"onig 1916)}
+  \\If $\bl M$ is a nonnegative matrix with integers entries and constant line sums,
+  \\then $\bl M\meq \sum P_i$ for permutation matrices~$\bl P_i$.}
+
+\newcommand{\halliiie}{A {\dg Latin rectangle} is a matrix where no line has repeated entries.}
+\newcommand{\halliiiea}{\\A {\dg Latin square} is a square Latin rectangle.}
+\newcommand{\halliiieb}{\\A Latin rectangle is {\dg incomplete} if it has some empty entries.}
+
+\newcommand{\halliiiec}[1]{{\darkgreen Example}
+  \\\psset{unit=5mm}\pspicture(-4,-2)(0,3.5)\rput(0,0){\mymatrixe{
+    \rput(.5,3.5){\darkgray1}\rput(1.5,3.5){\darkgray3}\rput(2.5,3.5){\darkgray4}\rput(3.5,3.5){\darkgray2}
+    \rput(.5,2.5){\darkgray3}\rput(1.5,2.5){\darkgray1}\rput(2.5,2.5){\darkgray2}\rput(3.5,2.5){\darkgray4}
+    \rput(.5,1.5){\darkgray4}\rput(1.5,1.5){\darkgray2}\rput(2.5,1.5){\darkgray1}\rput(3.5,1.5){\darkgray3}}}#1\endpspicture}
+\newcommand{\halliiieca}{\rput(8,0){\mymatrixf{
+    \rput(.5,3.5){\lss}\rput(1.5,3.5){\lhs}\rput(2.5,3.5){\lds}\rput(3.5,3.5){\lcs}
+    \rput(.5,2.5){\lds}\rput(1.5,2.5){\lcs}\rput(2.5,2.5){\lss}\rput(3.5,2.5){\lhs}
+    \rput(.5,1.5){\lhs}\rput(1.5,1.5){\lss}\rput(2.5,1.5){\lcs}\rput(3.5,1.5){\lds}
+    \rput(.5, .5){\lcs}\rput(1.5, .5){\lds}\rput(2.5, .5){\lhs}\rput(3.5, .5){\lss}}}}
+\newcommand{\halliiiecb}{\rput(16,0){\mymatrixf{
+    \rput(.5,3.5){\darkgray1}\rput(1.5,3.5){\darkgray3}\rput(2.5,3.5){\darkgray4}\rput(3.5,3.5){\darkgray2}
+    \rput(.5,2.5){\darkgray3}\rput(1.5,2.5){\darkgray1}\rput(2.5,2.5){\darkgray }\rput(3.5,2.5){\darkgray }
+    \rput(.5,1.5){\darkgray4}\rput(1.5,1.5){\darkgray }\rput(2.5,1.5){\darkgray1}\rput(3.5,1.5){\darkgray3}
+    \rput(.5, .5){\darkgray2}\rput(1.5, .5){\darkgray4}\rput(2.5, .5){\darkgray3}\rput(3.5, .5){\darkgray }}}}
+
+\newcommand{\halliiif}{{\darkgreen\sf Theorem}
+  \\Each $\bl r\times n$ Latin rectangle ($\bl r\!\mlt \!n$) can be extended to an $\bl n\times n$ Latin~square.}
+
+\newcommand{\halliiipfiia}{\\[2.5mm]\proof}
+\newcommand{\halliiipfiib}{\\By induction, we need only show that one row can be added. }
+\newcommand{\halliiipfiic}{\\Let $\bl A_i$ be the set of elements {\red not} in the $\bl i$th column of the rectangle~$\bl R$,
+  \\and set $\bl \mathcal{A}\meq \{A_i\}_I$ where $\bl I\meq\{1,\dots,n\}$. \\Note that $\bl |A_i| \meq n - r$. }
+\newcommand{\halliiipfiid}{\\Consider any subset $\bl J\msubseteq I$. }
+\newcommand{\halliiipfiie}{\\Each element appears $\bl r$ times in $\bl R$
+                           \\and therefore $\bl n-r$ times in the sets~$\bl A_i$.}
+\newcommand{\halliiipfiif}{\\Therefore, each element can appear at most
+                           \\$\bl n-r$ times in the sets $\bl A_i$ where $\bl i\myin J$. }
+\newcommand{\halliiipfiig}{\\Then\vspace{-2.5mm}
+  \[\bl|J|(n-r) \meq \sum_{i\myin J}|A_i| \meq \sum_{j\myin\mathcal{A}(J)}|\{i\myin J\::\: j\myin A_i\}|\mleq |\mathcal{A}(J)|(n-r)\,\black.\vspace*{-1mm}\]}
+\newcommand{\halliiipfiih}{\\[-5mm]Hence, $\bl |\mathcal{A}(J)|\mgeq |J|$. }
+\newcommand{\halliiipfiij}{\\By {\dg Hall's Theorem}, $\bl \mathcal{A}$ has a matching,
+  which gives a new row for $\bl R$.\qed\vspace*{-12mm}}
+
+\newcommand{\halliiifa}[1]{\mypicture{\rput(9.5,-2.75){\mymatrixg{#1\psline(0,2)(5,2)
+  \rput(.5,3.5){\darkgray1}\rput(1.5,3.5){\darkgray3}\rput(2.5,3.5){\darkgray4}\rput(3.5,3.5){\darkgray2}\rput(4.5,3.5){\darkgray5}
+  \rput(.5,2.5){\darkgray2}\rput(1.5,2.5){\darkgray4}\rput(2.5,2.5){\darkgray5}\rput(3.5,2.5){\darkgray1}\rput(4.5,2.5){\darkgray3}}}}}
+\newcommand{\halliiifaa}{\rput(2.5,-.2){$\bl A_1\meq\{\textsf{{\darkgray3,4,5}}\}$}}
+\newcommand{\halliiifab}{\psframe[fillcolor=halfgray,linecolor=halfgray](0,1)(2,4)\rput(1,4.7){$\bl J$}}
+\newcommand{\halliiifac}{\rput(.5,1.5){\darkgray3}\rput(1.5,1.5){\darkgray1}\rput(2.5,1.5){\darkgray2}\rput(3.5,1.5){\darkgray5}\rput(4.5,1.5){\darkgray4}}
+
+\newcommand{\halliiig}{\\[5mm]{\dg Hall's Theorem} can also be used to prove stronger results like the following.}
+\newcommand{\halliiiga}{\\[5mm]{\dg Ryser's Theorem} {\gray(1956)}
+  \\An $\bl r\times s$ Latin rectangle on $\bl n$ symbols can be extended to an $\bl n\times n$ Latin square
+  if and only if each symbol occurs at least $\bl r + s - n$ times.}
+\newcommand{\halliiigb}{\\[5mm]{\darkgreen Evan's Conjecture} {\gray (Smetianuk 1981)}
+  \\An incomplete Latin $\bl n\times n$ square with at most $\bl n-1$ entries can be completed to a Latin square of order~$\bl n$.}
+
+\newcommand{\halliiih}{{\dg Boolean lattice} $\bl\mathcal{B}_n$
+  is the poset of subsets of $\bl \{1,\ldots,n\}$ under inclusion.}
+%with $\bl A\preseq B$ if and only if $\bl A\msubseteq B$. }
+
+\newcommand{\halliiiha}[1]{\mypicture{\rput(4.25,-4.9){\psset{unit=9mm,dotscale=1.5,linewidth=.03,
+  fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45}
+  \pspicture(-.7,1)(6,3.7)#1\endpspicture}}\\[-5.2mm]}
+
+\newcommand{\halliiihb}{{\darkgreen Symmetric Chain Decomposition Algorithm}
+  \\A symmetric chain decomposition of $\bl\mathcal{B}_n$ is given inductively as follows:
+  \\[2mm]\mybullet The chain $\bl \emptyset\msubset\{1\}$ decomposes $\bl\mathcal{B}_1$ (trivially).
+  \\\mybullet Suppose that $\bl \mathcal{C}$ decomposes $\bl\mathcal{B}_n$ into disjoint symmetric chains.
+  \\\mybullet Replace each chain $\bl P_k\msubset P_{k+1}\msubset\cdots\msubset P_{n-k}$ in $\bl \mathcal{C}$ with $\bl |P_i|=i$ by\vspace{-2mm}
+  \[\bl P_{k+1}\msubset\cdots\msubset P_{n-k}\quad\mytext{and}\quad
+    P_{k}\msubset P_{k}\cup\{n+1\}\msubset\cdots\msubset P_{n-k}\cup\{n+1\}\]}
+
+\newcommand{\scdi}{\rput[b](0,0){\pspicture(0,-.5)(0,1.5)\darkgray\pscircle(0,1){.09}\psline(0,.13)(0,.87)
+  \pscircle(0,0){.09}\rput(0,1.4){\small1}\rput(0,-.4){$\emptyset$}\rput(0,-1){$\blue\mathcal{B}_1$}\endpspicture}}
+\newcommand{\scdia}{\rput[b](0,0){\pspicture(0,-.5)(0,1.5)\darkgray\dbb\pscircle(0,1){.09}\psline(0,.13)(0,.87)
+  \pscircle(0,0){.09}\rput(0,1.4){\small1}\rput(0,-.4){$\emptyset$}\rput(0,-1){$\blue\mathcal{B}_1$}\endpspicture}}
+\newcommand{\scdiav}{\rput[b](0,0){\pspicture(0,-.5)(0,1.5)\darkgray\dbb
+  \pscircle(0,1){.09}\psline(0,.13)(0,.87)\pscircle(0,0){.09}
+  \psframe[linecolor=halfgray,fillcolor=lightgray,shadow=false,framearc=1,fillstyle=solid](-.18,-.18)(.18,.18)
+ {\psset{shadow=false,fillstyle=solid,fillstyle=solid}\pscircle(0,1){.09}\psline(0,.13)(0,.87)\pscircle(0,0){.09}}
+  \rput(0,1.4){\small1}\rput(0,-.4){$\emptyset$}
+  \rput(0,-1){$\blue\mathcal{B}_1$}\endpspicture}}
+\newcommand{\scdii}{\rput[b](3.5,0){\pspicture(0,-.5)(0,2.5){\small\darkgray\pscircle(0,2){.09}\psline(-.91,1.09)(-.09,1.91)
+  \psline(.91,1.09)(.09,1.91)\pscircle(-1,1){.09}\pscircle(1,1){.09}\psline(-.91,.91)(-.09,.09)
+  \psline(.91,.91)(.09,.09)\pscircle(0,0){.09}\rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}
+  \rput(1.3,1){2}\rput(0,2.4){12}}\rput(0,-1){$\blue\mathcal{B}_2$}\endpspicture}}
+\newcommand{\scdiia}{\rput[b](3.5,0){\pspicture(0,-.5)(0,2.5){\small\darkgray\psline(-.91,1.09)(-.09,1.91)
+  {\dbb\pscircle(0,2){.09}\psline(.91,1.09)(.09,1.91)\pscircle(-1,1){.09}\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09){\dbb\psline(.91,.91)(.09,.09)\pscircle(0,0){.09}}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}
+  \rput(1.3,1){2}\rput(0,2.4){12}}\rput(0,-1){$\blue\mathcal{B}_2$}\endpspicture}}
+\newcommand{\scdiiav}{\rput[b](3.5,0){\pspicture(0,-.5)(0,2.5){\small\darkgray
+  \psline(-.91,1.09)(-.09,1.91)
+  {\dbb\pscircle(0,2){.09}\psline(.91,1.09)(.09,1.91)\pscircle(-1,1){.09}\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09){\dbb\psline(.91,.91)(.09,.09)\pscircle(0,0){.09}}
+  \psframe[linecolor=halfgray,fillcolor=lightgray,shadow=false,framearc=1,fillstyle=solid](-1.18,.82)(1.18,1.18)
+  {\psset{shadow=false,fillcolor=blue,fillstyle=solid}\psline(-.91,1.09)(-.09,1.91)
+  {\dbb\pscircle(0,2){.09}\psline(.91,1.09)(.09,1.91)\pscircle(-1,1){.09}\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09){\dbb\psline(.91,.91)(.09,.09)\pscircle(0,0){.09}}}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}
+  \rput(1.3,1){2}\rput(0,2.4){12}}\rput(0,-1){$\blue\mathcal{B}_2$}\endpspicture}}
+\newcommand{\scdiii}{\rput[b](8,0){\pspicture(0,-.5)(0,3.5){\small\darkgray\pscircle(0,3){.09}
+  \psline(-.91,2.09)(-.09,2.91)\psline(0,2.13)(0,2.87)\psline(.09,2.91)(.91,2.09)\pscircle(-1,2){.09}
+  \pscircle(0,2){.09}\pscircle(1,2){.09}\psline(-1,1.13)(-1,1.87)\psline(-.91,1.09)(-.09,1.91)
+  \psline(0,1.13)(0,1.87)\psline(.09,1.09)(.91,1.91)\psline(1,1.13)(1,1.87)\pscircle(-1,1){.09}
+  \pscircle(0,1){.09}\pscircle(1,1){.09}{\psset{shadow=false}\psline(-.884,1.94)(.884,1.06)}
+  \psline(-.91,.91)(-.09,.09)\psline(0,.13)(0,.87)\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}\rput(-.3,1){2}\rput(1.3,1){3}\rput(-1.4,2){13}
+  \rput(-.4,2){12}\rput(1.4,2){23}\rput(0,3.4){123}}\rput(0,-1){$\blue\mathcal{B}_3$}\endpspicture}}
+\newcommand{\scdiiia}{\rput[b](8,0){\pspicture(0,-.5)(0,3.5){\small\darkgray{\dbb\pscircle(0,3){.09}}
+  \psline(-.91,2.09)(-.09,2.91)\psline(0,2.13)(0,2.87){\dbb\psline(.09,2.91)(.91,2.09)\pscircle(1,2){.09}}
+  {\dbb\pscircle(-1,2){.09}\psline(-1,1.13)(-1,1.87)\pscircle(-1,1){.09}}
+  \psline(-.91,1.09)(-.09,1.91){\dbb\pscircle(0,2){.09}\psline(0,1.13)(0,1.87)\pscircle(0,1){.09}}
+  \psline(.09,1.09)(.91,1.91)\psline[shadow=false](-.884,1.94)(.884,1.06)
+  {\dbb\psline[shadow=false](0,1.13)(0,1.87)}{\dbb\psline(1,1.13)(1,1.87)\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09)\psline(0,.13)(0,.87){\dbb\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}\rput(-.3,1){2}\rput(1.3,1){3}\rput(-1.4,2){13}
+  \rput(.4,2){12}\rput(1.4,2){23}\rput(0,3.4){123}}\rput(0,-1){$\blue\mathcal{B}_3$}\endpspicture}}
+\newcommand{\scdiiiav}{\rput[b](8,0){\pspicture(0,-.5)(0,3.5){\small\darkgray
+  {\dbb\pscircle(0,3){.09}}
+  \psline(-.91,2.09)(-.09,2.91)\psline(0,2.13)(0,2.87){\dbb\psline(.09,2.91)(.91,2.09)\pscircle(1,2){.09}}
+  {\dbb\pscircle(-1,2){.09}\psline(-1,1.13)(-1,1.87)\pscircle(-1,1){.09}}
+  \psline(-.91,1.09)(-.09,1.91){\dbb\pscircle(0,2){.09}\psline(0,1.13)(0,1.87)\pscircle(0,1){.09}}
+  \psline(.09,1.09)(.91,1.91)\psline[shadow=false](-.884,1.94)(.884,1.06)
+  {\dbb\psline[shadow=false](0,1.13)(0,1.87)\psline(1,1.13)(1,1.87)\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09)\psline(0,.13)(0,.87){\dbb\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}}
+  \psframe[linecolor=halfgray,fillcolor=lightgray,shadow=false,framearc=1,fillstyle=solid](-1.18,.82)(1.18,1.18)
+  {\psset{shadow=false,fillcolor=blue,fillstyle=solid}{\dbb\pscircle(0,3){.09}}
+  \psline(-.91,2.09)(-.09,2.91)\psline(0,2.13)(0,2.87){\dbb\psline(.09,2.91)(.91,2.09)\pscircle(1,2){.09}}
+  {\dbb\pscircle(-1,2){.09}\psline(-1,1.13)(-1,1.87)\pscircle(-1,1){.09}}
+  \psline(-.91,1.09)(-.09,1.91){\dbb\pscircle(0,2){.09}\psline(0,1.13)(0,1.87)\pscircle(0,1){.09}}
+  \psline(.09,1.09)(.91,1.91)\psline[shadow=false](-.884,1.94)(.884,1.06)
+  {\dbb\psline[shadow=false](0,1.13)(0,1.87)}{\dbb\psline(1,1.13)(1,1.87)\pscircle(1,1){.09}}
+  \psline(-.91,.91)(-.09,.09)\psline(0,.13)(0,.87){\dbb\psline(.09,.09)(.91,.91)\pscircle(0,0){.09}}}
+  \rput(0,-.4){$\emptyset$}\rput(-1.3,1){1}\rput(-.3,1){2}\rput(1.3,1){3}\rput(-1.4,2){13}
+  \rput(.4,2){12}\rput(1.4,2){23}\rput(0,3.4){123}}\rput(0,-1){$\blue\mathcal{B}_3$}\endpspicture}}
+
+\newcommand{\halliiihc}{{\dg Sperner's Theorem} {\gray(1928)}
+  \\If $\bl\mathcal{A}$ is a family of subsets of $\bl \{1,\ldots,n\}$ with $\bl A\not\msubset B$ for all $\bl A,B\myin\mathcal{A}$,
+  %  so that no member is a subset of another,
+  then $\bl|\mathcal{A}|\mleq\binom{n}{\lfloor\frac{n}{2}\rfloor}$.}
+
+\newcommand{\halliiihd}[1]{\mypicture{\rput(1.5,-4.6){\psset{unit=9mm,dotscale=1.5,linewidth=.03,
+  fillcolor=halfgray,linecolor=gray,shadowcolor=offwhite,shadow=true,shadowsize=.125,shadowangle=-45}
+  \pspicture(-.7,1)(6,3.7)#1\endpspicture}}\\[-5.2mm]}
+
+\newcommand{\halliiipfiiia}{\\[3.5mm]\proof}
+\newcommand{\halliiipfiiib}{\\The family $\bl \mathcal{A}$ is an antichain in $\bl \mathcal{B}_n$. }
+\newcommand{\halliiipfiiic}{By the trivial direction of {\dg Dilworth's Theorem}, 
+ $\bl|\mathcal{A}|\mleq m$
+  where $\bl m$ is the minimal number of chains to cover~$\bl \mathcal{B}_n$. }
+\newcommand{\halliiipfiiid}{\\The {\dg Symmetric Chain Decomposition Algorithm} gives a covering of $\bl \mathcal{B}_n$
+  by disjoint chains that each contain one member $\bl P$ of size $\bl |P|\meq\lfloor\frac{n}{2}\rfloor$.}
+\newcommand{\halliiipfiiie}{\\There are $\bl \binom{n}{\lfloor\frac{n}{2}\rfloor}$ such members.}
+\newcommand{\halliiipfiiif}{\\Hence, $\bl |\mathcal{A}|\mleq m\mleq\binom{n}{\lfloor\frac{n}{2}\rfloor}$. }
+\newcommand{\halliiipfiiig}{\\(Indeed, $\bl m \meq \binom{n}{\lfloor\frac{n}{2}\rfloor}$.) }
+
+\newcommand{\halliiihe}{{\dg The Erd\H{o}s-Szemeredi Theorem} {\gray (1935)}
+  \\Each sequence $\bl a_1,\ldots,a_{n^2\!+\!1}$ of $\bl n^2\!+\!1$ distinct integers has
+  \\a subsequence with $\bl n+1$ elements that is either increasing or decreasing.}
+
+\newcommand{\halliiihf}{\\[3mm]{\darkgreen Example}
+  \\Consider the following sequence of $\bl n^2\!+\!1$ integers where $\bl n\meq\textsf{3}$:}
+\newcommand{\halliiihfa}{\\\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)
+   \rput(0,0){7}\rput(1,0){8}\rput(2,0){9}\rput(3,0){4}\rput(4,0){5}
+   \rput(5,0){6}\rput(6,0){1}\rput(7,0){2}\rput(8,0){3}\rput(9,0){0}\endpspicture}
+\newcommand{\halliiihfaa}{\\\psset{unit=5mm}\pspicture(-7,-1.5)(10,2)
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(-.5,-.5)(.5,.5)\psframe(2.5,-.5)(3.5,.5)\psframe(5.5,-.5)(6.5,.5)\psframe(8.5,-.5)(9.5,.5)
+   \rput(1,0){8}\rput(2,0){9}\rput(4,0){5}\rput(5,0){6}\rput(7,0){2}\rput(8,0){3}
+   {\darkred\rput(0,0){7}\rput(3,0){4}\rput(6,0){1}\rput(9,0){0}}\endpspicture}
+\newcommand{\halliiihfb}{\\There is no increasing subsequence of size $\bl n+1\meq\textsf{4}$.}
+\newcommand{\halliiihfc}{\\However, there is a decreasing subsequence of size $\bl n+1\meq\textsf{4}$.}
+
+\newcommand{\halliiipfiva}{\\[3.5mm]\proof}
+\newcommand{\halliiipfivb}{\\Define a poset $\bl P$ on the elements $\bl a_1,\ldots,a_{n^2\!+\!1}$
+  \\where $\bl a_i\preceq a_j$ if and only if $\bl i\mleq j$ and $\bl a_i\mleq a_j$.}
+\newcommand{\halliiipfivc}{\\The chains in $\bl P$ correspond to the increasing subsequences of $\bl a_1,\ldots,a_{n^2\!+\!1}$
+  \\and the antichains correspond to the decreasing subsequences. }
+\newcommand{\halliiipfivd}{\\If there is an increasing subsequence of size $\bl n+1$, then we are done.}
+\newcommand{\halliiipfive}{\\Suppose then that all increasing subsequences have length at most $\bl n$. }
+\newcommand{\halliiipfivf}{\\In other words, the chains of $\bl P$ have length at most $\bl n$. }
+\newcommand{\halliiipfivg}{\\By the {\dg Dual Dilworth's Theorem}, we can cover $\bl P$ by at most $\bl n$ antichains. }
+\newcommand{\halliiipfivh}{\\Since $\bl |P|\mgt n^2$, at least one antichain must have at least $\bl n+1$ elements. }
+\newcommand{\halliiipfivj}{\\Thus, there is a decreasing subsequence of size at least $\bl n+1$.\qed}
+
+\newcommand{\halliiipfivca}{\mypicture{\psset{unit=5mm}\pspicture(18,13.5)(18,13.5)\endpspicture}}
+\newcommand{\halliiipfivcb}{\mypicture{\psset{unit=5mm}\pspicture(18,13.5)(18,13.5)
+   \psset{linecolor=halfgray,fillcolor=lightgray,shadow=false,linewidth=.03,fillstyle=solid,framearc=0}
+   \psframe(-.5,-.5)(2.5,.5)\psframe(4.5,-.5)(5.5,.5)\psframe(6.5,-.5)(7.5,.5)\psframe(8.5,-.5)(9.5,.5)
+   {\blue\rput(0,0){7}\rput(1,0){8}\rput(2,0){9}}\rput(3,0){4}\rput(4,0){5}
+   \rput(6,0){1}\rput(8,0){3}{\darkred\rput(5,0){6}\rput(7,0){2}\rput(9,0){0}}\endpspicture}}
+
+
+
+\begin{document}
+\sf\coursetitle
+\newpage\lecturetitle
+\newpage\lecturetitleiii
+\newpage\hallib
+\newpage\hallib\hallic
+\newpage\hallib\hallic\halliea
+\newpage\hallib\hallic\halliea\blb\halliebv
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa\halliiab
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa\halliiab\halliiac
+\newpage\hallib\hallic\halliea\blb\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae
+\newpage\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae
+\newpage\halliebv\blb\halliiaa\halliiab\halliiac\blb\halliiae\blb\halliicav\halliicb
+\newpage\halliebv\blb\halliiae\blb\halliicav\halliicb
+\newpage\halliebv\blb\halliiae\blb\halliicav\halliicb\blb\halliicd
+\newpage\halliebv\blb\halliiae\blb\halliicd
+\newpage\halliebv\blb\halliiae\blb\halliicd\blb\halliida
+\newpage\halliebv\blb\halliiae\blb\halliicd\blb\halliida\blb\halliicev
+\newpage\halliiia
+\newpage\halliiia\halliiiaa
+\newpage\halliiia\halliiiaa\halliiiab
+\newpage\halliiia\halliiiaa\halliiiab\blb\halliiib
+\newpage\halliiia\halliiiaa\halliiiab\blb\halliiib\\\halliiiba
+\newpage\halliiib
+\newpage\halliiib\halliiipfia
+\newpage\halliiib\halliiipfia\halliiipfib
+\newpage\halliiib\halliiipfia\halliiipfib\halliiipfic
+\newpage\halliiib\halliiipfia\halliiipfib\halliiipfic\halliiipfid
+\newpage\halliiib\halliiipfia\halliiipfib\halliiipfic\halliiipfid\halliiipfie
+\newpage\halliiib\halliiipfia\halliiipfib\halliiipfic\halliiipfid\halliiipfie\halliiipfif
+\newpage\halliiib\halliiipfia\halliiipfib\halliiipfic\halliiipfid\halliiipfie\halliiipfif\halliiipfig
+\newpage\halliiib\halliiipfia\halliiipfibv
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim\halliiipfin
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim\halliiipfin\halliiipfio
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip\halliiipfiq
+\newpage\halliiib\halliiipfia\halliiipfibv\halliiipfih\halliiipfij\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip\halliiipfiq\halliiipfir
+\newpage\halliiib\halliiipfia\halliiipfibvv\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip\halliiipfiq\halliiipfir
+\newpage\halliiib\halliiipfia\halliiipfibvv\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip\halliiipfiq\halliiipfir\halliiipfis
+\newpage\halliiib\halliiipfia\halliiipfibvv\halliiipfik\halliiipfim\halliiipfin\halliiipfio\halliiipfip\halliiipfiq\halliiipfir\halliiipfis\halliiipfit
+\newpage\halliiia\blb\halliiib
+\newpage\halliiia\blb\halliiib\halliiic
+\newpage\halliiia\blb\halliiib\halliiic\blb\halliiid
+\newpage\halliiie
+\newpage\halliiie\halliiiea
+\newpage\halliiie\halliiiea\halliiieb
+\newpage\halliiie\halliiiea\halliiieb\blb\halliiiec{}
+\newpage\halliiie\halliiiea\halliiieb\blb\halliiiec{\halliiieca}
+\newpage\halliiie\halliiiea\halliiieb\blb\halliiiec{\halliiieca\halliiiecb}
+\newpage\halliiie\halliiiea\halliiieb\blb\halliiiec{\halliiieca\halliiiecb}\blb\halliiif
+\newpage\halliiif
+\newpage\halliiif\halliiipfiia
+\newpage\halliiif\halliiipfiia\halliiifa{}
+\newpage\halliiif\halliiipfiia\halliiifa{}\halliiipfiib
+\newpage\halliiif\halliiipfiia\halliiifa{}\halliiipfiib\halliiipfiic
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa}\halliiipfiib\halliiipfiic
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa}\halliiipfiib\halliiipfiic\halliiipfiid
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie\halliiipfiif
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie\halliiipfiif\halliiipfiig
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie\halliiipfiif\halliiipfiig\halliiipfiih
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie\halliiipfiif\halliiipfiig\halliiipfiih\halliiipfiij
+\newpage\halliiif\halliiipfiia\halliiifa{\halliiifaa\halliiifab\halliiifac}\halliiipfiib\halliiipfiic\halliiipfiid\halliiipfiie\halliiipfiif\halliiipfiig\halliiipfiih\halliiipfiij
+\newpage\halliiif
+\newpage\halliiif\halliiig
+\newpage\halliiif\halliiig\halliiiga
+\newpage\halliiif\halliiig\halliiiga\halliiigb
+\newpage\halliiih
+\newpage\halliiih\lb\halliiiha{\scdi}
+\newpage\halliiih\lb\halliiiha{\scdi\scdii}
+\newpage\halliiih\lb\halliiiha{\scdi\scdii\scdiii}
+\newpage\halliiih\lb\halliiiha{\scdi\scdii\scdiii}\halliiihb
+\newpage\halliiih\lb\halliiiha{\scdia\scdii\scdiii}\halliiihb
+\newpage\halliiih\lb\halliiiha{\scdia\scdiia\scdiii}\halliiihb
+\newpage\halliiih\lb\halliiiha{\scdia\scdiia\scdiiia}\halliiihb
+\newpage\halliiihc
+\newpage\halliiihc\halliiihd{}\halliiipfiiia
+\newpage\halliiihc\halliiihd{}\halliiipfiiia\halliiipfiiib
+\newpage\halliiihc\halliiihd{}\halliiipfiiia\halliiipfiiib\halliiipfiiic
+\newpage\halliiihc\halliiihd{}\halliiipfiiia\halliiipfiiib\halliiipfiiic\halliiipfiiid
+\newpage\halliiihc\halliiihd{\scdiav\scdiiav\scdiiiav}\halliiipfiiia\halliiipfiiib\halliiipfiiic\halliiipfiiid
+\newpage\halliiihc\halliiihd{\scdiav\scdiiav\scdiiiav}\halliiipfiiia\halliiipfiiib\halliiipfiiic\halliiipfiiid\halliiipfiiie
+\newpage\halliiihc\halliiihd{\scdiav\scdiiav\scdiiiav}\halliiipfiiia\halliiipfiiib\halliiipfiiic\halliiipfiiid\halliiipfiiie\halliiipfiiif
+\newpage\halliiihc\halliiihd{\scdiav\scdiiav\scdiiiav}\halliiipfiiia\halliiipfiiib\halliiipfiiic\halliiipfiiid\halliiipfiiie\halliiipfiiif\halliiipfiiig
+\newpage\halliiihe
+\newpage\halliiihe\halliiihf
+\newpage\halliiihe\halliiihf\halliiihfa
+\newpage\halliiihe\halliiihf\halliiihfa\halliiihfb
+\newpage\halliiihe\halliiihf\halliiihfa\halliiihfb\halliiihfc
+\newpage\halliiihe\halliiihf\halliiihfaa\halliiihfb\halliiihfc
+\newpage\halliiihe\halliiipfivca\halliiipfiva
+\newpage\halliiihe\halliiipfivca\halliiipfiva\halliiipfivb
+\newpage\halliiihe\halliiipfivca\halliiipfiva\halliiipfivb\halliiipfivc
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc %Not an error...
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd\halliiipfive
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd\halliiipfive\halliiipfivf
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd\halliiipfive\halliiipfivf\halliiipfivg
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd\halliiipfive\halliiipfivf\halliiipfivg\halliiipfivh
+\newpage\halliiihe\halliiipfivcb\halliiipfiva\halliiipfivb\halliiipfivc\halliiipfivd\halliiipfive\halliiipfivf\halliiipfivg\halliiipfivh\halliiipfivj
+
+
+
+\end{document}
+
+
+
+
+
+
+
+

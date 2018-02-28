@@ -1,0 +1,295 @@
+\include{mydefinitionsEST}
+%\usepackage{graphicx}
+%\usepackage[utf8]{inputenc}
+%
+%Lecture 3: Applications (or More Sperner)
+%
+%xx The Dictactor Paradox (Cameron's 1994 proof or Yu's 2012 one?)
+%   Sperner's Theorem --> Erdos' theorem extending 
+%    Kleitman's Theorem
+%   Sperner's Lemma
+%   Brouwer's Fixed Point Theorem
+%OK Mention Monsky's Theorem
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Extremal Set Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\sc\large Extremal Set Theory}\\[3mm]
+  \darkgreen Lecture 2: Sperner Applications\end{center}}
+
+\newcommand{\estcav}{{\dg Sperner's Theorem} {\gray(1928)}
+  \\If $\bl A\mnsubset B$ for all $\bl A,B\myin\mathcal{A}$,
+  then $\bl|\mathcal{A}|\mleq\binom{n}{\lceil\frac{n}{2}\rceil}$.}
+
+\newcommand{\erdosa}{\\[3mm]\theorem {\gray(Erd\H{o}s 1945)}
+  \\Let $\bl a_1,\ldots,a_n\myin\mathbb{R}$ satisfy $\bl|a_i|\mgeq 1$ for all $\bl i\myin [n]$.
+  \\The number of sums $\bl\sum_{i\in[n]}\epsilon_i a_i$ with $\bl\epsilon_i\meq\pm1$
+  \\that lie in some open interval of length $\bl 2$ is at most $\bl\binom{n}{\lceil\frac{n}{2}\rceil}$.}
+
+\newcommand{\erdosb}{\\[2mm]{\gray This result improved a bound by Littlewood and Offord (1943).}}
+\newcommand{\erdosc}{\\[3mm]{\gray Kleitman generalised this to arbitrary dimension, and to multiple regions.}}
+\newcommand{\erdosd}{\\[3mm]{\dg   Kleitman's Theorem} {\gray (1970)} {\lightgray (simple)}
+  \\Let $\bl \mathbf{a}_1,\ldots,\mathbf{a}_n\myin\mathbb{R}^d$ satisfy $\bl|\mathbf{a}_i|\mgeq 1$ for all $\bl i\myin [n]$.
+  \\The number of sums $\bl\sum_{i\in[n]}\epsilon_i \mathbf{a}_i$ with $\bl\epsilon_i\meq\pm1$
+  \\that lie in some open interval ball of radius $\bl 1$ is at most $\bl\binom{n}{\lceil\frac{n}{2}\rceil}$.}
+
+\newcommand{\erdospfa}{\\[2mm]\proof}
+\newcommand{\erdospfb}{\\By changing the signs of $\bl\epsilon_i$, we may assume that $\bl a_i\mgeq1$ for each $\bl i$.}
+\newcommand{\erdospfc}{\\Consider the sums $\bl\sum_{i\in[n]}\epsilon_i a_i$ that lie in a given interval $\bl I$ with $\bl |I|\meq 2$.}
+\newcommand{\erdospfd}{\\Each such sum $\bl S$ determines bijectively a subset $\bl J\meq\{i\in [n] :\epsilon_i\meq 1\}$.}
+\newcommand{\erdospfe}{\\Assume that $\bl J'\msubset J$ for associated sums $\bl S,S'\myin I$.}
+\newcommand{\erdospff}[3]{ Then $\bl S-S'$ equals\vspace*{-2mm}
+  \[\bl
+         \sum_{i\in [n]}\epsilon_i a_i - \hspace*{-1mm}\sum_{i\in [n]}\epsilon_i' a_i
+    \;{#1{\meq \Bigl(\sum_{i\in J } a_i - \hspace*{-2.5mm}\sum_{i\in[n]-J} \hspace*{-2.5mm} a_i\Bigr) -
+         \Bigl(\sum_{i\in J'} a_i - \hspace*{-3.5mm}\sum_{i\in[n]-J'}\hspace*{-2.5mm} a_i\Bigr)}}
+%    \meq \sum_{i\in J-J'} a_i + \sum_{i\in([n]-J')-([n]-J)} a_i
+    \;{#2{\meq2\hspace*{-2mm}\sum_{i\in J-J'} \hspace*{-2.5mm}a_i}}
+%    \meq2|J-J'|
+    \;{#3{\mgeq2}}\vspace*{-2mm}\hspace*{-4mm}\]} 
+\newcommand{\erdospfg}{This is a contradiction, so $\bl J'\mnsubset J$.}
+\newcommand{\erdospfh}{\\By {\dg Sperner's Theorem}, the number of sums~$\bl S\myin I$ is at most $\bl\binom{n}{\lceil\frac{n}{2}\rceil}$.\qed\vspace*{-15mm}}
+    
+\newcommand{\spernera}{{\dg Sperner's Lemma} {(\gray 1928)}
+  \\Consider a triangulation of a triangle with vertices $\bl V_1, V_2, V_3$.
+  \\If the vertices $\bl V$ in the triangulation have a colouring $\bl \chi: V\to [3]$
+  so that
+  \\\mybullet $\bl \chi(V_i) \meq i$ for each $\bl i\myin[3]$
+  \\\mybullet $\bl \chi(v) \myin \{i,j\}$ for perimeter vertices $\bl v\myin V$ between $\bl V_i,V_j$
+  \\then at least one triangle is tricoloured.}
+
+\newcommand{\spernerb}[1]{\rput(-1,-6.5){\spernerbpic{#1}}}
+\newcommand{\spernerbv}[1]{\rput(3,-6.5){\spernerbpic{#1}}}
+
+\newcommand{\spernerbpic}[1]{\begin{pspicture}(-2,-3)(2,2)
+  \psset{shadow=false,fillstyle=solid,framearc=0,linecolor=gray,linewidth=.05,fillcolor=lightgray}
+  \pnode(-3.464,-2){v1}\pnode( 3.464,-2){v2}\pnode( 0    , 4){v3}
+  \pnode(-1.732,-2){a} \pnode( 0    ,-2){b} \pnode( 1.732,-2){c} \pnode( 0.866, 2.5 ){f}
+  \pnode( 1.732, 1   ){e}\pnode( 2.598,-0.5 ){d}\pnode(-0.866, 2.5 ){h}\pnode(-2.165, 0.25){g}
+  \pnode(-1.5  ,-1   ){i}\pnode( 1.5  ,-1   ){j}\pnode( 0    , 0.5 ){k}
+  \pnode( 0    ,-3.5 ){d1}
+  \pnode(-2    ,-1.6 ){d2}
+  \pnode(-1    ,-1.6 ){d3}
+  \pnode( 2.6  ,-1.6 ){d4}
+  \pnode( 1.9  ,-1.2 ){d5}
+  \pnode( 1.9  ,-0.3 ){d6}
+  \pnode(  .866, 1.4 ){d7}
+  \pnode( 0    , 1.8 ){d8}
+  \pnode( 0    , 3 ){d9}
+  \psline(v1)(v2)\psline(v1)(v3)\psline(v2)(v3)\psline(i)(v1)
+  \psline(i)(a)\psline(i)(b)\psline(i)(g)\psline(i)(j)\psline(j)(b)\psline(j)(c)
+  \psline(j)(d)\psline(j)(e)\psline(j)(g)\psline(j)(k)\psline(k)(g)\psline(k)(j)
+  \psline(k)(h)\psline(k)(e)\psline(k)(f)\psline(f)(h)\psline(c)(d)
+  \rput[lt]( 3.9,-2.15){$\bl V_2$}\rput[rt](-3.8,-2.15){$\bl V_1$}\rput[b ](0,4.4){$\bl V_3$}#1
+%  \psset{fillstyle=solid,fillcolor=nearlywhite,linewidth=.05,nodesep=2mm,boxsize=.33,linearc=.33,arcangle=18,opacity=0.5}
+%  \psset{opacity=1,fillcolor=lightgray}
+  \psset{fillstyle=solid,linewidth=.05}
+  \psset{fillcolor=blue}
+  \pscircle(v1){.22}\rput(v1){{\white\tiny1}}
+  \pscircle(b){.22}\rput(b){{\white\tiny1}}\pscircle(c){.22}\rput(c){{\white\tiny1}}
+  \pscircle(h){.22}\rput(h){{\white\tiny1}}\pscircle(i){.22}\rput(i){{\white\tiny1}}
+  \pscircle(j){.22}\rput(j){{\white\tiny1}}\pscircle(k){.22}\rput(k){{\white\tiny1}}
+  \psset{fillcolor=green}
+  \pscircle(v2){.22}\rput(v2){{\white\tiny2}}\pscircle(a){.22}\rput(a){{\white\tiny2}}
+  \pscircle(d ){.22}\rput(d ){{\white\tiny2}}\pscircle(f){.22}\rput(f){{\white\tiny2}}
+  \psset{fillcolor=red}
+  \pscircle(v3){.22}\rput(v3){{\white\tiny3}}
+  \pscircle(e ){.22}\rput(e ){{\white\tiny3}}\pscircle(g){.22}\rput(g){{\white\tiny3}}
+  \end{pspicture}}
+
+\newcommand{\spernerba}{\pspolygon(v3)(f)(h)\pspolygon(e)(f)(k)\pspolygon(d)(e)(j)}
+\newcommand{\spernerbb}{{\psset{linewidth=.05,fillstyle=none,fillcolor=offwhite,linecolor=darkgray,opacity=1.0}
+  \psbezier(d1)(-3,-2)(-3,-2)(d2)\psline(d2)(d3)
+  \psbezier(d3)(-1.05,-2.2)(-1.05,-2.2)(d1)
+  \psbezier(d1)(2.65,-2.75)(2.65,-2.75)(d4)
+  \psline(d4)(d5)(d6)\psline(d7)(d8)(d9)\psset{fillstyle=solid}
+  \pscircle(d1){.1}\pscircle(d2){.1}\pscircle(d3){.1}\pscircle(d4){.1}
+  \pscircle(d5){.1}\pscircle(d6){.1}\pscircle(d7){.1}\pscircle(d8){.1}\pscircle(d9){.1}}}
+
+\newcommand{\spernerpfa}{\\[2mm]\proof}
+%\newcommand{\spernerpfb}{\\Consider the subgraph of the dual $\bl G^*$ of the triangulation
+%  \\whose edges pass between vertex pairs coloured
+%  {\psset{fillcolor=blue}\pscircle(0,0){.22}\rput(0,0){{\white\tiny1}}}
+%  and
+%  {\psset{fillcolor=green}\pscircle(0,0){.22}\rput(0,0){{\white\tiny1}}}.
+%  Tricoloured triangles are then represented by leaves of $\bl G^*$.}
+%\newcommand{\spernerpfc}{\\Apart from the outside vertex, each vertex has degree {\bl 1} or {\bl 2}.}
+%\newcommand{\spernerpfd}{\\Ignoring paths (thus paired tricolour
+
+\newcommand{\spernerpfz}{\\[44mm]\ph{bla}\qed}
+
+\newcommand{\monskya}{\\[3mm]{\gray Another well-known application of {\green Sperner's Lemma} is the theorem below.}}
+\newcommand{\monskyb}{\\[3mm]{\dg Monsky's Theorem} {\gray (1970)}
+  \\A square cannot be dissected by an odd number of equal-sized triangles.}
+%  It is not possible to dissect a square into an
+%odd number of triangles of equal area.
+
+
+\begin{document}
+\sf\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+\np\estcav
+\np\estcav\erdosa
+\np\estcav\erdosa\erdosb
+\np\estcav\erdosa\erdospfa
+\np\estcav\erdosa\erdospfa\erdospfb
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{\ph}{\ph}{\ph}
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{}{\ph}{\ph}
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{}{}{\ph}
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{}{}{}
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{}{}{}\erdospfg
+\np\estcav\erdosa\erdospfa\erdospfb\erdospfc\erdospfd\erdospfe\erdospff{}{}{}\erdospfg\erdospfh
+\np\estcav\erdosa\erdosc
+\np\estcav\erdosa\erdosc\erdosd
+\np\spernera
+\np\spernera\spernerb{}
+\np\spernera\spernerb{\spernerba}
+\np\spernera\spernerb{\spernerba}\spernerpfa
+\np\spernera\spernerb{\spernerba\spernerbb}\spernerpfa
+\np\spernera\spernerb{\spernerba\spernerbb}\spernerpfa\spernerpfz
+
+\newcommand{\brouwera}{\\[3mm]{\dg Brouwer's Fixed Point Theorem} {\gray (1912)}
+  \\Each continuous function $\bl f:B_n\to B_n$ on a ball $\bl B_n\msubset\mathbb{R}^n$ has a fixed~point.\hspace*{-5mm}}
+\newcommand{\brouwerav}{{\dg Brouwer's Fixed Point Theorem} {\gray (1912)}
+  \\Each continuous function $\bl f:B_n\to B_n$ on a ball $\bl B_n\msubset\mathbb{R}^n$ has a fixed~point.\hspace*{-5mm}}
+
+\newcommand{\brouwerpfa}{\\[2mm]\proof {\gray(for $\lightblue n\gray=\lightblue2$)}}
+\newcommand{\brouwerpfb}{\\The triangle $\bl\triangle\msubset\mathbb{R}^3$ with vertices $\bl\mathbf{e}_1, \mathbf{e}_2, \mathbf{e}_3$
+                         is homeomorphic to $\bl B_2$.}
+\newcommand{\brouwerpfc}{\\Assume that $\bl f:\triangle \to \triangle$ is a continuous function without a fixed point.}
+\newcommand{\brouwerpfd}{\\Let $\bl\delta(\mathcal{T})$ be the maximal length of an edge in a triangulation $\bl\mathcal{T}$.}
+\newcommand{\brouwerpfe}{\\Form a sequence of triangulations $\bl\mathcal{T}_1,\mathcal{T}_2,\ldots$ 
+  for which $\bl\delta(\mathcal{T}_k)\black\to\bl 0$.}
+\newcommand{\brouwerpff}{\\Colour the vertices of each $\bl\mathcal{T}_k$ by 
+  $\bl\lambda(\mathbf{v})\meq \min\{i:(f(\mathbf{v})-\mathbf{v})_i \mlt 0\}$.}
+\newcommand{\brouwerpfg}{\\This is well-defined: $\bl f(\mathbf{v}) -\mathbf{v}$ lies in the plane $\bl x+y+z\meq 0$
+  and is non-zero by assumption, so at least one coordinate is negative (resp.\ positive).}
+\newcommand{\brouwerpfh}{\\It is not hard to check that $\bl\lambda$ is a Sperner colouring; for instance, 
+  $\bl\lambda(\mathbf{e}_i)\meq i$.}
+\newcommand{\brouwerpfj}{\\By {\dg Sperner's Lemma}, each triangulation $\bl\mathcal{T}_k$ contains a tricoloured triangle
+  $\bl\{\mathbf{v}^{k1},\mathbf{v}^{k2},\mathbf{v}^{k3}\}$ with $\bl\lambda(\mathbf{v}^{ki})\meq i$.}
+\newcommand{\brouwerpfk}{\\Since $\bl\triangle$ is compact, $\bl\{\mathbf{v}^{k1}\}_k$ has a converging subsequence with limit $\bl\mathbf{v}$.}
+\newcommand{\brouwerpfm}{\\Since $\bl\delta(\mathcal{T}_k)\black\to\bl 0$, the corresponding subsequences of $\bl\{\mathbf{v}^{k2}\}_k$ and $\bl\{\mathbf{v}^{k3}\}_k$
+  must also converge to $\bl\mathbf{v}$.}
+\newcommand{\brouwerpfn}{ Note that $\bl f(\mathbf{v}^{ki})_i\mlt \mathbf{v}^{ki}_i$ for all $\bl k$.}
+\newcommand{\brouwerpfo}{\\By continuity, $\bl f(\mathbf{v})_i\mleq \mathbf{v}_i$ for all $\bl i$, a contradiction.\qed\vspace*{-15mm}}
+
+\newcommand{\contents}{%\pspicture(0,0)(0,0)\endpspicture\\[-8mm]
+  {{\sc\Large Extremal Set Theory}%\footnotesize
+  \dg
+  \\[2mm] $\bl A\cap B\mneq \emptyset$ theorems
+  \\[0mm] Sperner's Theorem
+  \\[0mm] The Erd\H{o}s-Ko-Rado Theorem 
+  \\[0mm] Fischer's Inequality 
+  \\[0mm] The Sunflower Lemma
+  \\[0mm] Bondy's Theorem
+  \\[0mm] Tur\'an's Theorem
+  \\[0mm] Kleitman's Theorem
+  \\[0mm] Sperner's Theorem
+  \\[0mm] Brouwer's Fixed Point Theorem
+  \\[0mm] Triangulations of the square}}
+
+\newcommand{\references}{{\dg References}\footnotesize
+  \\[1mm]    M.~Aigner, {\sl\darkgreen Combinatorial Theory}, Springer-Verlag, New York, 1979.
+  \\[0mm]    M.~Aigner and G.~Ziegler,
+  \\\myspace  {\sl\dg Proofs from The Book}, 4th ed., Springer-Verlag, Berlin, 2010.
+  \\[0mm]    I.~Anderson, {\sl\dg Combinatorics of Finite Sets}, Oxford University Press, New York, 1987.
+  \\[0mm]    B.~Bollob\'as, {\sl\dg Combinatorics. Set Systems, Hypergraphs, Families of Vectors 
+  \\\myspace  and Combinatorial Probability}, Cambridge University Press, Cambridge, 1986.
+  \\[0mm]    R.L.~Graham, M.~Gr\"otschel, and L.~Lov\'asz (eds.),
+  \\\myspace  {\sl\darkgreen Handbook of Combinatorics. I--II}, North-Holland, Amsterdam, 1995.
+  \\[0mm]    S.~Jukna, {\sl\dg Extremal Combinatorics. With Applications in Computer Science}, 
+  \\\myspace   2nd ed., Springer, Heidelberg, 2011.
+  \\[0mm]    J.H.~van Lint and R.M.~Wilson,
+  \\\myspace  {\sl\darkgreen A Course in Combinatorics}, Cambridge University Press, 1992.}
+
+
+\np\spernera
+\np\spernera\brouwera
+\np\brouwerav\brouwerpfa
+\np\brouwerav\brouwerpfa\brouwerpfb
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh\brouwerpfj
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh\brouwerpfj\brouwerpfk
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh\brouwerpfj\brouwerpfk\brouwerpfm
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh\brouwerpfj\brouwerpfk\brouwerpfm\brouwerpfn
+\np\brouwerav\brouwerpfa\brouwerpfb\brouwerpfc\brouwerpfd\brouwerpfe\brouwerpff\brouwerpfg\brouwerpfh\brouwerpfj\brouwerpfk\brouwerpfm\brouwerpfn\brouwerpfo
+\np\spernera\brouwera
+\np\spernera\brouwera\monskya
+\np\spernera\brouwera\monskya\monskyb
+\np\contents
+\np\references
+\np\theend
+
+\end{document}
+
+
+\np\qnoma
+\np\qnoma\qnomb
+\np\qnoma\qnomb\qnomc
+\np\qnoma\qnomb\qnomaexa
+\np\qnoma\qnomb\qnomaexa\qnomaexb
+\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc
+\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa
+\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa\qnomapfb
+\np\qnoma\qnomb\qnomaexa\qnomaexb\qnomaexc\qnomapfa\qnomapfb\qnomapfc
+
+
+\newcommand{\qnoma}{\theorem}
+\newcommand{\qnomb}{\\The number of $\bl k$-dimensional subspaces of $\bl\mathbb{F}_q^n$ over the field $\bl\mathbb{F}_q$ of size $\bl q$~is\vspace*{-3mm}
+  \[\bl
+          \qnom{n}{k}_q
+    \mdef \prod_{i=1}^k\frac{q^{n-i+1}-1}{q^i-1}
+    \meq  \frac{(q^n-1)(q^{n-1}-1)\cdots (q^{n-k+1}-1)}
+               {(q^k-1)(q^{k-1}-1)\cdots (q     -   1)}
+  \]}
+\newcommand{\qnomc}{{\gray These numbers are called $\lightblue q${\green-nomials} and generalise binomials
+  \\(which are obtained in the limit $\lightblue q\to 1$).
+  \\Many set results have vector space analogies and vice versa.}}
+
+\newcommand{\qnomaexa}{\example}
+\newcommand{\qnomaexb}{\\The number of $\bl 2$-dimensional subspaces of $\bl \mathbb{F}_2^3$ is\vspace*{-1mm}
+  \[\bl
+          \qnom{3}{2}
+    \meq  \frac{(2^3-1)(2^2-1)}
+               {(2^2-1)(2-1)}
+    \meq 7\vspace*{-1mm}
+  \]}
+\newcommand{\qnomaexc}{These are:
+  \[\bl
+    \mymatrixb{1}{0}{0}
+              {0}{1}{0}
+    \quad\;
+    \mymatrixb{1}{0}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{0}{1}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{1}{1}{0}
+              {0}{0}{1}
+    \quad\;
+    \mymatrixb{1}{0}{1}
+              {0}{1}{0}
+    \quad\;
+    \mymatrixb{1}{0}{0}
+              {0}{1}{1}
+    \quad\;
+    \mymatrixb{1}{1}{0}
+              {0}{1}{1}\vspace*{-3mm}
+  \]}
+
+\newcommand{\qnomapfa}{\proof}
+\newcommand{\qnomapfb}{\\There are $\bl (q^n-1)\cdots (q^{n-k+1}-1)$ ordered independent sets of size $\bl k$}
+\newcommand{\qnomapfc}{\\and each $\bl k$-dimensional subspace contains $\bl (q^k-1)\cdots (q-1)$ of these. \qed\vspace*{-3mm}}
+

@@ -1,0 +1,332 @@
+%%  MATH5505 Ramsey Theory Lecture 5: Graphs and Geometry
+%%
+%%  by Thomas Britz 2018S1
+%%
+
+% OK Refresh Ramsey's Theorem
+% OK Ramsey bipartite theorem  (prove, first proving "flower" intersection result Ramsey theorem)
+% OK r(T_n,K_m) \geq ...       (prove)
+% OK r(T_n,K_m) = ...          (prove)
+% OK Euclidean Ramsey Theory: the Gallai-Witt Theorem (mention) - translate and scale
+% OK Euclidean Ramsey Theory: bricks, regular n-gon - translate and rotate/reflect etc.
+%
+
+\include{mydefinitionsramsey}
+
+
+\begin{document}
+%% Very important: sans-serif font throughout
+\sf
+
+\newcommand{\lecturetitle}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\end{center}}
+
+\newcommand{\lecturetitlei}{\vphantom{ }\vspace{15mm}\begin{center}
+  {\large\sc Ramsey Theory}\\[3mm]
+  \darkgreen Lecture 5: Graphs and Geometry\end{center}}
+
+\newcommand{\pigeonthmplusa}{{\dg The Pigeonhole Principle} {\gray (general)}
+  \\[1mm]If $\bl km+1$ pigeons are put into $\bl k$ pigeonholes,\\
+         then some pigeonhole contains at least $\bl m+1$ pigeons.}
+
+\newcommand{\ramseyb}{{\dg Ramsey's Theorem} {\gray (1930)} {\halfgray (simple)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_n$ gives a complete monochromatic subgraph $\bl K_m$.}
+
+\newcommand{\ramseybipartitea}{\\[4mm]\theorem {\gray (Beineke \&\ Schwenk 1976)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_{n,n}$ gives a complete monochromatic subgraph $\bl K_{m,m}$.}
+
+\newcommand{\ramseybipartiteav}{\theorem {\gray (Beineke \&\ Schwenk 1976)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_{n,n}$ gives a complete monochromatic subgraph $\bl K_{m,m}$.}
+
+\newcommand{\ramseybipartiteavv}{\\[2mm]\theorem {\gray (Beineke \&\ Schwenk 1976)}\\
+   If $\bl k,m\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each $\bl k$-colouring of the edges of $\bl K_{n,n}$ gives a complete monochromatic subgraph $\bl K_{m,m}$.}
+
+\newcommand{\ramseysetintersecta}{\\[4mm]\theorem {\gray(Ramras 2002)}
+  \\If $\bl k,m\myin\mathbb{N}$, $\bl k\mgeq 2$ and $\bl N$ is sufficiently large,
+   then of any $\bl N$ $\bl N$-subsets $\bl X\msubseteq\bl[k(N-1)+1]$,
+   some $\bl m$ sets have at least $\bl m$ elements in common.}
+
+\newcommand{\ramseysetintersectb}{\\[2mm]{\gray
+  Ramras proved the special case $\lightblue k\gray=\lightblue 2$; we have generalised his result here.
+  \\As the proof shows,
+  $\lightblue k(N-1)+1$ may be replaced by any linear function $\lightblue f(N)\gray:=\lightblue aN+b$
+  where $\lightblue  a,b\gray\in\lightblue\mathbb{Z}$ and $\lightblue a\gray\geq\lightblue 1$,
+  and $\lightblue b\gray\geq\lightblue1$ if $\lightblue a\gray=\lightblue 1$.
+  \\The particular choice $\lightblue k(N-1)+1$ is required for the proof of the $\lightblue K_{n,n}$ theorem above.}}
+
+\newcommand{\ramseysetintersectav}{\theorem  {\gray(Ramras 2002)}
+  \\If $\bl k,m\myin\mathbb{N}$, $\bl k\mgeq 2$ and $\bl N$ is sufficiently large,
+   then of any $\bl N$ $\bl N$-subsets $\bl X\msubseteq\bl[k(N-1)+1]$,
+   some $\bl m$ sets have at least $\bl m$ elements in common.}
+
+\newcommand{\ramseysetintersectavv}{\\[2mm]\theorem  {\gray(Ramras 2002)}
+  \\If $\bl k,m\myin\mathbb{N}$, $\bl k\mgeq 2$ and $\bl N$ is sufficiently large,
+   then of any $\bl N$ $\bl N$-subsets $\bl X\msubseteq\bl[k(N-1)+1]$,
+   some $\bl m$ sets have at least $\bl m$ elements in common.}
+
+\newcommand{\ramseysetintersectpfa}{\\[2mm]\proof}
+\newcommand{\ramseysetintersectpfb}{\\Let $\bl m\myin\mathbb{N}$ and assume that the theorem is false. Set $\bl M\mdef k(N-1)+1$.}
+\newcommand{\ramseysetintersectpfc}{\\Then there is
+  a family $\bl\mathcal{X}$ of $\bl N$ $\bl N$-subsets $\bl X\myin\bl\binom{[M]}{N}$,
+  \\each $\bl m$ sets of which have at most $\bl m-1$ elements in common.}
+%\newcommand{\ramseysetintersectpfd}{\\Let $\bl\mathcal{Y}\mdef\binom{[M]}{m}$ be the family of all $\bl m$-subsets of $\bl[M]$.}
+\newcommand{\ramseysetintersectpfe}[3]{\\Then
+ \[\bl
+        N\binom{N}{m}
+   \meq \sum_{X\in\mathcal{X}}\sum_{Y\in\binom{X}{m}}\!\! 1\;
+   {#1{\meq \hspace*{-1mm}\sum_{Y\in\binom{[M]}{m}}
+             \sum_{\begin{smallmatrix}X\in\mathcal{X}\,:\\Y\subset X\phantom{\,:}\end{smallmatrix}}\!\!1}}\;
+   {#2{\mleq\hspace*{-2mm}\sum_{Y\in\binom{[M]}{m}}\hspace*{-2mm} (m-1)}}\;
+   {#3{\meq \textstyle\binom{M}{m} (m-1)\,\black.\hspace*{-8mm}}}\]}
+\newcommand{\ramseysetintersectpff}{Now, $\bl N\binom{N}{m}$ is a polynomial in $\bl N$ of degree $\bl m+1$,
+  \\whereas $\bl \binom{M}{m} (m\!-\!1)\meq \binom{k(N-1)+1}{m} (m\!-\!1)$ is a polynomial in $\bl N$ of degree~$\bl m$}
+\newcommand{\ramseysetintersectpfg}{,
+  \\so for sufficiently large $\bl N$, we have a contradiction.\qed}
+
+
+
+\newcommand{\ramseybipartitepfa}{\\[2mm]\proof}
+\newcommand{\ramseybipartitepfb}{\\Let $\bl N$ be sufficiently large as in the theorem, and set $\bl n\mdef k(N-1)+1$.}
+\newcommand{\ramseybipartitepfc}{\\Colour the edges of $\bl K_{n,n}$ with $\bl k$ colours, and let $\bl A, B$ be the vertex parts.}
+\newcommand{\ramseybipartitepfd}{\\Each vertex $\bl a\myin A$ is adjacent to $\bl n\meq k(N-1)+1$ edges.}
+\newcommand{\ramseybipartitepfe}{\\By the {\dg Pigeonhole Principle}, $\bl a$ is incident to $\bl N$ edges with same colour~$\bl c(a)$.}
+\newcommand{\ramseybipartitepff}{\\There are $\bl n$ vertices $\bl a\myin A$, each incident to $\bl N$ edges with colour $\bl c(a)$.}
+\newcommand{\ramseybipartitepfg}{\\By the {\dg Pigeonhole Principle}, $\bl N$ of these $\bl n$ colours $\bl c(a)$ are the same,~say~$\bl c$.}
+\newcommand{\ramseybipartitepfh}{\\So, some $\bl N$ vertices in $\bl A$ are each adjacent to $\bl N$ vertices in $\bl B$ by edges of colour~$\bl c$.}
+\newcommand{\ramseybipartitepfj}{  By definition of $\bl N$, some $\bl m$ vertices in $\bl A$ are each adjacent to
+  a common set of $\bl m$ vertices in~$\bl B$ via edges of colour~$\bl c$.}
+\newcommand{\ramseybipartitepfk}{\\This gives us a $\bl c$-coloured subgraph $\bl K_{m,m}$.\qed\vspace*{-10mm}}
+
+\newcommand{\ramseybipartitedensity}{\\[4mm]\theorem {\gray (Zarankiewicz 1951)}\\
+   Let $\bl m\myin\mathbb{N}$ and $\bl \epsilon \mgt 0$.
+   If $\bl n$ is sufficiently large and $\bl G$ is a subgraph of $\bl K_{n,n}$ with at least $\bl\epsilon n^2$ edges,
+   then $\bl G$ has $\bl K_{m,m}$ as a subgraph.}
+
+\newcommand{\graphramseyaa}[2]{For graphs $\bl G,H$,\\[3mm]
+  \begin{tabular}{rl}
+     {$\bl\chi(G)$}  &\hspace*{-2mm}{{is the least number of colours in a proper vertex colouring of $\bl G$}}\\ % {\gray(is the chromatic number of $\lightblue G$)}\\
+  {#1{$\bl   c(H)$}} &\hspace*{-2mm}{#1{is the largest size of a connected component of $\bl H$}}\\
+  {#2{$\bl r(G,H)$}} &\hspace*{-2mm}{#2{is the smallest $\bl n$ so that if $\bl E(K_n)$ is coloured {\red red} and {\bl blue},}}
+                   \\&\hspace*{-2mm}{#2{then $\bl K_n$ either has a {\red red} $\red G$ or a {\bl blue} $\bl H$ as subgraph.}}
+  \end{tabular}}
+
+\newcommand{\graphramseyaexaa}{\\[4mm]\example}
+\newcommand{\graphramseyaexab}[2]{\begin{center}%
+   {\psset{fillcolor=halfgray,linecolor=gray,shadow=false,fillstyle=none,linewidth=.06}
+    \pspicture(0,0)(10.5,4)\rput(0,0){%
+      \pspicture(-1.5,-2)(1.5,2.6)
+    \pnode(-1.5, 0  ){a}
+    \pnode( 1.5, 0  ){b}
+    \pnode( 0  , 2.6){c}
+    \pspolygon(a)(b)(c)\psset{fillstyle=solid}
+    \pscircle(a){.2}
+    \pscircle(b){.2}
+    \pscircle(c){.2}
+    \rput[b](0,-1.5){$\bl G_1$}
+    \rput[b](0,-3){$\bl  \chi(G_1)\meq 3$}
+    \rput[b](0,-4){{#1{$\bl \,c(G_1)\meq 3$}}}
+      \endpspicture}
+    \rput(7,0){\pspicture(-1.5,-2)(1.5,2.6)
+    \pnode(-1.5, 0  ){a}
+    \pnode( 1.5, 0  ){b}
+    \pnode( 0  , 2.6){c}
+    \psline(a)(b)\psset{fillstyle=solid}
+    \pscircle(a){.2}
+    \pscircle(b){.2}
+    \pscircle(c){.2}
+    \rput[b](0,-1.5){$\bl G_2$}
+    \rput[b](0,-3  ){$\bl \chi(G_2)\meq 2$}
+    \rput[b](0,-4  ){{#1{$\bl \,c(G_2)\meq 2$}}}
+     \endpspicture}
+     \rput[l](12,0){{#2{$\bl r({\red\triangle},{\bl\triangle})\meq 6$}}}
+    \endpspicture}\end{center}}
+
+\newcommand{\graphramseyba}{\\[4mm]\theorem {\gray (Chv\'{a}tal \&\ Harary 1972)}\vspace*{-2mm}
+  \[\bl
+    r(G,H)\mgeq (c(G) - 1)(\chi(H) - 1) + 1
+  \]}
+
+\newcommand{\graphramseybav}{\theorem {\gray (Chv\'{a}tal \&\ Harary 1972)}\vspace*{-2mm}
+  \[\bl
+    r(G,H)\mgeq (c(G) - 1)(\chi(H) - 1) + 1
+  \]}
+
+\newcommand{\graphramseybexaa}{\\[4mm]\example}
+\newcommand{\graphramseybexab}[1]{\[\bl r({\red\triangle},{\bl\triangle})
+  \meq 6 \mgeq 5\meq (3 - 1)\times (3 - 1) + 1
+  \,{#1{\meq (\chi({\red\triangle}) - 1)(c({\bl\triangle})-1) + 1}}\]}
+
+
+\newcommand{\graphramseybpfa}{\\\proof}
+\newcommand{\graphramseybpfb}{\\Set $\bl n\mdef (c(G) - 1)(\chi(H)-1)$ and consider $\bl K_n$.}
+\newcommand{\graphramseybpfc}{\\We can find $\bl\chi(H)-1$ disjoint $\bl K_{c(G)-1}$ subgraphs of $\bl K_n$.}
+\newcommand{\graphramseybpfd}{\\Colour the edges of these {\red red} and all other edges {\bl blue}.}
+\newcommand{\graphramseybpfe}{\\Then $\bl K_n$ has no {\red red $G$} subgraph nor any {\bl blue $H$} subgraph.}
+\newcommand{\graphramseybpff}{\\Hence, $\bl r(G,H)\mgeq n+1$.\qed}
+
+\newcommand{\graphramseyca}{\theorem {\gray (Chv\'{a}tal 1977)}
+  \\If $\bl T_m$ is a tree on $\bl m$ vertices, then\vspace*{-2mm}
+  \[\bl
+    r(T_m,K_n)\meq (m-1)(n-1) + 1\,\black.\vspace*{-2mm}
+  \]}
+
+\newcommand{\graphramseycexaa}{\example}
+\newcommand{\graphramseycexab}{\\For $\bl m\meq 2$, it is clear that $\bl r(T_m,K_n)\meq n$, as claimed.}
+\newcommand{\graphramseycexac}{\\Similarly for $\bl n\meq 2$, $\bl r(T_m,K_n)\meq m$, as claimed.}
+
+\newcommand{\graphramseycpfa}{\proof}
+\newcommand{\graphramseycpfb}[1]{\\By the \theorem above,\vspace*{-2mm}
+  \[\bl r(T_m,K_n)\mgeq (c(T_m) - 1)(\chi(K_n) - 1) + 1\,{#1{\meq (m-1)(n-1)+1}}\,\black.\]}
+\newcommand{\graphramseycpfbv}{\\By the \theorem above, $\bl r(T_m,K_n)\mgeq (m-1)(n-1)+1$.\\}
+\newcommand{\graphramseycpfc}{We therefore wish to prove that $\bl r(T_m,K_n)\mleq (m-1)(n-1)+1$.}
+\newcommand{\graphramseycpfd}{\\Assume that the theorem is true for all $\bl m',n'$ with $\bl m'+n'\mlt m+n$.}
+\newcommand{\graphramseycpfe}{\\Now colour the edges of $\bl K_N$ {\red red} and {\blue blue} where $\bl N\mdef (m-1)(n-1)+1$.}
+\newcommand{\graphramseycpff}{\\Let $\bl T_{m-1}$ be a tree obtained by removing an end-vertex from $\bl T_m$
+  \\and let $\red v$ be the vertex that was adjacent to that removed vertex.}
+\newcommand{\graphramseycpfg}{\\By the induction assumption, $\bl K_N$ contains either a {\blue blue} $\bl K_n$ subgraph, and we are done}
+\newcommand{\graphramseycpfh}{, or it has a {\red red} $\red T_{m-1}$ subgraph; suppose the latter.}
+\newcommand{\graphramseycpfj}{\\Let $\bl K_{N'}$ be the graph obtained by deleting the vertices of $\red T_{m-1}$ from $\bl K_N$.}
+\newcommand{\graphramseycpfk}{\\Then $\bl K_{N'}$ has $\bl N-(m-1)\meq (m-1)(n-2)+1$ vertices.}
+\newcommand{\graphramseycpfm}{\\By the induction assumption, $\bl K_{N'}$ has either a {\red red} $\red T_m$ subgraph in which case we are done,
+  or it has a {\bl blue} $\bl K_{n-1}$ subgraph; suppose the latter.}
+\newcommand{\graphramseycpfn}{\\{[...]}We have supposed that {\red red} $\red T_{m-1}$
+  and {\bl blue} $\bl K_{n-1}$ are subgraphs of $\bl K_N$.}
+\newcommand{\graphramseycpfp}{\\Now consider the edges from the vertex $\red v$ in $\red T_{m-1}$ to the vertices of $\bl K_{n-1}$.}
+\newcommand{\graphramseycpfq}{\\If one of these edges is red, then add it to $\red v$ to get a {\red red} $\red T_m$ subgraph.}
+\newcommand{\graphramseycpfr}{\\Otherwise, all the edges are blue, so add them to $\bl K_{n-1}$ to get a {\bl blue} $\bl K_n$.}
+\newcommand{\graphramseycpfs}{\\Thus, $\bl K_N$ has either a {\red red} $\red T_m$ subgraph or a {\bl blue} $\bl K_n$ subgraph.}
+\newcommand{\graphramseycpft}{\\Hence, $\bl r(T_m,K_n)\mleq (m-1)(n-1)+1$.\qed\vspace*{-2mm}}
+
+
+
+
+\coursetitle
+\np\lecturetitle
+\np\lecturetitlei
+\np\pigeonthmplusa
+\np\ramseyb
+\np\ramseyb\ramseybipartitea
+\np\ramseyb\ramseybipartitea\ramseysetintersecta
+\np\ramseyb\ramseybipartitea\ramseysetintersecta\ramseysetintersectb
+\np\ramseysetintersectav
+\np\ramseysetintersectav\ramseysetintersectpfa
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{\ph}{\ph}{\ph}
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{}{\ph}{\ph}
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{}{}{\ph}
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{}{}{}
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{}{}{}\ramseysetintersectpff
+\np\ramseysetintersectav\ramseysetintersectpfa\ramseysetintersectpfb\ramseysetintersectpfc\ramseysetintersectpfe{}{}{}\ramseysetintersectpff\ramseysetintersectpfg
+\np\ramseysetintersectav
+\np\ramseysetintersectav\ramseybipartitea
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe\ramseybipartitepff
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe\ramseybipartitepff\ramseybipartitepfg
+\np\ramseysetintersectav\ramseybipartitea\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe\ramseybipartitepff\ramseybipartitepfg\ramseybipartitepfh
+\np\ramseysetintersectav\ramseybipartiteavv\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe\ramseybipartitepff\ramseybipartitepfg\ramseybipartitepfh\ramseybipartitepfj
+\np\ramseysetintersectav\ramseybipartiteavv\ramseybipartitepfa\ramseybipartitepfb\ramseybipartitepfc\ramseybipartitepfd\ramseybipartitepfe\ramseybipartitepff\ramseybipartitepfg\ramseybipartitepfh\ramseybipartitepfj\ramseybipartitepfk
+\np\ramseybipartiteav
+\np\ramseybipartiteav\ramseybipartitedensity
+\np\graphramseyaa{\ph}{\ph}\graphramseyaexab{\ph}{\ph}
+\np\graphramseyaa{}{\ph}\graphramseyaexab{}{\ph}
+\np\graphramseyaa{}{}\graphramseyaexab{}{}
+\np\graphramseyaa{}{}
+\np\graphramseyaa{}{}\graphramseyba
+\np\graphramseyaa{}{}\graphramseyba\graphramseybexaa
+\np\graphramseyaa{}{}\graphramseyba\graphramseybexaa\graphramseybexab{\ph}
+\np\graphramseyaa{}{}\graphramseyba\graphramseybexaa\graphramseybexab{}
+\np\graphramseyaa{}{}\graphramseyba
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa\graphramseybpfb
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa\graphramseybpfb\graphramseybpfc
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa\graphramseybpfb\graphramseybpfc\graphramseybpfd
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa\graphramseybpfb\graphramseybpfc\graphramseybpfd\graphramseybpfe
+\np\graphramseyaa{}{}\graphramseyba\graphramseybpfa\graphramseybpfb\graphramseybpfc\graphramseybpfd\graphramseybpfe\graphramseybpff
+\np\graphramseyaa{}{}\graphramseyba
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycexaa
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycexaa\graphramseycexab
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycexaa\graphramseycexab\graphramseycexac
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycpfa
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycpfa\graphramseycpfb{\ph}
+\np\graphramseyaa{}{}\graphramseyba\graphramseyca\graphramseycpfa\graphramseycpfb{}
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfg
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfg\graphramseycpfh
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfg\graphramseycpfh\graphramseycpfj
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfg\graphramseycpfh\graphramseycpfj\graphramseycpfk
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfg\graphramseycpfh\graphramseycpfj\graphramseycpfk\graphramseycpfm
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn\graphramseycpfp
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn\graphramseycpfp\graphramseycpfq
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn\graphramseycpfp\graphramseycpfq\graphramseycpfr
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn\graphramseycpfp\graphramseycpfq\graphramseycpfr\graphramseycpfs
+\np\graphramseyca\graphramseycpfa\graphramseycpfbv\graphramseycpfc\graphramseycpfd\graphramseycpfe\graphramseycpff\graphramseycpfn\graphramseycpfp\graphramseycpfq\graphramseycpfr\graphramseycpfs\graphramseycpft
+
+\newcommand{\ramseye}{{\dg Ramsey's Theorem} {\gray (1930)}\\
+   If $\bl n_1,\ldots,n_k,r\myin\mathbb{N}$ and $\bl n$ is sufficiently large,\\
+   then each colouring of $\bl \binom{[n]}{r}$ with colours $\bl c_1,\ldots,c_k$\\
+   gives a $\bl c_i$-coloured subfamily $\bl \binom{S}{r}$
+   for some $\bl i$ and $\bl n_i$-subset $\bl S\subseteq [n]$.}
+
+\newcommand{\affineramsey}{\\[4mm]{\dg The Affine Ramsey Theorem} {\gray (Spencer 1975)}
+  \\Let $\bl\mathbb{F}$ be a finite field.
+  If $\bl k,r,t\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+  then each \\$\bl r$-colouring of the $\bl t$-dimensional affine subspaces of $\bl\mathbb{F}^n$
+  gives a $\bl k$-dimensional affine subspace of $\bl\mathbb{F}^n$
+  whose $\bl t$-dimensional affine subspaces have the same colour.}
+
+\newcommand{\vectorramsey}{\\[4mm]{\dg Vector Space Ramsey Theorem} {\gray (Graham, Leeb \&\ Rothschild 1972)}
+  \\Let $\bl\mathbb{F}$ be a finite field.
+  If $\bl k,r,t\myin\mathbb{N}$ and $\bl n$ is sufficiently large,
+   then each \\$\bl r$-colouring of the $\bl t$-dimensional subspaces of $\bl\mathbb{F}^n$
+   gives a $\bl k$-dimensional subspace of $\bl\mathbb{F}^n$
+   whose $\bl t$-dimensional subspaces have the same colour.}
+
+\newcommand{\euclidramseya}{{\dg The Gallai-Witt Theorem}
+  \\For each finite subset $\bl V\msubseteq \mathbb{R}^n$ and each finite colouring of $\bl\mathbb{R}^n$,
+  \\there is a monochromatic subset $\bl W\msubseteq \mathbb{R}^n$ that
+  can be obtained from $\bl V$ by {\dg translating} and {\dg scaling}.}
+
+\newcommand{\euclidramseyb}{\\[4mm]When {\dg scaling} is not allowed, then it is easy to find
+  finite sets $\bl V\msubseteq\mathbb{R}^n$ and colourings of $\bl\mathbb{R}^n$
+  so that no {\dg translation} of $\bl V$ is monochromatic.}
+
+\newcommand{\euclidramseyc}{\\[4mm]A finite set of points $\bl V$ is {\dg\em Ramsey} if
+  for each $\bl r\myin\mathbb{N}$ there is a sufficiently large $\bl n$ such that any $\bl r$-colouring
+  of $\bl\mathbb{R}^n$ has a monochromatic subset $\bl W$ that is {\dg congruent} to $\bl V$,
+  i.e., {\dg translating}, {\dg rotating}, and {\dg reflecting} is allowed.}
+
+\newcommand{\euclidramseyd}{\\[4mm]\theorem
+  \\\mybullet All rectangular parallelopipeds (``bricks'') are Ramsey.
+  \\\mybullet In particular, all equilateral simplexes are Ramsey.
+  \\\mybullet Indeed, all regular polygons and polyhedra are Ramsey.
+  \\\mybullet Each Ramsey set can be placed on some sphere.}
+
+
+\np\ramseye
+\np\ramseye\affineramsey
+\np\ramseye\affineramsey\vectorramsey
+\np\euclidramseya
+\np\euclidramseya\euclidramseyb
+\np\euclidramseya\euclidramseyb\euclidramseyc
+\np\euclidramseya\euclidramseyb\euclidramseyc\euclidramseyd
+
+
+
+\end{document}
+
